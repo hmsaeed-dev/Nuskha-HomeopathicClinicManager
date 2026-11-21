@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Schibsted+Grotesk:wght@600;700&family=Spline+Sans+Mono:wght@500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Schibsted+Grotesk:wght@600;700&family=Spline+Sans+Mono:wght@500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -25,17 +25,12 @@
   --font-display: 'Schibsted Grotesk', sans-serif;
   --font-body: 'Commissioner', sans-serif;
   --font-mono: 'Spline Sans Mono', monospace;
-  --font-urdu: 'Noto Nastaliq Urdu', serif;
 }
 
 body {
   background-color: #f1f5f4;
   color: #131c1a;
   font-family: 'Commissioner', sans-serif;
-}
-
-.font-urdu {
-  font-family: 'Noto Nastaliq Urdu', serif;
 }
 
 /* Custom scrollbars for clinical density */

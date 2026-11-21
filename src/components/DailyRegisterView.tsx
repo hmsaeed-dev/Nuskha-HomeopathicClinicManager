@@ -16,7 +16,6 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
     p.pastVisits.map((v) => ({
       ...v,
       patientName: p.fullName,
-      patientUrdu: p.urduName,
       relation: `${p.relationType} ${p.relativeName}`,
       locality: p.locality,
       phone: p.phone,
@@ -301,11 +300,6 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                       <td className="px-4 py-3">
                         <div className="font-bold text-[#131C1A] flex items-center gap-1.5">
                           <span>{item.patientName}</span>
-                          {item.patientUrdu && (
-                            <span className="text-xs font-urdu text-[#085E52]">
-                              ({item.patientUrdu})
-                            </span>
-                          )}
                           <span
                             className={`text-[10px] font-['Spline_Sans_Mono'] font-bold px-1.5 py-0.5 rounded ${demo.chipBg} ${demo.chipText}`}
                           >

@@ -86,14 +86,14 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                   onClick={() => onSelectPatient(patient)}
                   className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 ${
                     isSelected
-                      ? 'bg-[#085E52] text-white shadow-sm'
+                      ? `${demo.selectedCardBg} text-white shadow-sm`
                       : 'bg-white text-[#131C1A] hover:bg-white/90 shadow-2xs'
                   }`}
                 >
                   {/* Demographic Vertical Indicator Bar */}
                   <div
                     className={`w-1 self-stretch rounded-full shrink-0 ${
-                      isSelected ? 'bg-white/80' : demo.barColor
+                      isSelected ? 'bg-white/60' : demo.barColor
                     }`}
                     title={`${demo.label} (${patient.age}y)`}
                   />
@@ -101,27 +101,16 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                   <div className="flex-1 min-w-0 flex flex-col gap-1">
                     {/* Patient Name & MRN */}
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 truncate">
-                        <span
-                          className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
-                            isSelected ? 'text-white' : 'text-[#131C1A]'
-                          }`}
-                        >
-                          {patient.fullName}
-                        </span>
-                        {patient.urduName && (
-                          <span
-                            className={`text-xs font-urdu opacity-85 truncate ${
-                              isSelected ? 'text-[#8FE0D1]' : 'text-[#085E52]'
-                            }`}
-                          >
-                            {patient.urduName}
-                          </span>
-                        )}
-                      </div>
+                      <span
+                        className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
+                          isSelected ? 'text-white' : 'text-[#131C1A]'
+                        }`}
+                      >
+                        {patient.fullName}
+                      </span>
                       <span
                         className={`font-['Spline_Sans_Mono'] text-[11px] shrink-0 font-medium ${
-                          isSelected ? 'text-[#8FE0D1]' : 'text-[#5E706B]'
+                          isSelected ? demo.selectedCardSubtext : 'text-[#5E706B]'
                         }`}
                       >
                         {patient.mrn}

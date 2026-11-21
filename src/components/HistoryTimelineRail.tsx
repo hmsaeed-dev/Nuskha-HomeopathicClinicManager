@@ -70,27 +70,17 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
 
   return (
     <section className="rounded-2xl bg-white p-5 shadow-xs flex flex-col gap-5 h-full overflow-hidden">
-      {/* Patient Identity Anchor (Dark Botanical Teal Card) */}
-      <div className="rounded-2xl bg-[#122B27] text-[#F4FAF8] p-5 shadow-sm flex flex-col gap-4 shrink-0">
+      {/* Patient Identity Anchor (Demographic Cohort Characteristic Card) */}
+      <div className={`rounded-2xl ${demo.bannerBg} text-[#F4FAF8] p-5 shadow-sm flex flex-col gap-4 shrink-0 transition-colors duration-200`}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="font-['Schibsted_Grotesk'] text-2xl font-bold tracking-tight text-white">
-                {patient.fullName}
-              </h1>
-              {patient.urduName && (
-                <span className="text-base font-urdu text-[#8FE0D1] leading-none">
-                  {patient.urduName}
-                </span>
-              )}
-            </div>
+            <h1 className="font-['Schibsted_Grotesk'] text-2xl font-bold tracking-tight text-white">
+              {patient.fullName}
+            </h1>
 
-            <div className="text-xs text-[#8FE0D1] flex items-center gap-2 flex-wrap mt-0.5">
-              <span className="font-semibold">
+            <div className={`text-xs ${demo.bannerAccentText} flex items-center gap-2 flex-wrap mt-0.5`}>
+              <span className="font-semibold text-white/95">
                 {patient.relationType} {patient.relativeName}
-                {patient.relativeUrduName && (
-                  <span className="ml-1 font-urdu opacity-90">({patient.relativeUrduName})</span>
-                )}
               </span>
               <span>·</span>
               <span
@@ -103,23 +93,23 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
           </div>
 
           <div className="flex flex-col items-end gap-1 shrink-0">
-            <span className="px-2.5 py-1 rounded-full bg-[#085E52] text-white font-['Spline_Sans_Mono'] text-xs font-bold shadow-xs">
+            <span className={`px-2.5 py-1 rounded-full ${demo.bannerTokenBg} text-white font-['Spline_Sans_Mono'] text-xs font-bold shadow-xs`}>
               Today: #T-048
             </span>
-            <span className="text-[11px] font-['Spline_Sans_Mono'] text-[#8FE0D1] font-medium">
+            <span className={`text-[11px] font-['Spline_Sans_Mono'] ${demo.bannerAccentText} font-medium`}>
               MRN: {patient.mrn}
             </span>
           </div>
         </div>
 
         {/* Secondary Contact Bar */}
-        <div className="flex items-center gap-4 text-xs text-[#8FE0D1]/90 pt-1">
+        <div className={`flex items-center gap-4 text-xs ${demo.bannerAccentText}/90 pt-1`}>
           <span className="flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5 text-[#8FE0D1]" />
+            <MapPin className={`w-3.5 h-3.5 ${demo.bannerAccentText}`} />
             {patient.locality}
           </span>
           <span className="flex items-center gap-1 font-['Spline_Sans_Mono']">
-            <Phone className="w-3.5 h-3.5 text-[#8FE0D1]" />
+            <Phone className={`w-3.5 h-3.5 ${demo.bannerAccentText}`} />
             {patient.phone}
           </span>
           <span className="ml-auto text-[11px] bg-white/10 px-2 py-0.5 rounded text-white font-medium">
@@ -131,11 +121,11 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
         {patient.severityTrend && (
           <div className="rounded-xl bg-white/10 p-3 flex flex-col gap-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#8FE0D1] font-semibold flex items-center gap-1.5">
+              <span className={`${demo.bannerAccentText} font-semibold flex items-center gap-1.5`}>
                 <Sparkles className="w-3.5 h-3.5" />
                 Migraine Progress
               </span>
-              <span className="font-['Spline_Sans_Mono'] text-white font-bold px-1.5 py-0.5 rounded bg-[#085E52]/60">
+              <span className={`font-['Spline_Sans_Mono'] text-white font-bold px-1.5 py-0.5 rounded ${demo.bannerTokenBg}/70`}>
                 {patient.severityTrend.overallRelief}
               </span>
             </div>
@@ -143,7 +133,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
             <svg viewBox="0 0 300 44" className="w-full h-9 overflow-visible" role="img" aria-label="Relief trajectory curve">
               <polyline
                 fill="none"
-                stroke="#8FE0D1"
+                stroke={demo.bannerStroke}
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -152,10 +142,10 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
               <circle cx="15" cy="10" r="4" fill="#0C5A7A" stroke="#F4FAF8" strokeWidth="1.5" />
               <circle cx="95" cy="16" r="4" fill="#8F4F00" stroke="#F4FAF8" strokeWidth="1.5" />
               <circle cx="195" cy="30" r="4" fill="#146C43" stroke="#F4FAF8" strokeWidth="1.5" />
-              <circle cx="285" cy="38" r="5" fill="#8FE0D1" stroke="#085E52" strokeWidth="2" />
+              <circle cx="285" cy="38" r="5" fill={demo.bannerStroke} stroke={demo.bannerTokenBg} strokeWidth="2" />
             </svg>
 
-            <div className="flex items-center justify-between text-[10px] font-['Spline_Sans_Mono'] text-[#8FE0D1]/80 px-1">
+            <div className={`flex items-center justify-between text-[10px] font-['Spline_Sans_Mono'] ${demo.bannerAccentText}/80 px-1`}>
               {patient.severityTrend.history.map((h, i) => (
                 <span key={i}>{h.label}</span>
               ))}

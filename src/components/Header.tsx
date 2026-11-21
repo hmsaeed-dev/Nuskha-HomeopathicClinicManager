@@ -30,9 +30,6 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="font-['Schibsted_Grotesk'] text-xl font-bold text-[#131C1A] leading-none tracking-tight">
                   Nuskha
                 </span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-[#085E52]/10 text-[#085E52] font-semibold">
-                  نسخہ
-                </span>
               </div>
               <span className="text-xs text-[#3A4B47] mt-0.5">
                 Dr. Aslam · Homoeopathic OPD Clinic

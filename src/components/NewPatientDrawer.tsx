@@ -19,10 +19,8 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
   nextDailyToken,
 }) => {
   const [fullName, setFullName] = useState('');
-  const [urduName, setUrduName] = useState('');
   const [relationType, setRelationType] = useState<'s/o' | 'w/o' | 'd/o'>('s/o');
   const [relativeName, setRelativeName] = useState('');
-  const [relativeUrduName, setRelativeUrduName] = useState('');
   const [age, setAge] = useState<number>(35);
   const [gender, setGender] = useState<'Male' | 'Female' | 'Child'>('Male');
   const [phone, setPhone] = useState('0300-');
@@ -41,10 +39,8 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
     onRegisterPatient({
       mrn: `NK-${Math.floor(1000 + Math.random() * 9000)}`,
       fullName,
-      urduName: urduName.trim() || undefined,
       relationType,
       relativeName,
-      relativeUrduName: relativeUrduName.trim() || undefined,
       age,
       gender,
       phone,
@@ -91,35 +87,19 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
-          {/* Patient Name (English + Urdu) */}
-          <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-7 flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#131C1A]">
-                Patient Name <span className="text-[#BA1A1A]">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. Muhammad Tariq"
-                className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
-              />
-            </div>
-
-            <div className="col-span-5 flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#131C1A]">
-                Urdu Name (نام)
-              </label>
-              <input
-                type="text"
-                dir="rtl"
-                value={urduName}
-                onChange={(e) => setUrduName(e.target.value)}
-                placeholder="محمد طارق"
-                className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm font-urdu text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
-              />
-            </div>
+          {/* Patient Name */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#131C1A]">
+              Patient Name <span className="text-[#BA1A1A]">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="e.g. Muhammad Tariq"
+              className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+            />
           </div>
 
           {/* Relation + Guardian/Spouse Name */}

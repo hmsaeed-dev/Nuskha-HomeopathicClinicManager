@@ -21,6 +21,8 @@ import {
   ReactionType,
   PrescriptionItem,
   DispensingVehicle,
+  getDemographicCohort,
+  DEMOGRAPHIC_CONFIG,
 } from '@/types';
 import {
   COMMON_REMEDIES,
@@ -46,6 +48,9 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   patient,
   onSaveConsultation,
 }) => {
+  const cohort = getDemographicCohort(patient.age, patient.gender);
+  const demo = DEMOGRAPHIC_CONFIG[cohort];
+
   const [reaction, setReaction] = useState<ReactionType>('Improved');
   const [symptoms, setSymptoms] = useState<string>(
     'Migraine 70% better; occasional morning gastric acidity persists after heavy meals.'
@@ -161,12 +166,12 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleRepeatLastRx}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#D8F0E9] text-[#0E3B33] hover:bg-[#c4e8de] text-xs font-semibold transition-all active:scale-98"
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} hover:opacity-90 text-xs font-semibold transition-all active:scale-98`}
           title="Repeat Previous Prescription (Alt+R)"
         >
-          <RotateCcw className="w-3.5 h-3.5 text-[#085E52]" />
+          <RotateCcw className="w-3.5 h-3.5" />
           <span>Repeat Last</span>
-          <kbd className="px-1 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-white/60 text-[#085E52]">
+          <kbd className="px-1 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-black/5 font-semibold">
             Alt+R
           </kbd>
         </button>
@@ -511,7 +516,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-3 rounded-xl bg-[#085E52] text-white hover:bg-[#0E7668] shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98"
+          className={`w-full py-3 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98`}
         >
           <CheckCircle2 className="w-5 h-5 text-white" />
           <span>Save &amp; Next</span>

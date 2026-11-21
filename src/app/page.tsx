@@ -29,9 +29,7 @@ export default function Home() {
     if (!q) return true;
     return (
       p.fullName.toLowerCase().includes(q) ||
-      (p.urduName && p.urduName.includes(q)) ||
       p.relativeName.toLowerCase().includes(q) ||
-      (p.relativeUrduName && p.relativeUrduName.includes(q)) ||
       p.phone.includes(q) ||
       p.mrn.toLowerCase().includes(q) ||
       p.locality.toLowerCase().includes(q)
