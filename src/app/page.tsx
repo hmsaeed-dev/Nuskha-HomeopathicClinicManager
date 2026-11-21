@@ -100,6 +100,7 @@ export default function Home() {
     symptoms: string;
     prescriptions: PrescriptionItem[];
     doctorNotes: string;
+    durationDays?: number;
     fee: number;
     feeStatus: 'Paid' | 'Free' | 'Due';
   }) => {
@@ -112,6 +113,7 @@ export default function Home() {
       symptoms: data.symptoms,
       prescriptions: data.prescriptions,
       doctorNotes: data.doctorNotes,
+      durationDays: data.durationDays || 15,
       fee: data.fee,
       feeStatus: data.feeStatus,
     };

@@ -120,7 +120,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
             <div className="flex items-center justify-between text-xs">
               <span className={`${demo.bannerAccentText} font-semibold flex items-center gap-1.5`}>
                 <Sparkles className="w-3.5 h-3.5" />
-                Migraine Progress
+                {patient.severityTrend.complaintName || patient.chiefComplaints?.[0]?.name || 'Symptom'} Relief Trajectory
               </span>
               <span className={`font-['Spline_Sans_Mono'] text-white font-bold px-1.5 py-0.5 rounded ${demo.bannerTokenBg}/70`}>
                 {patient.severityTrend.overallRelief}
@@ -147,6 +147,34 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                 <span key={i}>{h.label}</span>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Active Chief Complaints */}
+        {patient.chiefComplaints && patient.chiefComplaints.length > 0 && (
+          <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+            {patient.chiefComplaints.map((cc) => (
+              <span
+                key={cc.id}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 text-xs text-white"
+              >
+                <span className="font-semibold">{cc.name}</span>
+                {cc.duration && (
+                  <span className={`text-[10px] ${demo.bannerAccentText}`}>({cc.duration})</span>
+                )}
+                <span
+                  className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                    cc.trend === 'Improving'
+                      ? 'bg-[#146C43]/80 text-[#D1F2E1]'
+                      : cc.trend === 'Aggravating'
+                      ? 'bg-[#BA1A1A]/80 text-[#FFDAD6]'
+                      : 'bg-white/20 text-white'
+                  }`}
+                >
+                  {cc.trend}
+                </span>
+              </span>
+            ))}
           </div>
         )}
       </div>
@@ -194,6 +222,11 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                       <span className="font-['Spline_Sans_Mono'] text-xs font-bold text-[#131C1A]">
                         {visit.date}
                       </span>
+                      {visit.durationDays && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#E9F0EE] text-[#3D665E] font-['Spline_Sans_Mono'] font-bold">
+                          {visit.durationDays}d course
+                        </span>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2">

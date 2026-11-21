@@ -39,6 +39,7 @@ interface ConsultationComposerProps {
     symptoms: string;
     prescriptions: PrescriptionItem[];
     doctorNotes: string;
+    durationDays: number;
     fee: number;
     feeStatus: 'Paid' | 'Free' | 'Due';
   }) => void;
@@ -55,6 +56,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   const [symptoms, setSymptoms] = useState<string>(
     'Migraine 70% better; occasional morning gastric acidity persists after heavy meals.'
   );
+  const [durationDays, setDurationDays] = useState<number>(15);
   const [prescriptions, setPrescriptions] = useState<PrescriptionItem[]>([
     {
       id: 'rx-new-1',
@@ -144,6 +146,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       symptoms,
       prescriptions,
       doctorNotes,
+      durationDays,
       fee,
       feeStatus,
     });
@@ -476,7 +479,41 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         </div>
       </div>
 
-      {/* 4. Doctor's Notes & Consultation Fee */}
+      {/* 4. Course Duration */}
+      <div className="flex flex-col gap-1.5 pt-1">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-bold text-[#131C1A]">
+            Course Duration
+          </label>
+          <span className="text-[10px] text-[#5E706B] font-['Spline_Sans_Mono']">
+            {durationDays} Days Supply
+          </span>
+        </div>
+
+        <div className="grid grid-cols-4 gap-2">
+          {[
+            { days: 3, label: '3 Days' },
+            { days: 7, label: '1 Week (7d)' },
+            { days: 15, label: '15 Days' },
+            { days: 30, label: '1 Month (30d)' },
+          ].map((item) => (
+            <button
+              key={item.days}
+              type="button"
+              onClick={() => setDurationDays(item.days)}
+              className={`py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                durationDays === item.days
+                  ? `${demo.bannerTokenBg} text-white shadow-xs`
+                  : 'bg-[#E9F0EE] text-[#3A4B47] hover:bg-[#d8e3e0]'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Doctor's Notes & Consultation Fee */}
       <div className="grid grid-cols-12 gap-3 pt-1">
         <div className="col-span-8 flex flex-col gap-1.5">
           <label htmlFor="doctor-notes" className="text-xs font-bold text-[#131C1A]">

@@ -13,7 +13,12 @@ export const INITIAL_PATIENTS: Patient[] = [
     locality: 'Taxila Cantt',
     totalVisits: 4,
     lastVisitDate: '14 Nov 2026',
+    chiefComplaints: [
+      { id: 'cc-1', name: 'Migraine', severity: 'Mild', trend: 'Improving', duration: '4 yrs' },
+      { id: 'cc-2', name: 'Gastric Acidity', severity: 'Moderate', trend: 'Stable', duration: '6 mos' },
+    ],
     severityTrend: {
+      complaintName: 'Migraine',
       overallRelief: '-70% relief',
       history: [
         { label: '12 Oct', date: '12 Oct 2026', score: 90 },
@@ -30,6 +35,7 @@ export const INITIAL_PATIENTS: Patient[] = [
         tokenNo: 48,
         reaction: 'Improved',
         symptoms: 'Migraine reduced by 50%; mild morning acidity persists.',
+        durationDays: 14,
         prescriptions: [
           {
             id: 'rx-1',
@@ -58,6 +64,7 @@ export const INITIAL_PATIENTS: Patient[] = [
         tokenNo: 32,
         reaction: 'No Change',
         symptoms: 'Severe frontal headache < motion, gastric heaviness after lunch.',
+        durationDays: 15,
         prescriptions: [
           {
             id: 'rx-3',
@@ -77,6 +84,7 @@ export const INITIAL_PATIENTS: Patient[] = [
         tokenNo: 19,
         reaction: 'First Visit',
         symptoms: 'Chronic migraine episodes since 3 months, nausea during sunrise.',
+        durationDays: 15,
         prescriptions: [
           {
             id: 'rx-4',
@@ -103,7 +111,12 @@ export const INITIAL_PATIENTS: Patient[] = [
     locality: 'Mohallah Farooqia',
     totalVisits: 2,
     lastVisitDate: '02 Nov 2026',
+    chiefComplaints: [
+      { id: 'cc-3', name: 'Eczema / Skin Allergy', severity: 'Moderate', trend: 'Improving', duration: '1 yr' },
+      { id: 'cc-4', name: 'Allergic Rhinitis', severity: 'Mild', trend: 'Stable', duration: '2 yrs' },
+    ],
     severityTrend: {
+      complaintName: 'Eczema',
       overallRelief: '-40% relief',
       history: [
         { label: '18 Oct', date: '18 Oct 2026', score: 80 },
@@ -118,6 +131,7 @@ export const INITIAL_PATIENTS: Patient[] = [
         tokenNo: 21,
         reaction: 'Improved',
         symptoms: 'Allergic rhinitis and morning sneezing subsided.',
+        durationDays: 14,
         prescriptions: [
           {
             id: 'rx-21',
@@ -144,6 +158,18 @@ export const INITIAL_PATIENTS: Patient[] = [
     locality: 'Wah Model Town',
     totalVisits: 6,
     lastVisitDate: '10 Nov 2026',
+    chiefComplaints: [
+      { id: 'cc-5', name: 'Knee Osteoarthritis', severity: 'Moderate', trend: 'Improving', duration: '5 yrs' },
+      { id: 'cc-6', name: 'Insomnia', severity: 'Mild', trend: 'Improving', duration: '1 yr' },
+    ],
+    severityTrend: {
+      complaintName: 'Knee Osteoarthritis',
+      overallRelief: '-50% relief',
+      history: [
+        { label: '20 Oct', date: '20 Oct 2026', score: 90 },
+        { label: '10 Nov', date: '10 Nov 2026', score: 45 },
+      ]
+    },
     pastVisits: [
       {
         id: 'v-301',
@@ -152,6 +178,7 @@ export const INITIAL_PATIENTS: Patient[] = [
         tokenNo: 54,
         reaction: 'Improved',
         symptoms: 'Knee joint pain relief after Arnica.',
+        durationDays: 20,
         prescriptions: [
           {
             id: 'rx-31',
@@ -178,6 +205,9 @@ export const INITIAL_PATIENTS: Patient[] = [
     locality: 'Taxila Cantt',
     totalVisits: 3,
     lastVisitDate: '16 Nov 2026',
+    chiefComplaints: [
+      { id: 'cc-7', name: 'Renal Colic (Kidney Stone)', severity: 'Severe', trend: 'Aggravating', duration: '3 wks' },
+    ],
     pastVisits: []
   },
   {
@@ -192,6 +222,9 @@ export const INITIAL_PATIENTS: Patient[] = [
     locality: 'Lala Rukh',
     totalVisits: 1,
     lastVisitDate: '19 Nov 2026',
+    chiefComplaints: [
+      { id: 'cc-8', name: 'Dry Cough & Congestion', severity: 'Moderate', trend: 'Stable', duration: '5 days' },
+    ],
     pastVisits: []
   }
 ];

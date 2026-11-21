@@ -21,6 +21,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
       phone: p.phone,
       age: p.age,
       gender: p.gender,
+      durationDays: v.durationDays,
     }))
   );
 
@@ -326,7 +327,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         {item.prescriptions.map((rx, rIdx) => (
                           <span
                             key={rIdx}
@@ -335,6 +336,11 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                             {rx.remedy} {rx.potency} ({rx.vehicle.split(' ')[0]})
                           </span>
                         ))}
+                        {item.durationDays && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#E9F0EE] text-[#5E706B] font-['Spline_Sans_Mono'] font-bold">
+                            {item.durationDays}d
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3 font-['Spline_Sans_Mono'] font-bold text-right text-[#131C1A]">

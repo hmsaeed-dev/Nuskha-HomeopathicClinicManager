@@ -24,9 +24,18 @@ export interface PastVisit {
   symptoms: string;
   prescriptions: PrescriptionItem[];
   doctorNotes?: string;
+  durationDays?: number; // Course duration in days: e.g. 3, 7, 15, 30
   fee: number;
   feeStatus: 'Paid' | 'Free' | 'Due';
   editedAt?: string;
+}
+
+export interface ChiefComplaint {
+  id: string;
+  name: string; // e.g. "Migraine", "Gastric Acidity", "Knee Pain"
+  severity: 'Severe' | 'Moderate' | 'Mild' | 'Relieved';
+  trend: 'Improving' | 'Stable' | 'Aggravating';
+  duration?: string; // e.g. "4 yrs", "6 mos"
 }
 
 export interface Patient {
@@ -41,8 +50,10 @@ export interface Patient {
   locality: string;
   totalVisits: number;
   lastVisitDate: string;
+  chiefComplaints?: ChiefComplaint[];
   pastVisits: PastVisit[];
   severityTrend?: {
+    complaintName?: string; // Name of complaint being tracked
     overallRelief: string; // e.g. "-70%"
     history: Array<{ label: string; date: string; score: number }>;
   };
