@@ -6,7 +6,7 @@ import { PatientSearchRail } from '@/components/PatientSearchRail';
 import { HistoryTimelineRail } from '@/components/HistoryTimelineRail';
 import { ConsultationComposer } from '@/components/ConsultationComposer';
 import { NewPatientDrawer } from '@/components/NewPatientDrawer';
-import { DailyRegisterModal } from '@/components/DailyRegisterModal';
+import { DailyRegisterView } from '@/components/DailyRegisterView';
 import { INITIAL_PATIENTS, INITIAL_QUEUE } from '@/data/mockData';
 import { Patient, QueueItem, PastVisit, ReactionType, PrescriptionItem } from '@/types';
 
@@ -16,7 +16,6 @@ export default function Home() {
   const [selectedPatientId, setSelectedPatientId] = useState<string>(INITIAL_PATIENTS[0].id);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isNewPatientOpen, setIsNewPatientOpen] = useState<boolean>(false);
-  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'opd' | 'analytics'>('opd');
   const [todayCount, setTodayCount] = useState<number>(48);
 
@@ -65,7 +64,6 @@ export default function Home() {
       // Esc: Close drawers / modals
       if (e.key === 'Escape') {
         setIsNewPatientOpen(false);
-        setIsAnalyticsOpen(false);
         return;
       }
     };
@@ -77,9 +75,6 @@ export default function Home() {
   // Handle Tab Switch
   const handleTabChange = (tab: 'opd' | 'analytics') => {
     setActiveTab(tab);
-    if (tab === 'analytics') {
-      setIsAnalyticsOpen(true);
-    }
   };
 
   // Select patient from queue
@@ -188,36 +183,42 @@ export default function Home() {
         targetCount={100}
       />
 
-      {/* Main 3-Pane Spatial Clinical Workspace */}
-      <main className="flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
-        {/* Pane 1 (Left 3 cols): Find Patient & Waiting Queue */}
-        <div className="lg:col-span-3 h-full">
-          <PatientSearchRail
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            filteredPatients={filteredPatients}
-            selectedPatientId={selectedPatientId}
-            onSelectPatient={(p) => setSelectedPatientId(p.id)}
-            queue={queue}
-            onSelectFromQueue={handleSelectFromQueue}
-            searchInputRef={searchInputRef}
-          />
-        </div>
+      {/* Main Content Area: OPD Workspace vs Daily Register Tab */}
+      {activeTab === 'opd' ? (
+        <main className="flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
+          {/* Pane 1 (Left 3 cols): Find Patient & Waiting Queue */}
+          <div className="lg:col-span-3 h-full">
+            <PatientSearchRail
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              filteredPatients={filteredPatients}
+              selectedPatientId={selectedPatientId}
+              onSelectPatient={(p) => setSelectedPatientId(p.id)}
+              queue={queue}
+              onSelectFromQueue={handleSelectFromQueue}
+              searchInputRef={searchInputRef}
+            />
+          </div>
 
-        {/* Pane 2 (Center 4 cols): Patient Banner, Sparkline & Historical Timeline */}
-        <div className="lg:col-span-4 h-full">
-          <HistoryTimelineRail patient={selectedPatient} />
-        </div>
+          {/* Pane 2 (Center 4 cols): Patient Banner, Sparkline & Historical Timeline */}
+          <div className="lg:col-span-4 h-full">
+            <HistoryTimelineRail patient={selectedPatient} />
+          </div>
 
-        {/* Pane 3 (Right 5 cols): Consultation Composer & Prescription Builder */}
-        <div className="lg:col-span-5 h-full">
-          <ConsultationComposer
-            key={selectedPatient.id}
-            patient={selectedPatient}
-            onSaveConsultation={handleSaveConsultation}
-          />
-        </div>
-      </main>
+          {/* Pane 3 (Right 5 cols): Consultation Composer & Prescription Builder */}
+          <div className="lg:col-span-5 h-full">
+            <ConsultationComposer
+              key={selectedPatient.id}
+              patient={selectedPatient}
+              onSaveConsultation={handleSaveConsultation}
+            />
+          </div>
+        </main>
+      ) : (
+        <main className="flex-1 p-4 sm:p-5 lg:p-6 max-w-7xl w-full mx-auto">
+          <DailyRegisterView patients={patients} />
+        </main>
+      )}
 
       {/* Slide-over Walk-In Drawer (F2) */}
       <NewPatientDrawer
@@ -225,16 +226,6 @@ export default function Home() {
         onClose={() => setIsNewPatientOpen(false)}
         onRegisterPatient={handleRegisterPatient}
         nextDailyToken={todayCount + 1}
-      />
-
-      {/* Daily Register & Analytics Modal */}
-      <DailyRegisterModal
-        isOpen={isAnalyticsOpen}
-        onClose={() => {
-          setIsAnalyticsOpen(false);
-          setActiveTab('opd');
-        }}
-        patients={patients}
       />
     </div>
   );
