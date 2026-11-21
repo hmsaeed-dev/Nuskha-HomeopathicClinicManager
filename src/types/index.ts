@@ -49,12 +49,3 @@ export interface Patient {
     history: Array<{ label: string; date: string; score: number }>;
   };
 }
-
-export interface QueueItem {
-  tokenNo: number;
-  patientId: string;
-  patientName: string;
-  relation: string;
-  status: 'Waiting' | 'In Consultation' | 'Completed';
-  time: string;
-}

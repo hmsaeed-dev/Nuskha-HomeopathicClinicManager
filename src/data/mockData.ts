@@ -1,4 +1,4 @@
-import { Patient, QueueItem } from '@/types';
+import { Patient } from '@/types';
 
 export const INITIAL_PATIENTS: Patient[] = [
   {
@@ -203,41 +203,6 @@ export const INITIAL_PATIENTS: Patient[] = [
     totalVisits: 1,
     lastVisitDate: '19 Nov 2026',
     pastVisits: []
-  }
-];
-
-export const INITIAL_QUEUE: QueueItem[] = [
-  {
-    tokenNo: 48,
-    patientId: 'p-1',
-    patientName: 'Fatima Bibi',
-    relation: 'w/o Tariq Mehmood',
-    status: 'In Consultation',
-    time: '11:42 AM'
-  },
-  {
-    tokenNo: 49,
-    patientId: 'p-4',
-    patientName: 'Muhammad Tariq',
-    relation: 's/o Abdul Rehman',
-    status: 'Waiting',
-    time: '11:45 AM'
-  },
-  {
-    tokenNo: 50,
-    patientId: 'p-5',
-    patientName: 'Sadia Parveen',
-    relation: 'w/o Kamran Khan',
-    status: 'Waiting',
-    time: '11:48 AM'
-  },
-  {
-    tokenNo: 51,
-    patientId: 'p-2',
-    patientName: 'Fatima Bibi',
-    relation: 'd/o Haji Akbar',
-    status: 'Waiting',
-    time: '11:52 AM'
   }
 ];
 

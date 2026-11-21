@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
-import { Search, Users, Sparkles, UserCheck } from 'lucide-react';
-import { Patient, QueueItem } from '@/types';
+import React, { useRef } from 'react';
+import { Search, Sparkles } from 'lucide-react';
+import { Patient } from '@/types';
 
 interface PatientSearchRailProps {
   searchQuery: string;
@@ -10,8 +10,6 @@ interface PatientSearchRailProps {
   filteredPatients: Patient[];
   selectedPatientId: string;
   onSelectPatient: (patient: Patient) => void;
-  queue: QueueItem[];
-  onSelectFromQueue: (patientId: string) => void;
   searchInputRef: React.RefObject<HTMLInputElement | null>;
 }
 
@@ -21,8 +19,6 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
   filteredPatients,
   selectedPatientId,
   onSelectPatient,
-  queue,
-  onSelectFromQueue,
   searchInputRef,
 }) => {
   return (
@@ -153,61 +149,6 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
               );
             })
           )}
-        </div>
-      </section>
-
-      {/* Waiting Queue */}
-      <section className="flex flex-col gap-2.5 pt-1">
-        <div className="flex items-center justify-between">
-          <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#3A4B47] flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-[#085E52]" />
-            Waiting ({queue.length})
-          </h2>
-          <span className="text-[10px] font-['Spline_Sans_Mono'] text-[#5E706B]">
-            Tokens
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-1 rounded-xl bg-white/70 p-1.5 shadow-2xs max-h-48 overflow-y-auto">
-          {queue.map((item) => {
-            const isCurrentConsultation = item.status === 'In Consultation';
-            return (
-              <button
-                key={item.tokenNo}
-                type="button"
-                onClick={() => onSelectFromQueue(item.patientId)}
-                className={`w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 transition-colors ${
-                  isCurrentConsultation ? 'bg-[#085E52]/10' : 'hover:bg-white'
-                }`}
-              >
-                <div className="flex items-center gap-2 truncate">
-                  <span
-                    className={`w-2 h-2 rounded-full shrink-0 ${
-                      isCurrentConsultation ? 'bg-[#085E52]' : 'bg-[#C9D8D3]'
-                    }`}
-                  />
-                  <div className="flex flex-col truncate">
-                    <span className="text-xs font-semibold text-[#131C1A] truncate">
-                      {item.patientName}
-                    </span>
-                    <span className="text-[10px] text-[#5E706B] truncate">
-                      {item.relation}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end shrink-0">
-                  <span
-                    className={`font-['Spline_Sans_Mono'] text-xs font-bold ${
-                      isCurrentConsultation ? 'text-[#085E52]' : 'text-[#3A4B47]'
-                    }`}
-                  >
-                    #T-{String(item.tokenNo).padStart(3, '0')}
-                  </span>
-                  <span className="text-[9px] text-[#5E706B]">{item.time}</span>
-                </div>
-              </button>
-            );
-          })}
         </div>
       </section>
     </aside>

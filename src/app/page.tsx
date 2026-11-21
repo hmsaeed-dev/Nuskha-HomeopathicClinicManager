@@ -7,12 +7,11 @@ import { HistoryTimelineRail } from '@/components/HistoryTimelineRail';
 import { ConsultationComposer } from '@/components/ConsultationComposer';
 import { NewPatientDrawer } from '@/components/NewPatientDrawer';
 import { DailyRegisterView } from '@/components/DailyRegisterView';
-import { INITIAL_PATIENTS, INITIAL_QUEUE } from '@/data/mockData';
-import { Patient, QueueItem, PastVisit, ReactionType, PrescriptionItem } from '@/types';
+import { INITIAL_PATIENTS } from '@/data/mockData';
+import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
 
 export default function Home() {
   const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS);
-  const [queue, setQueue] = useState<QueueItem[]>(INITIAL_QUEUE);
   const [selectedPatientId, setSelectedPatientId] = useState<string>(INITIAL_PATIENTS[0].id);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isNewPatientOpen, setIsNewPatientOpen] = useState<boolean>(false);
@@ -77,16 +76,10 @@ export default function Home() {
     setActiveTab(tab);
   };
 
-  // Select patient from queue
-  const handleSelectFromQueue = (patientId: string) => {
-    setSelectedPatientId(patientId);
-  };
-
   // Register new patient
   const handleRegisterPatient = (
     newPatientData: Omit<Patient, 'id' | 'pastVisits'> & { initialFee: number }
   ) => {
-    const nextToken = todayCount + 1;
     const newId = `p-${Date.now()}`;
     const newPatient: Patient = {
       ...newPatientData,
@@ -98,17 +91,7 @@ export default function Home() {
       },
     };
 
-    const newQueueItem: QueueItem = {
-      tokenNo: nextToken,
-      patientId: newId,
-      patientName: newPatient.fullName,
-      relation: `${newPatient.relationType} ${newPatient.relativeName}`,
-      status: 'In Consultation',
-      time: 'Just now',
-    };
-
     setPatients((prev) => [newPatient, ...prev]);
-    setQueue((prev) => [newQueueItem, ...prev]);
     setSelectedPatientId(newId);
     setTodayCount((prev) => prev + 1);
   };
@@ -150,22 +133,7 @@ export default function Home() {
       })
     );
 
-    // Update queue item to completed
-    setQueue((prev) =>
-      prev.map((q) =>
-        q.patientId === selectedPatient.id ? { ...q, status: 'Completed' } : q
-      )
-    );
-
     setTodayCount((prev) => prev + 1);
-
-    // Auto-advance to next waiting patient in queue if available
-    const nextWaiting = queue.find(
-      (q) => q.status === 'Waiting' && q.patientId !== selectedPatient.id
-    );
-    if (nextWaiting) {
-      setSelectedPatientId(nextWaiting.patientId);
-    }
 
     // Focus search bar for rapid next consultation
     searchInputRef.current?.focus();
@@ -180,13 +148,12 @@ export default function Home() {
         onTabChange={handleTabChange}
         onOpenNewPatient={() => setIsNewPatientOpen(true)}
         todayCount={todayCount}
-        targetCount={100}
       />
 
       {/* Main Content Area: OPD Workspace vs Daily Register Tab */}
       {activeTab === 'opd' ? (
         <main className="flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
-          {/* Pane 1 (Left 3 cols): Find Patient & Waiting Queue */}
+          {/* Pane 1 (Left 3 cols): Find Patient */}
           <div className="lg:col-span-3 h-full">
             <PatientSearchRail
               searchQuery={searchQuery}
@@ -194,8 +161,6 @@ export default function Home() {
               filteredPatients={filteredPatients}
               selectedPatientId={selectedPatientId}
               onSelectPatient={(p) => setSelectedPatientId(p.id)}
-              queue={queue}
-              onSelectFromQueue={handleSelectFromQueue}
               searchInputRef={searchInputRef}
             />
           </div>

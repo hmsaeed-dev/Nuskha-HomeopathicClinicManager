@@ -8,7 +8,6 @@ interface HeaderProps {
   onTabChange: (tab: 'opd' | 'analytics') => void;
   onOpenNewPatient: () => void;
   todayCount: number;
-  targetCount?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,10 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
   onTabChange,
   onOpenNewPatient,
   todayCount,
-  targetCount = 100,
 }) => {
-  const percentage = Math.min(100, Math.round((todayCount / targetCount) * 100));
-
   return (
     <header className="sticky top-3 z-30 mx-4 sm:mx-5 lg:mx-6 mt-3 rounded-2xl bg-white shadow-xs px-6 py-3.5">
       <div className="flex items-center justify-between gap-4">
@@ -73,36 +69,14 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right Stats & New Patient Button */}
         <div className="flex items-center gap-5">
-          {/* Daily Progress Gauge */}
-          <div className="hidden sm:flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-[#E9F0EE]">
-            <div className="relative w-7 h-7 flex items-center justify-center">
-              <svg viewBox="0 0 36 36" className="w-7 h-7">
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="14"
-                  fill="none"
-                  stroke="#D8F0E9"
-                  strokeWidth="4"
-                />
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="14"
-                  fill="none"
-                  stroke="#085E52"
-                  strokeWidth="4"
-                  strokeDasharray={`${(percentage * 88) / 100} 88`}
-                  transform="rotate(-90 18 18)"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-['Spline_Sans_Mono'] text-xs font-bold text-[#131C1A] leading-tight">
-                {todayCount} / {targetCount}
+          {/* Patient Visits Today */}
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F0EE]">
+            <span className="w-2 h-2 rounded-full bg-[#085E52]" />
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-['Spline_Sans_Mono'] text-sm font-bold text-[#131C1A] leading-none">
+                {todayCount}
               </span>
-              <span className="text-[10px] text-[#3A4B47] font-medium leading-none">
+              <span className="text-xs text-[#3A4B47] font-medium leading-none">
                 Visits Today
               </span>
             </div>

@@ -69,11 +69,8 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
         {/* KPI 1 */}
         <article className="rounded-2xl bg-[#122B27] text-white p-5 shadow-xs flex flex-col justify-between gap-3">
           <span className="text-xs font-semibold text-[#8FE0D1]">Patients Seen</span>
-          <div className="flex items-baseline gap-2">
-            <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-white">48</span>
-            <span className="font-['Spline_Sans_Mono'] text-xs text-[#8FE0D1]">/ 100 target</span>
-          </div>
-          <p className="text-[11px] text-[#8FE0D1]/80">3 patients waiting in queue</p>
+          <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-white">48</span>
+          <p className="text-[11px] text-[#8FE0D1]/80">Today&#39;s completed visits</p>
         </article>
 
         {/* KPI 2 */}
@@ -100,7 +97,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
           <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-[#0C5A7A]">
             2m 18s
           </span>
-          <p className="text-[11px] text-[#0C5A7A]/80">On track for 100</p>
+          <p className="text-[11px] text-[#0C5A7A]/80">Across today&#39;s consultations</p>
         </article>
       </section>
 
@@ -122,17 +119,12 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                 <span className="w-2.5 h-2.5 rounded-full bg-[#085E52]" />
                 Patients / hr
               </span>
-              <span className="flex items-center gap-1.5 text-[#5E706B]">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#D8F0E9]" />
-                Target (10/hr)
-              </span>
             </div>
           </div>
 
           {/* Bar Chart SVG */}
           <div className="w-full pt-3">
             <svg viewBox="0 0 680 140" className="w-full h-auto">
-              <line x1="20" y1="40" x2="660" y2="40" stroke="#D8F0E9" strokeWidth="1.5" strokeDasharray="4 4" />
               <line x1="20" y1="110" x2="660" y2="110" stroke="#C9D8D3" strokeWidth="1.5" />
 
               {/* 9 AM */}
