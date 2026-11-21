@@ -66,9 +66,9 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
   };
 
   return (
-    <section className="rounded-xl bg-white p-5 shadow-sm border border-[#C9D8D3]/70 flex flex-col gap-5 h-full overflow-hidden">
+    <section className="rounded-2xl bg-white p-5 shadow-xs flex flex-col gap-5 h-full overflow-hidden">
       {/* Patient Identity Anchor (Dark Botanical Teal Card) */}
-      <div className="rounded-xl bg-[#122B27] text-[#F4FAF8] p-5 shadow-md flex flex-col gap-3.5 shrink-0">
+      <div className="rounded-2xl bg-[#122B27] text-[#F4FAF8] p-5 shadow-sm flex flex-col gap-4 shrink-0">
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2.5 flex-wrap">
@@ -107,7 +107,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
         </div>
 
         {/* Secondary Contact Bar */}
-        <div className="flex items-center gap-4 text-xs text-[#8FE0D1]/90 pt-1 border-t border-[#8FE0D1]/20">
+        <div className="flex items-center gap-4 text-xs text-[#8FE0D1]/90 pt-1">
           <span className="flex items-center gap-1">
             <MapPin className="w-3.5 h-3.5 text-[#8FE0D1]" />
             {patient.locality}
@@ -123,7 +123,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
 
         {/* Visual Symptom Recovery Curve (Sparkline) */}
         {patient.severityTrend && (
-          <div className="rounded-lg bg-white/10 p-3 flex flex-col gap-1.5 border border-white/10">
+          <div className="rounded-xl bg-white/10 p-3 flex flex-col gap-1.5">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[#8FE0D1] font-semibold flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
@@ -171,35 +171,33 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
 
         <div className="flex-1 overflow-y-auto pr-1">
           {patient.pastVisits.length === 0 ? (
-            <div className="text-center py-12 text-xs text-[#5E706B] bg-[#F1F5F4] rounded-lg p-6 border border-dashed border-[#C9D8D3]">
+            <div className="text-center py-12 text-xs text-[#5E706B] bg-[#F7FAF8] rounded-2xl p-6">
               No past visits.
               <div className="mt-1 text-[11px] text-[#085E52] font-semibold">
                 First visit today.
               </div>
             </div>
           ) : (
-            <div className="relative pl-5 flex flex-col gap-4 border-l-2 border-[#C9D8D3]/80 my-1">
+            <div className="flex flex-col gap-3 my-1">
               {patient.pastVisits.map((visit) => (
                 <article
                   key={visit.id}
-                  className="relative rounded-xl bg-[#F7FAF8] p-3.5 border border-[#C9D8D3]/70 shadow-xs flex flex-col gap-2 hover:border-[#085E52]/40 transition-colors"
+                  className="rounded-xl bg-[#F7FAF8] p-4 shadow-2xs flex flex-col gap-2.5 hover:bg-[#EFF5F2] transition-colors"
                 >
-                  {/* Timeline Node Bullet */}
-                  <span
-                    className={`w-3.5 h-3.5 rounded-full absolute -left-[27px] top-4 ring-4 ring-white ${
-                      visit.reaction === 'Improved'
-                        ? 'bg-[#146C43]'
-                        : visit.reaction === 'Aggravated'
-                        ? 'bg-[#BA1A1A]'
-                        : visit.reaction === 'No Change'
-                        ? 'bg-[#8F4F00]'
-                        : 'bg-[#0C5A7A]'
-                    }`}
-                  />
-
                   {/* Visit Header */}
                   <header className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
+                      <span
+                        className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                          visit.reaction === 'Improved'
+                            ? 'bg-[#146C43]'
+                            : visit.reaction === 'Aggravated'
+                            ? 'bg-[#BA1A1A]'
+                            : visit.reaction === 'No Change'
+                            ? 'bg-[#8F4F00]'
+                            : 'bg-[#0C5A7A]'
+                        }`}
+                      />
                       <span className="font-['Spline_Sans_Mono'] text-xs font-bold text-[#131C1A]">
                         {visit.date}
                       </span>
@@ -230,11 +228,11 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                   </p>
 
                   {/* Prescribed Remedies with Potency and Vehicle */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {visit.prescriptions.map((rx, idx) => (
                       <div
                         key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#D8F0E9] border border-[#085E52]/20 text-[#0E3B33] text-xs font-medium"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#D8F0E9] text-[#0E3B33] text-xs font-medium"
                       >
                         {rx.vehicle.includes('Drops') ? (
                           <Droplet className="w-3 h-3 text-[#085E52]" />
@@ -245,15 +243,15 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                         <span className="font-['Spline_Sans_Mono'] text-[11px] font-bold text-[#085E52]">
                           {rx.potency}
                         </span>
-                        <span className="text-[10px] text-[#3D665E] border-l border-[#085E52]/20 pl-1">
-                          {rx.dosage}
+                        <span className="text-[10px] text-[#3D665E] pl-0.5">
+                          · {rx.dosage}
                         </span>
                       </div>
                     ))}
                   </div>
 
                   {/* Doctor Notes & Fee */}
-                  <footer className="flex items-center justify-between text-[11px] text-[#5E706B] pt-1.5 border-t border-[#C9D8D3]/50">
+                  <footer className="flex items-center justify-between text-[11px] text-[#5E706B] pt-1">
                     <span className="truncate max-w-[240px]">
                       {visit.doctorNotes || 'No notes'}
                     </span>

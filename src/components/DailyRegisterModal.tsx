@@ -52,9 +52,9 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="w-full max-w-6xl max-h-[92vh] bg-white rounded-2xl shadow-2xl border border-[#C9D8D3] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+      <div className="w-full max-w-6xl max-h-[92vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <header className="px-6 py-4 bg-[#E9F0EE] border-b border-[#C9D8D3] flex items-center justify-between gap-4">
+        <header className="px-6 py-4 bg-[#E9F0EE] flex items-center justify-between gap-4">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <h1 className="font-['Schibsted_Grotesk'] text-xl font-bold text-[#131C1A]">
@@ -82,7 +82,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
           {/* 4-Column KPI Strip */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* KPI 1 */}
-            <article className="rounded-xl bg-[#122B27] text-white p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#085E52]/40">
+            <article className="rounded-xl bg-[#122B27] text-white p-4 shadow-sm flex flex-col justify-between gap-2">
               <span className="text-xs font-semibold text-[#8FE0D1]">Patients Seen</span>
               <div className="flex items-baseline gap-2">
                 <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-white">48</span>
@@ -92,7 +92,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
             </article>
 
             {/* KPI 2 */}
-            <article className="rounded-xl bg-[#D8F0E9] text-[#0E3B33] p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#085E52]/20">
+            <article className="rounded-xl bg-[#D8F0E9] text-[#0E3B33] p-4 shadow-sm flex flex-col justify-between gap-2">
               <span className="text-xs font-semibold text-[#0E3B33]">Total Fees</span>
               <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-[#085E52]">
                 Rs. 22,500
@@ -101,7 +101,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
             </article>
 
             {/* KPI 3 */}
-            <article className="rounded-xl bg-[#FFE8DF] text-[#4D2010] p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#7A402A]/20">
+            <article className="rounded-xl bg-[#FFE8DF] text-[#4D2010] p-4 shadow-sm flex flex-col justify-between gap-2">
               <span className="text-xs font-semibold text-[#4D2010]">New vs. Return</span>
               <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-[#7A402A]">
                 11 : 37
@@ -110,7 +110,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
             </article>
 
             {/* KPI 4 */}
-            <article className="rounded-xl bg-[#D2EEFA] text-[#063245] p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#0C5A7A]/20">
+            <article className="rounded-xl bg-[#D2EEFA] text-[#063245] p-4 shadow-sm flex flex-col justify-between gap-2">
               <span className="text-xs font-semibold text-[#063245]">Avg. Time / Patient</span>
               <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-[#0C5A7A]">
                 2m 18s
@@ -122,7 +122,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
           {/* Visual Throughput Chart + Outcome Breakdown */}
           <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             {/* Hourly Patient Throughput */}
-            <article className="lg:col-span-8 rounded-xl bg-[#F7FAF8] p-5 border border-[#C9D8D3] shadow-xs flex flex-col justify-between gap-3">
+            <article className="lg:col-span-8 rounded-2xl bg-[#F7FAF8] p-5 shadow-2xs flex flex-col justify-between gap-3">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-['Schibsted_Grotesk'] text-sm font-bold text-[#131C1A]">
@@ -196,7 +196,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
             </article>
 
             {/* Case Mix & Outcomes */}
-            <article className="lg:col-span-4 rounded-xl bg-[#F7FAF8] p-5 border border-[#C9D8D3] shadow-xs flex flex-col justify-between gap-3">
+            <article className="lg:col-span-4 rounded-2xl bg-[#F7FAF8] p-5 shadow-2xs flex flex-col justify-between gap-3">
               <h3 className="font-['Schibsted_Grotesk'] text-sm font-bold text-[#131C1A]">
                 Patient Progress
               </h3>
@@ -239,7 +239,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
           </section>
 
           {/* Consultation Log Table */}
-          <section className="rounded-xl bg-[#F7FAF8] p-5 border border-[#C9D8D3] shadow-xs flex flex-col gap-3">
+          <section className="rounded-2xl bg-[#F7FAF8] p-5 shadow-2xs flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="font-['Schibsted_Grotesk'] text-sm font-bold text-[#131C1A]">
                 Today&#39;s Log ({filteredVisits.length})
@@ -251,14 +251,14 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
                   value={filterText}
                   onChange={(e) => setFilterText(e.target.value)}
                   placeholder="Search patient or medicine..."
-                  className="pl-8 pr-3 py-1.5 rounded-lg bg-white border border-[#C9D8D3] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                  className="pl-8 pr-3 py-1.5 rounded-xl bg-white shadow-2xs text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
                 />
               </div>
             </div>
 
-            <div className="w-full overflow-x-auto rounded-lg border border-[#C9D8D3] bg-white">
+            <div className="w-full overflow-x-auto rounded-xl bg-white shadow-2xs">
               <table className="w-full text-left border-collapse text-xs">
-                <thead className="bg-[#E9F0EE] text-[#131C1A] border-b border-[#C9D8D3]">
+                <thead className="bg-[#E9F0EE] text-[#131C1A]">
                   <tr>
                     <th className="px-4 py-2.5 font-bold">Token</th>
                     <th className="px-4 py-2.5 font-bold">Patient &amp; Guardian</th>
@@ -267,7 +267,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
                     <th className="px-4 py-2.5 font-bold text-right">Fee</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#C9D8D3]/60">
+                <tbody className="divide-y divide-[#E1EBE8]/60">
                   {filteredVisits.map((item, idx) => (
                     <tr key={idx} className="hover:bg-[#F1F5F4] transition-colors">
                       <td className="px-4 py-2.5 font-['Spline_Sans_Mono'] font-bold text-[#085E52]">

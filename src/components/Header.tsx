@@ -21,12 +21,12 @@ export const Header: React.FC<HeaderProps> = ({
   const percentage = Math.min(100, Math.round((todayCount / targetCount) * 100));
 
   return (
-    <header className="sticky top-3 z-30 mx-4 mt-3 rounded-xl bg-white shadow-sm border border-[#C9D8D3]/60 px-5 py-3">
+    <header className="sticky top-3 z-30 mx-4 sm:mx-5 lg:mx-6 mt-3 rounded-2xl bg-white shadow-xs px-6 py-3.5">
       <div className="flex items-center justify-between gap-4">
         {/* Logo & Clinic Title */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#D8F0E9] text-[#085E52] flex items-center justify-center shrink-0 shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-[#D8F0E9] text-[#085E52] flex items-center justify-center shrink-0">
               <Stethoscope className="w-5 h-5 text-[#085E52]" />
             </div>
             <div className="flex flex-col">
@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onTabChange('opd')}
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
                 activeTab === 'opd'
-                  ? 'bg-[#D8F0E9] text-[#0E3B33] shadow-xs'
+                  ? 'bg-[#D8F0E9] text-[#0E3B33]'
                   : 'text-[#3A4B47] hover:bg-[#E9F0EE] hover:text-[#131C1A]'
               }`}
             >
@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onTabChange('analytics')}
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
                 activeTab === 'analytics'
-                  ? 'bg-[#D8F0E9] text-[#0E3B33] shadow-xs'
+                  ? 'bg-[#D8F0E9] text-[#0E3B33]'
                   : 'text-[#3A4B47] hover:bg-[#E9F0EE] hover:text-[#131C1A]'
               }`}
             >
@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Right Stats & New Patient Button */}
         <div className="flex items-center gap-5">
           {/* Daily Progress Gauge */}
-          <div className="hidden sm:flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-[#E9F0EE] border border-[#C9D8D3]/50">
+          <div className="hidden sm:flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-[#E9F0EE]">
             <div className="relative w-7 h-7 flex items-center justify-center">
               <svg viewBox="0 0 36 36" className="w-7 h-7">
                 <circle

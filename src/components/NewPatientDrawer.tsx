@@ -59,9 +59,9 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/45 backdrop-blur-xs transition-opacity duration-150">
-      <aside className="w-full max-w-lg bg-white shadow-2xl flex flex-col h-full border-l border-[#C9D8D3] overflow-hidden animate-in slide-in-from-right duration-200">
+      <aside className="w-full max-w-lg bg-white shadow-2xl flex flex-col h-full overflow-hidden animate-in slide-in-from-right duration-200">
         {/* Drawer Header */}
-        <header className="px-6 py-4 bg-[#E9F0EE] border-b border-[#C9D8D3] flex items-center justify-between gap-3">
+        <header className="px-6 py-4 bg-[#E9F0EE] flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-[#085E52] text-white flex items-center justify-center font-['Schibsted_Grotesk'] text-sm font-bold shadow-xs">
               <UserPlus className="w-5 h-5" />
@@ -93,7 +93,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
           {/* Patient Name (English + Urdu) */}
           <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-7 flex flex-col gap-1">
+            <div className="col-span-7 flex flex-col gap-1.5">
               <label className="text-xs font-bold text-[#131C1A]">
                 Patient Name <span className="text-[#BA1A1A]">*</span>
               </label>
@@ -103,11 +103,11 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="e.g. Muhammad Tariq"
-                className="w-full px-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
               />
             </div>
 
-            <div className="col-span-5 flex flex-col gap-1">
+            <div className="col-span-5 flex flex-col gap-1.5">
               <label className="text-xs font-bold text-[#131C1A]">
                 Urdu Name (نام)
               </label>
@@ -117,19 +117,19 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 value={urduName}
                 onChange={(e) => setUrduName(e.target.value)}
                 placeholder="محمد طارق"
-                className="w-full px-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-sm font-urdu text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm font-urdu text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
               />
             </div>
           </div>
 
           {/* Relation + Guardian/Spouse Name */}
           <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-3 flex flex-col gap-1">
+            <div className="col-span-4 flex flex-col gap-1.5">
               <label className="text-xs font-bold text-[#131C1A]">Relation</label>
               <select
                 value={relationType}
                 onChange={(e) => setRelationType(e.target.value as 's/o' | 'w/o' | 'd/o')}
-                className="w-full px-2.5 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-xs font-bold text-[#085E52] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                className="w-full px-2.5 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-xs font-bold text-[#085E52] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
               >
                 <option value="s/o">s/o (Son of)</option>
                 <option value="w/o">w/o (Wife of)</option>
@@ -137,7 +137,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               </select>
             </div>
 
-            <div className="col-span-9 flex flex-col gap-1">
+            <div className="col-span-8 flex flex-col gap-1.5">
               <label className="text-xs font-bold text-[#131C1A]">
                 Guardian / Relative Name <span className="text-[#BA1A1A]">*</span>
               </label>
@@ -147,32 +147,32 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 value={relativeName}
                 onChange={(e) => setRelativeName(e.target.value)}
                 placeholder="e.g. Abdul Rehman"
-                className="w-full px-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
               />
             </div>
           </div>
 
           {/* Age + Gender */}
           <div className="grid grid-cols-12 gap-3 items-end">
-            <div className="col-span-4 flex flex-col gap-1">
+            <div className="col-span-4 flex flex-col gap-1.5">
               <label className="text-xs font-bold text-[#131C1A]">Age</label>
               <input
                 type="number"
                 value={age}
                 onChange={(e) => setAge(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-sm font-['Spline_Sans_Mono'] font-bold text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm font-['Spline_Sans_Mono'] font-bold text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
               />
             </div>
 
-            <div className="col-span-8 flex flex-col gap-1">
+            <div className="col-span-8 flex flex-col gap-1.5">
               <label className="text-xs font-bold text-[#131C1A]">Gender</label>
-              <div className="grid grid-cols-3 gap-1 bg-[#E9F0EE] p-1 rounded-lg border border-[#C9D8D3]">
+              <div className="grid grid-cols-3 gap-1 bg-[#E9F0EE] p-1 rounded-xl">
                 {(['Male', 'Female', 'Child'] as const).map((g) => (
                   <button
                     key={g}
                     type="button"
                     onClick={() => setGender(g)}
-                    className={`py-1.5 rounded-md text-xs font-semibold transition-all ${
+                    className={`py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       gender === g
                         ? 'bg-[#085E52] text-white shadow-xs'
                         : 'text-[#3A4B47] hover:bg-white/60'
@@ -186,7 +186,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           </div>
 
           {/* Contact Phone Number */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-[#131C1A]">
               Phone Number
             </label>
@@ -197,7 +197,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="0300-1234567"
-                className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-sm font-['Spline_Sans_Mono'] text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm font-['Spline_Sans_Mono'] text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
               />
             </div>
           </div>
@@ -212,19 +212,19 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               value={locality}
               onChange={(e) => setLocality(e.target.value)}
               placeholder="e.g. Taxila Cantt"
-              className="w-full px-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+              className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] shadow-2xs text-sm text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
             />
 
-            <div className="flex flex-wrap gap-1 pt-1">
+            <div className="flex flex-wrap gap-1.5 pt-1">
               {LOCALITY_PRESETS.map((loc) => (
                 <button
                   key={loc}
                   type="button"
                   onClick={() => setLocality(loc)}
-                  className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors ${
+                  className={`text-[11px] px-2.5 py-1 rounded-full transition-colors ${
                     locality === loc
-                      ? 'bg-[#085E52] text-white border-[#085E52]'
-                      : 'bg-[#F1F5F4] text-[#3A4B47] border-[#C9D8D3] hover:bg-[#D8F0E9]'
+                      ? 'bg-[#085E52] text-white'
+                      : 'bg-[#E9F0EE] text-[#3A4B47] hover:bg-[#D8F0E9]'
                   }`}
                 >
                   {loc}
@@ -234,7 +234,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           </div>
 
           {/* 1-Tap Consultation Fee Presets */}
-          <div className="flex flex-col gap-1.5 pt-2 border-t border-[#C9D8D3]/60">
+          <div className="flex flex-col gap-2 pt-2">
             <label className="text-xs font-bold text-[#131C1A]">
               Consultation Fee
             </label>
@@ -244,10 +244,10 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                   key={amount}
                   type="button"
                   onClick={() => setFee(amount)}
-                  className={`py-2 rounded-lg text-xs font-['Spline_Sans_Mono'] font-bold border transition-all ${
+                  className={`py-2 rounded-xl text-xs font-['Spline_Sans_Mono'] font-bold transition-all shadow-2xs ${
                     fee === amount
-                      ? 'bg-[#085E52] text-white border-[#085E52] shadow-xs'
-                      : 'bg-[#F7FAF8] text-[#131C1A] border-[#C9D8D3] hover:bg-[#E9F0EE]'
+                      ? 'bg-[#085E52] text-white shadow-xs'
+                      : 'bg-[#F7FAF8] text-[#131C1A] hover:bg-[#E9F0EE]'
                   }`}
                 >
                   {amount === 0 ? 'Free' : `Rs. ${amount}`}
@@ -256,7 +256,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               <button
                 type="button"
                 onClick={() => setFee(0)}
-                className="py-2 rounded-lg text-xs font-bold bg-[#FFE8DF] text-[#7A402A] border border-[#FFE8DF] hover:bg-[#ffdacf]"
+                className="py-2 rounded-xl text-xs font-bold bg-[#FFE8DF] text-[#7A402A] hover:bg-[#ffdacf]"
               >
                 Due
               </button>

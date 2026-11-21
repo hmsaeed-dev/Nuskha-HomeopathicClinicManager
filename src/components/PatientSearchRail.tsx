@@ -26,9 +26,9 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
   searchInputRef,
 }) => {
   return (
-    <aside className="rounded-xl bg-[#E9F0EE] p-4 shadow-sm border border-[#C9D8D3]/70 flex flex-col gap-4 h-full">
+    <aside className="rounded-2xl bg-[#E9F0EE] p-4 flex flex-col gap-5 h-full">
       {/* Search Bar with Alt+S Badge */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <label htmlFor="patient-search" className="text-xs font-bold text-[#131C1A]">
             Find Patient
@@ -47,16 +47,16 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Name, phone, or MRN..."
-            className="w-full pl-9 pr-14 py-2 rounded-lg bg-white border border-[#C9D8D3] text-sm text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] focus:border-transparent transition-all shadow-xs"
+            className="w-full pl-9 pr-14 py-2.5 rounded-xl bg-white text-sm text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] transition-all shadow-2xs"
           />
-          <kbd className="absolute right-2 px-1.5 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-[#E9F0EE] text-[#3A4B47] border border-[#C9D8D3] font-semibold">
+          <kbd className="absolute right-2.5 px-1.5 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-[#E9F0EE] text-[#3A4B47] font-semibold">
             Alt+S
           </kbd>
         </div>
       </div>
 
       {/* Search Results */}
-      <section className="flex flex-col gap-2 flex-1 min-h-[200px] overflow-hidden">
+      <section className="flex flex-col gap-2.5 flex-1 min-h-[200px] overflow-hidden">
         <div className="flex items-center justify-between">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#3A4B47]">
             Patients ({filteredPatients.length})
@@ -68,9 +68,9 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
           )}
         </div>
 
-        <div className="flex flex-col gap-1.5 overflow-y-auto pr-1 flex-1">
+        <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1">
           {filteredPatients.length === 0 ? (
-            <div className="text-center py-8 text-xs text-[#5E706B] bg-white/60 rounded-lg p-4 border border-dashed border-[#C9D8D3]">
+            <div className="text-center py-8 text-xs text-[#5E706B] bg-white/50 rounded-xl p-5">
               No patients found.
               <div className="mt-1 text-[11px] text-[#085E52] font-semibold">
                 Press F2 for new patient
@@ -91,10 +91,10 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                   role="button"
                   tabIndex={0}
                   onClick={() => onSelectPatient(patient)}
-                  className={`p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-all duration-150 border ${
+                  className={`p-3 rounded-xl flex items-center gap-3 cursor-pointer transition-all duration-150 ${
                     isSelected
-                      ? 'bg-[#085E52] text-white border-[#085E52] shadow-sm'
-                      : 'bg-white text-[#131C1A] border-[#C9D8D3]/80 hover:bg-[#F7FAF8] hover:border-[#085E52]/40 shadow-xs'
+                      ? 'bg-[#085E52] text-white shadow-sm'
+                      : 'bg-white text-[#131C1A] hover:bg-white/90 shadow-2xs'
                   }`}
                 >
                   {/* Monogram Avatar */}
@@ -157,7 +157,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
       </section>
 
       {/* Waiting Queue */}
-      <section className="flex flex-col gap-2 pt-2 border-t border-[#C9D8D3]/80">
+      <section className="flex flex-col gap-2.5 pt-1">
         <div className="flex items-center justify-between">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#3A4B47] flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5 text-[#085E52]" />
@@ -168,7 +168,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
           </span>
         </div>
 
-        <div className="flex flex-col divide-y divide-[#C9D8D3]/60 rounded-lg bg-white border border-[#C9D8D3] shadow-xs overflow-hidden max-h-48 overflow-y-auto">
+        <div className="flex flex-col gap-1 rounded-xl bg-white/70 p-1.5 shadow-2xs max-h-48 overflow-y-auto">
           {queue.map((item) => {
             const isCurrentConsultation = item.status === 'In Consultation';
             return (
@@ -176,7 +176,9 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                 key={item.tokenNo}
                 type="button"
                 onClick={() => onSelectFromQueue(item.patientId)}
-                className="w-full text-left px-3 py-2 hover:bg-[#F1F5F4] flex items-center justify-between gap-2 transition-colors"
+                className={`w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 transition-colors ${
+                  isCurrentConsultation ? 'bg-[#085E52]/10' : 'hover:bg-white'
+                }`}
               >
                 <div className="flex items-center gap-2 truncate">
                   <span

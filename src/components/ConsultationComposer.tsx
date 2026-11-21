@@ -145,9 +145,9 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   };
 
   return (
-    <section className="rounded-xl bg-white p-5 shadow-sm border border-[#C9D8D3]/70 flex flex-col gap-4 h-full overflow-y-auto">
+    <section className="rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 sm:gap-6 h-full overflow-y-auto">
       {/* Top Consultation Header */}
-      <div className="flex items-center justify-between gap-2 border-b border-[#C9D8D3]/50 pb-3">
+      <div className="flex items-center justify-between gap-2 pb-1">
         <div className="flex flex-col">
           <h2 className="font-['Schibsted_Grotesk'] text-lg font-bold text-[#131C1A]">
             Today&#39;s Consultation
@@ -161,19 +161,19 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleRepeatLastRx}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#D8F0E9] text-[#0E3B33] hover:bg-[#c4e8de] text-xs font-semibold transition-all border border-[#085E52]/20 active:scale-98"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#D8F0E9] text-[#0E3B33] hover:bg-[#c4e8de] text-xs font-semibold transition-all active:scale-98"
           title="Repeat Previous Prescription (Alt+R)"
         >
           <RotateCcw className="w-3.5 h-3.5 text-[#085E52]" />
           <span>Repeat Last</span>
-          <kbd className="px-1 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-white/60 text-[#085E52] border border-[#085E52]/20">
+          <kbd className="px-1 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-white/60 text-[#085E52]">
             Alt+R
           </kbd>
         </button>
       </div>
 
       {/* 1. Reaction to Previous Remedy with 1-5 Hotkeys */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold text-[#131C1A]">
             Medicine Effect
@@ -183,11 +183,11 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-5 gap-1.5 bg-[#E9F0EE] p-1.5 rounded-lg border border-[#C9D8D3]">
+        <div className="grid grid-cols-5 gap-1.5 bg-[#E9F0EE] p-1.5 rounded-xl">
           <button
             type="button"
             onClick={() => setReaction('Improved')}
-            className={`py-2 px-1 rounded-md flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
+            className={`py-2 px-1 rounded-lg flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
               reaction === 'Improved'
                 ? 'bg-[#146C43] text-white shadow-xs'
                 : 'text-[#3A4B47] hover:bg-white/60'
@@ -203,7 +203,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           <button
             type="button"
             onClick={() => setReaction('No Change')}
-            className={`py-2 px-1 rounded-md flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
+            className={`py-2 px-1 rounded-lg flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
               reaction === 'No Change'
                 ? 'bg-[#8F4F00] text-white shadow-xs'
                 : 'text-[#3A4B47] hover:bg-white/60'
@@ -219,7 +219,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           <button
             type="button"
             onClick={() => setReaction('Aggravated')}
-            className={`py-2 px-1 rounded-md flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
+            className={`py-2 px-1 rounded-lg flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
               reaction === 'Aggravated'
                 ? 'bg-[#BA1A1A] text-white shadow-xs'
                 : 'text-[#3A4B47] hover:bg-white/60'
@@ -235,7 +235,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           <button
             type="button"
             onClick={() => setReaction('New')}
-            className={`py-2 px-1 rounded-md flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
+            className={`py-2 px-1 rounded-lg flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
               reaction === 'New'
                 ? 'bg-[#0C5A7A] text-white shadow-xs'
                 : 'text-[#3A4B47] hover:bg-white/60'
@@ -251,7 +251,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           <button
             type="button"
             onClick={() => setReaction('First Visit')}
-            className={`py-2 px-1 rounded-md flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
+            className={`py-2 px-1 rounded-lg flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
               reaction === 'First Visit'
                 ? 'bg-[#085E52] text-white shadow-xs'
                 : 'text-[#3A4B47] hover:bg-white/60'
@@ -267,7 +267,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       </div>
 
       {/* 2. Symptoms & Quick Categorized Tags */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <label htmlFor="complaints" className="text-xs font-bold text-[#131C1A]">
             Symptoms
@@ -292,14 +292,14 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         </div>
 
         {/* Quick Tag Pills for Active Category */}
-        <div className="flex flex-wrap gap-1.5 py-1">
+        <div className="flex flex-wrap gap-1.5 py-0.5">
           {COMPLAINT_TAG_CATEGORIES.find((c) => c.category === activeCategory)?.tags.map(
             (tag) => (
               <button
                 key={tag}
                 type="button"
                 onClick={() => handleAddSymptomTag(tag)}
-                className="text-[11px] px-2 py-0.5 rounded-md bg-[#F1F5F4] hover:bg-[#D8F0E9] text-[#085E52] border border-[#C9D8D3] font-medium transition-colors"
+                className="text-[11px] px-2.5 py-1 rounded-lg bg-[#E9F0EE] hover:bg-[#D8F0E9] text-[#085E52] font-medium transition-colors"
               >
                 + {tag}
               </button>
@@ -313,12 +313,12 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           value={symptoms}
           onChange={(e) => setSymptoms(e.target.value)}
           placeholder="Describe symptoms..."
-          className="w-full px-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] focus:bg-white transition-all shadow-xs"
+          className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] focus:bg-white transition-all shadow-2xs"
         />
       </div>
 
       {/* 3. Prescription with Potency, Vehicle & Presets */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         <div className="flex items-center justify-between">
           <span className="font-['Schibsted_Grotesk'] text-xs font-bold text-[#131C1A] flex items-center gap-1.5">
             Prescription ({prescriptions.length})
@@ -330,23 +330,23 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Medicine</span>
-            <kbd className="px-1 py-0.2 rounded text-[10px] font-['Spline_Sans_Mono'] bg-[#E9F0EE] border border-[#C9D8D3] text-[#3A4B47]">
+            <kbd className="px-1.5 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-[#E9F0EE] text-[#3A4B47]">
               Alt+A
             </kbd>
           </button>
         </div>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-3">
           {prescriptions.map((rx, idx) => (
             <div
               key={rx.id}
-              className="p-3 rounded-xl bg-[#F7FAF8] border border-[#C9D8D3] shadow-xs flex flex-col gap-2"
+              className="p-3.5 rounded-xl bg-[#F7FAF8] shadow-2xs flex flex-col gap-2.5"
             >
               {/* Row 1: Remedy + Potency + Vehicle + Delete */}
               <div className="grid grid-cols-12 gap-2 items-center">
                 {/* Remedy Name Input with Autocomplete */}
                 <div className="col-span-5 relative">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg border border-[#C9D8D3] focus-within:ring-2 focus-within:ring-[#085E52]">
+                  <div className="flex items-center gap-1.5 px-2.5 py-2 bg-white rounded-lg shadow-2xs focus-within:ring-2 focus-within:ring-[#085E52]">
                     {rx.vehicle.includes('Drops') ? (
                       <Droplet className="w-4 h-4 text-[#085E52] shrink-0" />
                     ) : (
@@ -366,7 +366,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
 
                   {/* Simple Quick Autocomplete Dropdown */}
                   {activeRemedySearchIndex === idx && (
-                    <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white border border-[#C9D8D3] rounded-lg shadow-lg max-h-36 overflow-y-auto">
+                    <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-lg max-h-36 overflow-y-auto p-1">
                       {COMMON_REMEDIES.filter((r) =>
                         r.toLowerCase().includes(rx.remedy.toLowerCase())
                       )
@@ -379,7 +379,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                               handleUpdatePrescription(rx.id, 'remedy', rem);
                               setActiveRemedySearchIndex(null);
                             }}
-                            className="w-full text-left px-3 py-1.5 text-xs hover:bg-[#D8F0E9] hover:text-[#085E52] font-medium"
+                            className="w-full text-left px-3 py-1.5 text-xs hover:bg-[#D8F0E9] hover:text-[#085E52] font-medium rounded-md"
                           >
                             {rem}
                           </button>
@@ -395,7 +395,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                     onChange={(e) =>
                       handleUpdatePrescription(rx.id, 'potency', e.target.value)
                     }
-                    className="w-full px-2 py-1.5 rounded-lg bg-white border border-[#C9D8D3] text-xs font-['Spline_Sans_Mono'] font-bold text-[#085E52] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                    className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-xs font-['Spline_Sans_Mono'] font-bold text-[#085E52] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
                   >
                     {COMMON_POTENCIES.map((pot) => (
                       <option key={pot} value={pot}>
@@ -416,7 +416,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                         e.target.value as DispensingVehicle
                       )
                     }
-                    className="w-full px-2 py-1.5 rounded-lg bg-white border border-[#C9D8D3] text-[11px] font-medium text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                    className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-[11px] font-medium text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
                   >
                     {DISPENSING_VEHICLES.map((veh) => (
                       <option key={veh} value={veh}>
@@ -440,7 +440,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
               </div>
 
               {/* Row 2: Dosage Input + Presets */}
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1.5">
                 <input
                   type="text"
                   value={rx.dosage}
@@ -448,7 +448,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                     handleUpdatePrescription(rx.id, 'dosage', e.target.value)
                   }
                   placeholder="Dosage (e.g. 3 drops BD in water)"
-                  className="w-full px-2.5 py-1 rounded-md bg-white border border-[#C9D8D3] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white shadow-2xs text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
                 />
 
                 {/* Presets */}
@@ -459,7 +459,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                       key={macro}
                       type="button"
                       onClick={() => handleUpdatePrescription(rx.id, 'dosage', macro)}
-                      className="text-[10px] px-2 py-0.5 rounded-full bg-white hover:bg-[#D8F0E9] text-[#085E52] border border-[#C9D8D3] transition-colors"
+                      className="text-[10px] px-2 py-0.5 rounded-full bg-white hover:bg-[#D8F0E9] text-[#085E52] shadow-2xs transition-colors"
                     >
                       {macro}
                     </button>
@@ -472,8 +472,8 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       </div>
 
       {/* 4. Doctor's Notes & Consultation Fee */}
-      <div className="grid grid-cols-12 gap-3 pt-2 border-t border-[#C9D8D3]/50">
-        <div className="col-span-8 flex flex-col gap-1">
+      <div className="grid grid-cols-12 gap-3 pt-1">
+        <div className="col-span-8 flex flex-col gap-1.5">
           <label htmlFor="doctor-notes" className="text-xs font-bold text-[#131C1A]">
             Doctor Notes
           </label>
@@ -483,11 +483,11 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
             value={doctorNotes}
             onChange={(e) => setDoctorNotes(e.target.value)}
             placeholder="Follow-up notes..."
-            className="w-full px-3 py-1.5 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-xs text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+            className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] text-xs text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52] shadow-2xs"
           />
         </div>
 
-        <div className="col-span-4 flex flex-col gap-1">
+        <div className="col-span-4 flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <label htmlFor="fee" className="text-xs font-bold text-[#131C1A]">
               Fee (Rs.)
@@ -500,7 +500,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
               type="number"
               value={fee}
               onChange={(e) => setFee(Number(e.target.value))}
-              className="w-full px-3 py-1.5 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-xs font-['Spline_Sans_Mono'] font-bold text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
+              className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] text-xs font-['Spline_Sans_Mono'] font-bold text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52] shadow-2xs"
             />
           </div>
         </div>
