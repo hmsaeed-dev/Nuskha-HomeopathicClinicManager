@@ -1,0 +1,213 @@
+'use client';
+
+import React, { useRef, useEffect } from 'react';
+import { Search, Users, Sparkles, UserCheck } from 'lucide-react';
+import { Patient, QueueItem } from '@/types';
+
+interface PatientSearchRailProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  filteredPatients: Patient[];
+  selectedPatientId: string;
+  onSelectPatient: (patient: Patient) => void;
+  queue: QueueItem[];
+  onSelectFromQueue: (patientId: string) => void;
+  searchInputRef: React.RefObject<HTMLInputElement | null>;
+}
+
+export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
+  searchQuery,
+  onSearchChange,
+  filteredPatients,
+  selectedPatientId,
+  onSelectPatient,
+  queue,
+  onSelectFromQueue,
+  searchInputRef,
+}) => {
+  return (
+    <aside className="rounded-xl bg-[#E9F0EE] p-4 shadow-sm border border-[#C9D8D3]/70 flex flex-col gap-4 h-full">
+      {/* Search Bar with Alt+S Badge */}
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between">
+          <label htmlFor="patient-search" className="text-xs font-bold text-[#131C1A]">
+            Find Patient
+          </label>
+          <span className="text-[11px] text-[#3A4B47] flex items-center gap-1 font-['Spline_Sans_Mono']">
+            Phonetic + Disambiguation
+          </span>
+        </div>
+
+        <div className="relative flex items-center">
+          <Search className="w-4 h-4 text-[#5E706B] absolute left-3 pointer-events-none" />
+          <input
+            id="patient-search"
+            ref={searchInputRef}
+            type="search"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Name, phone, or MRN..."
+            className="w-full pl-9 pr-14 py-2 rounded-lg bg-white border border-[#C9D8D3] text-sm text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] focus:border-transparent transition-all shadow-xs"
+          />
+          <kbd className="absolute right-2 px-1.5 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-[#E9F0EE] text-[#3A4B47] border border-[#C9D8D3] font-semibold">
+            Alt+S
+          </kbd>
+        </div>
+      </div>
+
+      {/* Disambiguated Search Results */}
+      <section className="flex flex-col gap-2 flex-1 min-h-[200px] overflow-hidden">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#3A4B47]">
+            Matching Patients ({filteredPatients.length})
+          </h2>
+          {searchQuery && (
+            <span className="text-[10px] text-[#085E52] font-semibold flex items-center gap-1">
+              <Sparkles className="w-3 h-3" /> Live Filter
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1.5 overflow-y-auto pr-1 flex-1">
+          {filteredPatients.length === 0 ? (
+            <div className="text-center py-8 text-xs text-[#5E706B] bg-white/60 rounded-lg p-4 border border-dashed border-[#C9D8D3]">
+              No matching records found.
+              <div className="mt-1 text-[11px] text-[#085E52] font-semibold">
+                Press F2 to register new patient
+              </div>
+            </div>
+          ) : (
+            filteredPatients.map((patient) => {
+              const isSelected = patient.id === selectedPatientId;
+              const initials = patient.fullName
+                .split(' ')
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join('');
+
+              return (
+                <div
+                  key={patient.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => onSelectPatient(patient)}
+                  className={`p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-all duration-150 border ${
+                    isSelected
+                      ? 'bg-[#085E52] text-white border-[#085E52] shadow-sm'
+                      : 'bg-white text-[#131C1A] border-[#C9D8D3]/80 hover:bg-[#F7FAF8] hover:border-[#085E52]/40 shadow-xs'
+                  }`}
+                >
+                  {/* Monogram Avatar */}
+                  <div
+                    className={`w-9 h-9 rounded-full flex items-center justify-center font-['Schibsted_Grotesk'] text-xs font-bold shrink-0 ${
+                      isSelected
+                        ? 'bg-[#0E7668] text-white'
+                        : 'bg-[#D8F0E9] text-[#085E52]'
+                    }`}
+                  >
+                    {initials}
+                  </div>
+
+                  {/* Patient Name & Secondary Disambiguator */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <div className="flex items-center gap-1.5 truncate">
+                        <span
+                          className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
+                            isSelected ? 'text-white' : 'text-[#131C1A]'
+                          }`}
+                        >
+                          {patient.fullName}
+                        </span>
+                        {patient.urduName && (
+                          <span
+                            className={`text-xs font-urdu opacity-85 truncate ${
+                              isSelected ? 'text-[#8FE0D1]' : 'text-[#085E52]'
+                            }`}
+                          >
+                            {patient.urduName}
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        className={`font-['Spline_Sans_Mono'] text-[11px] shrink-0 font-medium ${
+                          isSelected ? 'text-[#8FE0D1]' : 'text-[#5E706B]'
+                        }`}
+                      >
+                        {patient.mrn}
+                      </span>
+                    </div>
+
+                    <p
+                      className={`text-xs truncate mt-0.5 ${
+                        isSelected ? 'text-white/85' : 'text-[#3A4B47]'
+                      }`}
+                    >
+                      <span className="font-semibold">
+                        {patient.relationType} {patient.relativeName}
+                      </span>{' '}
+                      · {patient.locality}
+                    </p>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </section>
+
+      {/* Waiting Queue */}
+      <section className="flex flex-col gap-2 pt-2 border-t border-[#C9D8D3]/80">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#3A4B47] flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#085E52]" />
+            Waiting Queue ({queue.length})
+          </h2>
+          <span className="text-[10px] font-['Spline_Sans_Mono'] text-[#5E706B]">
+            Daily Tokens
+          </span>
+        </div>
+
+        <div className="flex flex-col divide-y divide-[#C9D8D3]/60 rounded-lg bg-white border border-[#C9D8D3] shadow-xs overflow-hidden max-h-48 overflow-y-auto">
+          {queue.map((item) => {
+            const isCurrentConsultation = item.status === 'In Consultation';
+            return (
+              <button
+                key={item.tokenNo}
+                type="button"
+                onClick={() => onSelectFromQueue(item.patientId)}
+                className="w-full text-left px-3 py-2 hover:bg-[#F1F5F4] flex items-center justify-between gap-2 transition-colors"
+              >
+                <div className="flex items-center gap-2 truncate">
+                  <span
+                    className={`w-2 h-2 rounded-full shrink-0 ${
+                      isCurrentConsultation ? 'bg-[#085E52]' : 'bg-[#C9D8D3]'
+                    }`}
+                  />
+                  <div className="flex flex-col truncate">
+                    <span className="text-xs font-semibold text-[#131C1A] truncate">
+                      {item.patientName}
+                    </span>
+                    <span className="text-[10px] text-[#5E706B] truncate">
+                      {item.relation}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end shrink-0">
+                  <span
+                    className={`font-['Spline_Sans_Mono'] text-xs font-bold ${
+                      isCurrentConsultation ? 'text-[#085E52]' : 'text-[#3A4B47]'
+                    }`}
+                  >
+                    #T-{String(item.tokenNo).padStart(3, '0')}
+                  </span>
+                  <span className="text-[9px] text-[#5E706B]">{item.time}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+    </aside>
+  );
+};

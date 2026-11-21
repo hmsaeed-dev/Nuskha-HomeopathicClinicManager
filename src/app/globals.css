@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Schibsted+Grotesk:wght@600;700&family=Spline+Sans+Mono:wght@500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-success: #146c43;
+  --color-on-success: #ffffff;
+  --color-success-container: #d1f2e1;
+  --color-warning: #8f4f00;
+  --color-warning-container: #ffe5c2;
+  --color-info: #0c5a7a;
+  --color-info-container: #d2eefa;
+  --color-primary: #085e52;
+  --color-primary-container: #0e7668;
+  --color-secondary: #3d665e;
+  --color-secondary-container: #d8f0e9;
+  --color-tertiary: #7a402a;
+  --color-tertiary-container: #ffe8df;
+  --color-surface-bg: #f1f5f4;
+  --color-surface-low: #e9f0ee;
+  --color-surface-lowest: #ffffff;
+  --color-inverse-surface: #122b27;
+  --color-inverse-on-surface: #f4faf8;
+  --color-inverse-primary: #8fe0d1;
+  --color-outline-border: #c9d8d3;
+  --font-display: 'Schibsted Grotesk', sans-serif;
+  --font-body: 'Commissioner', sans-serif;
+  --font-mono: 'Spline Sans Mono', monospace;
+  --font-urdu: 'Noto Nastaliq Urdu', serif;
+}
+
+body {
+  background-color: #f1f5f4;
+  color: #131c1a;
+  font-family: 'Commissioner', sans-serif;
+}
+
+.font-urdu {
+  font-family: 'Noto Nastaliq Urdu', serif;
+}
+
+/* Custom scrollbars for clinical density */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9d8d3;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8fa59e;
+}
