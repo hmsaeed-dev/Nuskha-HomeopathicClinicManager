@@ -14,7 +14,6 @@ import {
   TrendingDown,
   User,
   AlertCircle,
-  Tag,
 } from 'lucide-react';
 import {
   Patient,
@@ -29,7 +28,6 @@ import {
   COMMON_POTENCIES,
   DISPENSING_VEHICLES,
   DOSAGE_MACROS,
-  COMPLAINT_TAG_CATEGORIES,
 } from '@/data/mockData';
 
 interface ConsultationComposerProps {
@@ -79,7 +77,6 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   );
   const [fee, setFee] = useState<number>(500);
   const [feeStatus, setFeeStatus] = useState<'Paid' | 'Free' | 'Due'>('Paid');
-  const [activeCategory, setActiveCategory] = useState<string>('Gastric');
   const [activeRemedySearchIndex, setActiveRemedySearchIndex] = useState<number | null>(null);
 
   // Repeat Previous Prescription handler
@@ -127,16 +124,6 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
     setPrescriptions((prev) =>
       prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
     );
-  };
-
-  // Append symptom tag to complaints text
-  const handleAddSymptomTag = (tag: string) => {
-    setSymptoms((prev) => {
-      const trimmed = prev.trim();
-      if (!trimmed) return tag;
-      if (trimmed.toLowerCase().includes(tag.toLowerCase())) return prev;
-      return `${trimmed}, ${tag}`;
-    });
   };
 
   // Submit consultation
@@ -274,54 +261,18 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         </div>
       </div>
 
-      {/* 2. Symptoms & Quick Categorized Tags */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <label htmlFor="complaints" className="text-xs font-bold text-[#131C1A]">
-            Symptoms
-          </label>
-          {/* Category Tabs */}
-          <div className="flex items-center gap-1">
-            {COMPLAINT_TAG_CATEGORIES.map((cat) => (
-              <button
-                key={cat.category}
-                type="button"
-                onClick={() => setActiveCategory(cat.category)}
-                className={`text-[10px] px-2 py-0.5 rounded-full font-semibold transition-colors ${
-                  activeCategory === cat.category
-                    ? 'bg-[#085E52] text-white'
-                    : 'text-[#3A4B47] bg-[#E9F0EE] hover:bg-[#D8F0E9]'
-                }`}
-              >
-                {cat.category}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Tag Pills for Active Category */}
-        <div className="flex flex-wrap gap-1.5 py-0.5">
-          {COMPLAINT_TAG_CATEGORIES.find((c) => c.category === activeCategory)?.tags.map(
-            (tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => handleAddSymptomTag(tag)}
-                className="text-[11px] px-2.5 py-1 rounded-lg bg-[#E9F0EE] hover:bg-[#D8F0E9] text-[#085E52] font-medium transition-colors"
-              >
-                + {tag}
-              </button>
-            )
-          )}
-        </div>
-
+      {/* 2. Symptoms */}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="complaints" className="text-xs font-bold text-[#131C1A]">
+          Symptoms
+        </label>
         <textarea
           id="complaints"
-          rows={2}
+          rows={3}
           value={symptoms}
           onChange={(e) => setSymptoms(e.target.value)}
-          placeholder="Describe symptoms..."
-          className="w-full px-3 py-2 rounded-xl bg-[#F7FAF8] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] focus:bg-white transition-all shadow-2xs"
+          placeholder="Type patient symptoms, complaints, modalities..."
+          className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7FAF8] text-sm text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] focus:bg-white transition-all shadow-2xs resize-none"
         />
       </div>
 

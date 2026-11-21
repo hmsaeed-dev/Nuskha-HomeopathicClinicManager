@@ -280,29 +280,6 @@ export const DOSAGE_MACROS = [
   '1 dose SOS'
 ];
 
-export const COMPLAINT_TAG_CATEGORIES = [
-  {
-    category: 'Gastric',
-    tags: ['Acidity', 'Constipation', 'Gas / Bloating', 'Nausea']
-  },
-  {
-    category: 'Joint & Pain',
-    tags: ['Knee Pain', 'Sciatica', 'Cervical Stiffness', 'Backache']
-  },
-  {
-    category: 'Respiratory',
-    tags: ['Dry Cough', 'Allergic Coryza', 'Chest Congestion']
-  },
-  {
-    category: 'Skin',
-    tags: ['Eczema', 'Itching', 'Urticaria / Allergy']
-  },
-  {
-    category: 'General',
-    tags: ['Migraine', 'Fever', 'Anxiety / Insomnia']
-  }
-];
-
 export const LOCALITY_PRESETS = [
   'Taxila Cantt',
   'Mohallah Farooqia',
