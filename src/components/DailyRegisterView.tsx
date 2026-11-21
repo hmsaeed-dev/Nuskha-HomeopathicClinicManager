@@ -265,7 +265,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
           <table className="w-full text-left border-collapse text-xs">
             <thead className="bg-[#E9F0EE] text-[#131C1A]">
               <tr>
-                <th className="px-4 py-3 font-bold rounded-l-lg">Token</th>
+                <th className="px-4 py-3 font-bold rounded-l-lg">#</th>
                 <th className="px-4 py-3 font-bold">Patient &amp; Guardian</th>
                 <th className="px-4 py-3 font-bold">Result</th>
                 <th className="px-4 py-3 font-bold">Medicines</th>
@@ -293,7 +293,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                             title={`${demo.label} (${item.age}y)`}
                           />
                           <span className="font-['Spline_Sans_Mono'] font-bold text-[#085E52]">
-                            #T-{String(item.tokenNo).padStart(3, '0')}
+                            #{item.tokenNo}
                           </span>
                         </div>
                       </td>

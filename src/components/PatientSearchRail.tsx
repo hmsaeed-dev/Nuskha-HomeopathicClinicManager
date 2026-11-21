@@ -42,7 +42,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
             type="search"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Name, phone, or MRN..."
+            placeholder="Search by name or phone..."
             className="w-full pl-9 pr-14 py-2.5 rounded-xl bg-white text-sm text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] transition-all shadow-2xs"
           />
           <kbd className="absolute right-2.5 px-1.5 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-[#E9F0EE] text-[#3A4B47] font-semibold">
@@ -99,7 +99,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                   />
 
                   <div className="flex-1 min-w-0 flex flex-col gap-1">
-                    {/* Patient Name & MRN */}
+                    {/* Patient Name & Demographic Age Chip */}
                     <div className="flex items-center justify-between gap-2">
                       <span
                         className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
@@ -108,27 +108,6 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                       >
                         {patient.fullName}
                       </span>
-                      <span
-                        className={`font-['Spline_Sans_Mono'] text-[11px] shrink-0 font-medium ${
-                          isSelected ? demo.selectedCardSubtext : 'text-[#5E706B]'
-                        }`}
-                      >
-                        {patient.mrn}
-                      </span>
-                    </div>
-
-                    {/* Relation & Locality & Demographic Age Chip */}
-                    <div className="flex items-center justify-between gap-2">
-                      <p
-                        className={`text-xs truncate ${
-                          isSelected ? 'text-white/85' : 'text-[#3A4B47]'
-                        }`}
-                      >
-                        <span className="font-semibold">
-                          {patient.relationType} {patient.relativeName}
-                        </span>{' '}
-                        · {patient.locality}
-                      </p>
                       <span
                         className={`text-[10px] font-['Spline_Sans_Mono'] font-bold px-1.5 py-0.5 rounded shrink-0 ${
                           isSelected
@@ -139,6 +118,18 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                         {patient.age}y
                       </span>
                     </div>
+
+                    {/* Relation & Locality */}
+                    <p
+                      className={`text-xs truncate ${
+                        isSelected ? 'text-white/85' : 'text-[#3A4B47]'
+                      }`}
+                    >
+                      <span className="font-semibold">
+                        {patient.relationType} {patient.relativeName}
+                      </span>{' '}
+                      · {patient.locality}
+                    </p>
                   </div>
                 </div>
               );

@@ -63,14 +63,9 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               <UserPlus className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <h2 className="font-['Schibsted_Grotesk'] text-lg font-bold text-[#131C1A]">
-                  New Patient
-                </h2>
-                <span className="px-2 py-0.5 rounded-full bg-[#D8F0E9] text-[#085E52] font-['Spline_Sans_Mono'] text-xs font-bold">
-                  Token #T-{String(nextDailyToken).padStart(3, '0')}
-                </span>
-              </div>
+              <h2 className="font-['Schibsted_Grotesk'] text-lg font-bold text-[#131C1A]">
+                New Patient
+              </h2>
               <span className="text-xs text-[#3A4B47]">
                 Register for today&#39;s OPD
               </span>

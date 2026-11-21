@@ -93,11 +93,11 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
           </div>
 
           <div className="flex flex-col items-end gap-1 shrink-0">
-            <span className={`px-2.5 py-1 rounded-full ${demo.bannerTokenBg} text-white font-['Spline_Sans_Mono'] text-xs font-bold shadow-xs`}>
-              Today: #T-048
+            <span className={`px-2.5 py-1 rounded-full ${demo.bannerTokenBg} text-white text-xs font-bold shadow-xs`}>
+              {patient.totalVisits > 0 ? `Visit #${patient.totalVisits}` : 'First Visit'}
             </span>
-            <span className={`text-[11px] font-['Spline_Sans_Mono'] ${demo.bannerAccentText} font-medium`}>
-              MRN: {patient.mrn}
+            <span className={`text-[11px] ${demo.bannerAccentText} font-medium`}>
+              Last seen: {patient.lastVisitDate}
             </span>
           </div>
         </div>
@@ -111,9 +111,6 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
           <span className="flex items-center gap-1 font-['Spline_Sans_Mono']">
             <Phone className={`w-3.5 h-3.5 ${demo.bannerAccentText}`} />
             {patient.phone}
-          </span>
-          <span className="ml-auto text-[11px] bg-white/10 px-2 py-0.5 rounded text-white font-medium">
-            {patient.totalVisits} Total Visits
           </span>
         </div>
 
@@ -196,9 +193,6 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                       />
                       <span className="font-['Spline_Sans_Mono'] text-xs font-bold text-[#131C1A]">
                         {visit.date}
-                      </span>
-                      <span className="text-[10px] text-[#5E706B] font-['Spline_Sans_Mono']">
-                        (#T-{String(visit.tokenNo).padStart(3, '0')})
                       </span>
                     </div>
 
