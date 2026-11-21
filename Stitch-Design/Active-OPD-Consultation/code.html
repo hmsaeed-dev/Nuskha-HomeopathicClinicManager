@@ -1,0 +1,536 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuskha — Active OPD Consultation Workspace</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'success': '#146C43',
+        'on-success': '#FFFFFF',
+        'success-container': '#D1F2E1',
+        'on-success-container': '#0A3622',
+        'warning': '#8F4F00',
+        'on-warning': '#FFFFFF',
+        'warning-container': '#FFE5C2',
+        'on-warning-container': '#4A2700',
+        'info': '#0C5A7A',
+        'on-info': '#FFFFFF',
+        'info-container': '#D2EEFA',
+        'on-info-container': '#063245',
+        'light-primary': '#085E52',
+        'light-on-primary': '#FFFFFF',
+        'light-primary-container': '#0E7668',
+        'light-on-primary-container': '#FFFFFF',
+        'light-secondary': '#3D665E',
+        'light-on-secondary': '#FFFFFF',
+        'light-secondary-container': '#D8F0E9',
+        'light-on-secondary-container': '#0E3B33',
+        'light-tertiary': '#7A402A',
+        'light-on-tertiary': '#FFFFFF',
+        'light-tertiary-container': '#FFE8DF',
+        'light-on-tertiary-container': '#4D2010',
+        'light-error': '#BA1A1A',
+        'light-on-error': '#FFFFFF',
+        'light-error-container': '#FFDAD6',
+        'light-on-error-container': '#93000A',
+        'light-background': '#F1F5F4',
+        'light-on-background': '#131C1A',
+        'light-surface': '#F1F5F4',
+        'light-surface-dim': '#DCE5E2',
+        'light-surface-bright': '#FFFFFF',
+        'light-surface-container-lowest': '#FFFFFF',
+        'light-surface-container-low': '#E9F0EE',
+        'light-surface-container': '#E1EBE8',
+        'light-surface-container-high': '#D7E4E0',
+        'light-surface-container-highest': '#CDDDD8',
+        'light-on-surface': '#131C1A',
+        'light-surface-variant': '#D5E6E1',
+        'light-on-surface-variant': '#3A4B47',
+        'light-outline': '#5E706B',
+        'light-outline-variant': '#C9D8D3',
+        'light-inverse-surface': '#122B27',
+        'light-inverse-on-surface': '#F4FAF8',
+        'light-inverse-primary': '#8FE0D1',
+        'dark-primary': '#8CD4C7',
+        'dark-on-primary': '#003731',
+        'dark-primary-container': '#0F6258',
+        'dark-on-primary-container': '#FFFFFF',
+        'dark-secondary': '#B0CCC6',
+        'dark-on-secondary': '#1B3531',
+        'dark-secondary-container': '#324C47',
+        'dark-on-secondary-container': '#CCE9E2',
+        'dark-tertiary': '#FFB59E',
+        'dark-on-tertiary': '#532111',
+        'dark-tertiary-container': '#834734',
+        'dark-on-tertiary-container': '#FFFFFF',
+        'dark-error': '#FFB4AB',
+        'dark-on-error': '#690005',
+        'dark-error-container': '#93000A',
+        'dark-on-error-container': '#FFDAD6',
+        'dark-background': '#101413',
+        'dark-on-background': '#E0E3E1',
+        'dark-surface': '#101413',
+        'dark-surface-dim': '#101413',
+        'dark-surface-bright': '#363A39',
+        'dark-surface-container-lowest': '#0B0F0E',
+        'dark-surface-container-low': '#191C1B',
+        'dark-surface-container': '#1D201F',
+        'dark-surface-container-high': '#272B2A',
+        'dark-surface-container-highest': '#323634',
+        'dark-on-surface': '#E0E3E1',
+        'dark-surface-variant': '#3F4946',
+        'dark-on-surface-variant': '#BEC9C5',
+        'dark-outline': '#899390',
+        'dark-outline-variant': '#3F4946',
+        'dark-inverse-surface': '#E0E3E1',
+        'dark-inverse-on-surface': '#2D3130',
+        'dark-inverse-primary': '#1B695F',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '10px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '20px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '12px',
+        'gutter-lg': '16px',
+        'gutter-xl': '24px',
+        'section': '32px',
+        'page-margin': '20px',
+      },
+      fontFamily: {
+        'display': ['"Schibsted Grotesk"', 'sans-serif'],
+        'headline': ['"Schibsted Grotesk"', 'sans-serif'],
+        'body': ['"Commissioner"', 'sans-serif'],
+        'label': ['"Commissioner"', 'sans-serif'],
+        'mono': ['"Spline Sans Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['36px', { lineHeight: '42px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'display-lg-mobile': ['28px', { lineHeight: '34px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-lg': ['24px', { lineHeight: '30px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-md': ['18px', { lineHeight: '24px', letterSpacing: '-0.15px', fontWeight: '600' }],
+        'headline-sm': ['15px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '600' }],
+        'body-lg': ['15px', { lineHeight: '22px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-md': ['13px', { lineHeight: '19px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '400' }],
+        'label-lg': ['13px', { lineHeight: '18px', letterSpacing: '0.1px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'label-sm': ['11px', { lineHeight: '14px', letterSpacing: '0.3px', fontWeight: '600' }],
+        'mono-md': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'mono-sm': ['11px', { lineHeight: '15px', letterSpacing: '0.2px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '80ms',
+        'surface-enter': '180ms',
+        'surface-exit': '120ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&amp;family=Schibsted+Grotesk:wght@600;700&amp;family=Spline+Sans+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-light-surface text-light-on-surface font-body antialiased">
+
+  <div class="min-h-[1024px] flex flex-col bg-light-surface" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+    <!-- Floating Spatial App Shell -->
+    <header class="sticky top-gutter-md z-30 mx-gutter-lg mt-gutter-md rounded-lg bg-light-surface-container-lowest shadow-sm px-gutter-xl py-gutter-md">
+      <div class="flex items-center justify-between gap-gutter-lg">
+        <div class="flex items-center gap-gutter-xl">
+          <div class="flex items-center gap-gutter-sm">
+            <div class="w-9 h-9 rounded-md bg-light-secondary-container text-light-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">eco</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-headline text-headline-md text-light-on-surface leading-none" data-design-text-token="headline-md">Nuskha</span>
+              <span class="font-body text-body-sm text-light-on-surface-variant" data-design-text-token="body-sm">Dr. Aslam · Homoeopathic OPD</span>
+            </div>
+          </div>
+
+          <nav aria-label="Primary workspace navigation" class="flex items-center gap-gutter-xs">
+            <a href="../opd-workspace/ActiveOPDConsultationWorkspace.html" class="inline-flex items-center gap-gutter-xs px-gutter-md py-gutter-xs rounded-full bg-light-secondary-container text-light-on-secondary-container font-body text-label-md" aria-current="page">
+              <span class="material-symbols-outlined text-body-lg" aria-hidden="true">clinical_notes</span>
+              <span data-design-text-token="label-md">OPD Workspace</span>
+            </a>
+            <a href="../daily-register/DailyRegisterAnalytics.html" class="inline-flex items-center gap-gutter-xs px-gutter-md py-gutter-xs rounded-full text-light-on-surface-variant hover:bg-light-surface-container-low hover:text-light-on-surface font-body text-label-md transition-colors duration-state-change">
+              <span class="material-symbols-outlined text-body-lg" aria-hidden="true">receipt_long</span>
+              <span data-design-text-token="label-md">Daily Register &amp; Analytics</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-gutter-lg">
+          <div class="hidden md:flex items-center gap-gutter-sm px-gutter-md py-gutter-xs rounded-full bg-light-surface-container-low">
+            <svg viewBox="0 0 36 36" class="w-7 h-7" aria-hidden="true">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#D8F0E9" stroke-width="4"></circle>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#085E52" stroke-width="4" stroke-dasharray="42 88" transform="rotate(-90 18 18)"></circle>
+            </svg>
+            <div class="flex flex-col">
+              <span class="font-mono text-mono-md text-light-on-surface tabular-nums leading-none" data-design-text-token="mono-md">48 / 100</span>
+              <span class="font-body text-label-sm text-light-on-surface-variant leading-none" data-design-text-token="label-sm">Today&#39;s OPD</span>
+            </div>
+          </div>
+
+          <button id="open-new-patient-btn" data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center justify-center gap-gutter-xs px-gutter-lg py-gutter-sm rounded-full bg-light-primary text-light-on-primary hover:bg-light-primary-container shadow-sm transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-body-lg" aria-hidden="true">person_add</span>
+            <span class="font-body text-label-lg" data-design-text-token="label-lg">New Patient</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main 3-Pane Floating Spatial Clinical Grid -->
+    <main class="flex-1 p-gutter-lg grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg">
+
+      <!-- PANE 1 (Left Rail): Floating Patient Search & Avatar Queue -->
+      <aside class="lg:col-span-3 rounded-xl bg-light-surface-container-low p-gutter-lg shadow-sm flex flex-col gap-gutter-xl">
+        <label data-component-id="input-field-icon" data-component-type="input-field" data-component-variant="with-icon" class="flex flex-col gap-gutter-xs">
+          <span class="font-body text-label-md text-light-on-surface" data-design-text-token="label-md">Find patient</span>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined text-body-lg text-light-on-surface-variant absolute left-gutter-md pointer-events-none" aria-hidden="true">search</span>
+            <input id="patient-search-input" type="search" value="Fatima" placeholder="Name, phone, or token..." class="w-full pl-9 pr-gutter-md py-gutter-sm rounded-md bg-light-surface-container-lowest border-0 shadow-sm text-light-on-surface font-body text-body-md focus:ring-2 focus:ring-light-primary">
+          </div>
+        </label>
+
+        <!-- Matching Patients with Monogram Avatars -->
+        <section class="flex flex-col gap-gutter-sm">
+          <h2 class="font-body text-label-sm uppercase tracking-wider text-light-on-surface-variant" data-design-text-token="label-sm">Matching Patients (3)</h2>
+
+          <div class="flex flex-col gap-gutter-sm">
+            <div role="button" tabindex="0" data-component-id="card-interactive-selected" data-component-type="card" data-component-variant="interactive" class="rounded-lg bg-light-primary text-light-on-primary p-gutter-md shadow-sm flex items-center gap-gutter-md cursor-pointer">
+              <div class="w-10 h-10 rounded-full bg-light-primary-container text-light-on-primary flex items-center justify-center font-headline text-headline-sm shrink-0">FB</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-gutter-xs">
+                  <span class="font-headline text-headline-sm text-light-on-primary">Fatima Bibi</span>
+                  <span class="font-mono text-mono-sm text-light-on-primary tabular-nums">#T-048</span>
+                </div>
+                <p class="font-body text-body-sm text-light-on-primary-container">w/o Tariq · Taxila Cantt</p>
+              </div>
+            </div>
+
+            <div role="button" tabindex="0" data-component-id="card-interactive-2" data-component-type="card" data-component-variant="interactive" class="rounded-lg bg-light-surface-container-lowest text-light-on-surface p-gutter-md shadow-sm flex items-center gap-gutter-md hover:bg-light-surface-container transition-colors duration-state-change cursor-pointer">
+              <div class="w-10 h-10 rounded-full bg-light-secondary-container text-light-on-secondary-container flex items-center justify-center font-headline text-headline-sm shrink-0">FB</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-gutter-xs">
+                  <span class="font-headline text-headline-sm text-light-on-surface">Fatima Bibi</span>
+                  <span class="font-mono text-mono-sm text-light-on-surface-variant tabular-nums">#NK-0819</span>
+                </div>
+                <p class="font-body text-body-sm text-light-on-surface-variant">d/o Haji Akbar · Farooqia</p>
+              </div>
+            </div>
+
+            <div role="button" tabindex="0" data-component-id="card-interactive-2" data-component-type="card" data-component-variant="interactive" class="rounded-lg bg-light-surface-container-lowest text-light-on-surface p-gutter-md shadow-sm flex items-center gap-gutter-md hover:bg-light-surface-container transition-colors duration-state-change cursor-pointer">
+              <div class="w-10 h-10 rounded-full bg-light-tertiary-container text-light-on-tertiary-container flex items-center justify-center font-headline text-headline-sm shrink-0">FB</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-gutter-xs">
+                  <span class="font-headline text-headline-sm text-light-on-surface">Fatima Bibi</span>
+                  <span class="font-mono text-mono-sm text-light-on-surface-variant tabular-nums">#NK-1305</span>
+                </div>
+                <p class="font-body text-body-sm text-light-on-surface-variant">w/o Ghulam · Wah Model</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Waiting Queue -->
+        <section class="flex flex-col gap-gutter-sm">
+          <h2 class="font-body text-label-sm uppercase tracking-wider text-light-on-surface-variant" data-design-text-token="label-sm">Waiting Queue (3)</h2>
+          <div class="flex flex-col divide-y divide-light-surface-container-low rounded-lg bg-light-surface-container-lowest shadow-sm overflow-hidden">
+            <button type="button" class="w-full text-left px-gutter-md py-gutter-sm hover:bg-light-surface-container-low flex items-center justify-between gap-gutter-sm">
+              <div class="flex items-center gap-gutter-sm">
+                <span class="w-2 h-2 rounded-full bg-light-primary"></span>
+                <span class="font-body text-label-md text-light-on-surface">Muhammad Ali</span>
+              </div>
+              <span class="font-mono text-mono-sm text-light-primary tabular-nums">#T-049</span>
+            </button>
+            <button type="button" class="w-full text-left px-gutter-md py-gutter-sm hover:bg-light-surface-container-low flex items-center justify-between gap-gutter-sm">
+              <div class="flex items-center gap-gutter-sm">
+                <span class="w-2 h-2 rounded-full bg-light-outline-variant"></span>
+                <span class="font-body text-label-md text-light-on-surface">Ayesha Siddiqui</span>
+              </div>
+              <span class="font-mono text-mono-sm text-light-on-surface-variant tabular-nums">#T-050</span>
+            </button>
+            <button type="button" class="w-full text-left px-gutter-md py-gutter-sm hover:bg-light-surface-container-low flex items-center justify-between gap-gutter-sm">
+              <div class="flex items-center gap-gutter-sm">
+                <span class="w-2 h-2 rounded-full bg-light-outline-variant"></span>
+                <span class="font-body text-label-md text-light-on-surface">Haji Abdul Sattar</span>
+              </div>
+              <span class="font-mono text-mono-sm text-light-on-surface-variant tabular-nums">#T-051</span>
+            </button>
+          </div>
+        </section>
+      </aside>
+
+      <!-- PANE 2 (Center): Floating Patient Banner with Visual Relief Trajectory + Timeline Rail -->
+      <section class="lg:col-span-4 rounded-xl bg-light-surface-container-lowest p-gutter-xl shadow-sm flex flex-col gap-gutter-xl">
+        <!-- Patient Anchor + Visual Symptom Trajectory Sparkline -->
+        <div class="rounded-lg bg-light-inverse-surface text-light-inverse-on-surface p-gutter-xl shadow-md flex flex-col gap-gutter-md">
+          <div class="flex items-start justify-between gap-gutter-sm">
+            <div class="flex flex-col gap-gutter-xs">
+              <h1 class="font-headline text-display-lg text-light-inverse-on-surface" data-design-text-token="display-lg">Fatima Bibi</h1>
+              <p class="font-body text-body-md text-light-inverse-primary text-balance" data-design-text-token="body-md">w/o Tariq Mehmood · 42 yrs · Taxila Cantt</p>
+            </div>
+            <span class="font-mono text-mono-md px-gutter-sm py-gutter-xs rounded-full bg-light-primary text-light-on-primary tabular-nums">#T-048</span>
+          </div>
+
+          <!-- Visual Recovery Curve (Instant Glance at Patient Progress) -->
+          <div class="rounded-md bg-light-surface-container-lowest/10 p-gutter-md flex flex-col gap-gutter-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-body text-label-sm text-light-inverse-primary">Migraine Severity Trend</span>
+              <span class="font-mono text-mono-sm text-light-inverse-on-surface">-70% relief</span>
+            </div>
+            <svg viewBox="0 0 300 54" class="w-full h-12" role="img" aria-label="Symptom severity decreasing across 4 visits">
+              <polyline fill="none" stroke="#8FE0D1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="18,12 108,18 198,32 282,42"></polyline>
+              <circle cx="18" cy="12" r="4.5" fill="#0C5A7A" stroke="#F4FAF8" stroke-width="1.5"></circle>
+              <circle cx="108" cy="18" r="4.5" fill="#8F4F00" stroke="#F4FAF8" stroke-width="1.5"></circle>
+              <circle cx="198" cy="32" r="4.5" fill="#146C43" stroke="#F4FAF8" stroke-width="1.5"></circle>
+              <circle cx="282" cy="42" r="5.5" fill="#8FE0D1" stroke="#085E52" stroke-width="2"></circle>
+            </svg>
+            <div class="flex items-center justify-between font-mono text-mono-sm text-light-inverse-on-surface">
+              <span>12 Oct</span>
+              <span>29 Oct</span>
+              <span>14 Nov</span>
+              <span>Today</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Vertical Timeline Rail -->
+        <div class="flex flex-col gap-gutter-md">
+          <h2 class="font-headline text-headline-md text-light-on-surface" data-design-text-token="headline-md">Clinical History</h2>
+
+          <div class="relative pl-gutter-lg flex flex-col gap-gutter-md border-l-2 border-light-surface-container-high">
+            <!-- Visit 1 -->
+            <article class="relative rounded-lg bg-light-surface-container-low p-gutter-lg flex flex-col gap-gutter-sm">
+              <span class="w-3 h-3 rounded-full bg-success absolute -left-[23px] top-6 ring-4 ring-light-surface-container-lowest"></span>
+              <header class="flex items-center justify-between">
+                <span class="font-mono text-mono-md text-light-on-surface tabular-nums">14 Nov 2026</span>
+                <span class="inline-flex items-center gap-gutter-xs font-body text-label-md text-success">
+                  <span class="material-symbols-outlined text-body-md" aria-hidden="true">trending_up</span>
+                  <span>Improved</span>
+                </span>
+              </header>
+              <p class="font-body text-body-sm text-light-on-surface-variant">Migraine reduced; mild morning acidity</p>
+              <div class="flex flex-wrap gap-gutter-sm pt-gutter-xs">
+                <span class="inline-flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full bg-light-secondary-container font-body text-label-md text-light-on-secondary-container">
+                  <span class="material-symbols-outlined text-body-md" aria-hidden="true">water_drop</span>
+                  <span>Bryonia Alba</span>
+                  <span class="font-mono text-mono-sm">200C</span>
+                </span>
+                <span class="inline-flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full bg-light-tertiary-container font-body text-label-md text-light-on-tertiary-container">
+                  <span class="material-symbols-outlined text-body-md" aria-hidden="true">medication</span>
+                  <span>Nux Vomica</span>
+                  <span class="font-mono text-mono-sm">30C</span>
+                </span>
+              </div>
+            </article>
+
+            <!-- Visit 2 -->
+            <article class="relative rounded-lg bg-light-surface-container-low p-gutter-lg flex flex-col gap-gutter-sm">
+              <span class="w-3 h-3 rounded-full bg-warning absolute -left-[23px] top-6 ring-4 ring-light-surface-container-lowest"></span>
+              <header class="flex items-center justify-between">
+                <span class="font-mono text-mono-md text-light-on-surface tabular-nums">29 Oct 2026</span>
+                <span class="inline-flex items-center gap-gutter-xs font-body text-label-md text-warning">
+                  <span class="material-symbols-outlined text-body-md" aria-hidden="true">trending_flat</span>
+                  <span>No Change</span>
+                </span>
+              </header>
+              <p class="font-body text-body-sm text-light-on-surface-variant">Frontal headache &lt; motion; heaviness</p>
+              <div class="flex flex-wrap gap-gutter-sm pt-gutter-xs">
+                <span class="inline-flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full bg-light-secondary-container font-body text-label-md text-light-on-secondary-container">
+                  <span class="material-symbols-outlined text-body-md" aria-hidden="true">water_drop</span>
+                  <span>Bryonia Alba</span>
+                  <span class="font-mono text-mono-sm">30C</span>
+                </span>
+              </div>
+            </article>
+
+            <!-- Visit 3 -->
+            <article class="relative rounded-lg bg-light-surface-container-low p-gutter-lg flex flex-col gap-gutter-sm">
+              <span class="w-3 h-3 rounded-full bg-info absolute -left-[23px] top-6 ring-4 ring-light-surface-container-lowest"></span>
+              <header class="flex items-center justify-between">
+                <span class="font-mono text-mono-md text-light-on-surface tabular-nums">12 Oct 2026</span>
+                <span class="inline-flex items-center gap-gutter-xs font-body text-label-md text-info">
+                  <span class="material-symbols-outlined text-body-md" aria-hidden="true">fiber_new</span>
+                  <span>New Symptoms</span>
+                </span>
+              </header>
+              <p class="font-body text-body-sm text-light-on-surface-variant">Dry cough settled; new migraine onset</p>
+              <div class="flex flex-wrap gap-gutter-sm pt-gutter-xs">
+                <span class="inline-flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full bg-info-container font-body text-label-md text-on-info-container">
+                  <span class="material-symbols-outlined text-body-md" aria-hidden="true">medication</span>
+                  <span>Lycopodium</span>
+                  <span class="font-mono text-mono-sm">200C</span>
+                </span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 3 (Right): Floating Icon-Backed Consultation & Visual Prescription Composer -->
+      <section class="lg:col-span-5 rounded-xl bg-light-surface-container-lowest p-gutter-xl shadow-sm flex flex-col gap-gutter-xl">
+        <div class="flex items-center justify-between gap-gutter-sm">
+          <div class="flex flex-col">
+            <h2 class="font-headline text-headline-lg text-light-on-surface" data-design-text-token="headline-lg">Today&#39;s Consultation</h2>
+            <span class="font-mono text-mono-sm text-light-on-surface-variant tabular-nums" data-design-text-token="mono-sm">21 Nov 2026 · 11:42 AM · Visit #9</span>
+          </div>
+
+          <button id="repeat-rx-btn" data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-gutter-sm rounded-full bg-light-secondary-container text-light-on-secondary-container hover:bg-light-surface-variant transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-body-lg" aria-hidden="true">replay</span>
+            <span class="font-body text-label-md" data-design-text-token="label-md">Repeat Last Rx</span>
+          </button>
+        </div>
+
+        <!-- Visual Icon-Backed Reaction Tiles -->
+        <div class="flex flex-col gap-gutter-sm">
+          <span class="font-body text-label-md text-light-on-surface" data-design-text-token="label-md">Response to Previous Remedy</span>
+          <div id="reaction-pills" class="grid grid-cols-5 gap-gutter-xs bg-light-surface-container-low p-gutter-xs rounded-lg">
+            <button type="button" aria-pressed="true" class="py-gutter-sm px-gutter-xs rounded-md bg-success text-on-success shadow-sm flex flex-col items-center gap-gutter-xs font-body text-label-sm">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">trending_up</span>
+              <span>Improved</span>
+            </button>
+            <button type="button" aria-pressed="false" class="py-gutter-sm px-gutter-xs rounded-md text-light-on-surface-variant hover:bg-light-surface-container flex flex-col items-center gap-gutter-xs font-body text-label-sm">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">trending_flat</span>
+              <span>No Change</span>
+            </button>
+            <button type="button" aria-pressed="false" class="py-gutter-sm px-gutter-xs rounded-md text-light-on-surface-variant hover:bg-light-surface-container flex flex-col items-center gap-gutter-xs font-body text-label-sm">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">warning</span>
+              <span>Aggravated</span>
+            </button>
+            <button type="button" aria-pressed="false" class="py-gutter-sm px-gutter-xs rounded-md text-light-on-surface-variant hover:bg-light-surface-container flex flex-col items-center gap-gutter-xs font-body text-label-sm">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">fiber_new</span>
+              <span>New</span>
+            </button>
+            <button type="button" aria-pressed="false" class="py-gutter-sm px-gutter-xs rounded-md text-light-on-surface-variant hover:bg-light-surface-container flex flex-col items-center gap-gutter-xs font-body text-label-sm">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">person</span>
+              <span>First Visit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chief Complaints -->
+        <div class="flex flex-col gap-gutter-sm">
+          <div class="flex items-center justify-between">
+            <label for="complaints-input" class="font-body text-label-md text-light-on-surface" data-design-text-token="label-md">Chief Complaints &amp; Symptoms</label>
+            <div class="flex items-center gap-gutter-md">
+              <button type="button" class="font-body text-label-sm text-light-on-surface-variant hover:text-light-primary">+ Joint Pain</button>
+              <button type="button" class="font-body text-label-sm text-light-primary">Gastric</button>
+              <button type="button" class="font-body text-label-sm text-light-primary">Migraine</button>
+              <button type="button" class="font-body text-label-sm text-light-on-surface-variant hover:text-light-primary">+ Eczema</button>
+            </div>
+          </div>
+
+          <textarea id="complaints-input" rows="2" class="w-full px-gutter-md py-gutter-md rounded-lg bg-light-surface-container-low border-0 text-light-on-surface font-body text-body-lg focus:ring-2 focus:ring-light-primary">Migraine 70% better; occasional morning gastric acidity persists after meals.</textarea>
+        </div>
+
+        <!-- Visual Prescription Rows -->
+        <div class="flex flex-col gap-gutter-md">
+          <div class="flex items-center justify-between">
+            <span class="font-headline text-headline-sm text-light-on-surface" data-design-text-token="headline-sm">Prescription Set</span>
+            <button id="add-remedy-btn" type="button" class="inline-flex items-center gap-gutter-xs font-body text-label-md text-light-primary hover:underline">
+              <span class="material-symbols-outlined text-body-lg" aria-hidden="true">add</span>
+              <span>Add Remedy</span>
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-gutter-sm">
+            <div class="grid grid-cols-12 gap-gutter-sm items-center bg-light-surface-container-low p-gutter-sm rounded-lg">
+              <div class="col-span-5 flex items-center gap-gutter-xs bg-light-surface-container-lowest px-gutter-sm rounded-md shadow-sm">
+                <span class="material-symbols-outlined text-body-lg text-light-primary" aria-hidden="true">water_drop</span>
+                <input type="text" value="Bryonia Alba" aria-label="Remedy Name" class="w-full py-gutter-sm border-0 bg-transparent font-body text-body-md text-light-on-surface focus:ring-0">
+              </div>
+              <div class="col-span-3">
+                <select aria-label="Potency" class="w-full px-gutter-sm py-gutter-sm rounded-md bg-light-surface-container-lowest border-0 shadow-sm font-mono text-mono-md text-light-primary">
+                  <option>30C</option>
+                  <option selected>200C</option>
+                  <option>1M</option>
+                  <option>10M</option>
+                  <option>Q</option>
+                </select>
+              </div>
+              <div class="col-span-3">
+                <input type="text" value="3 drops BD" aria-label="Dosage" class="w-full px-gutter-sm py-gutter-sm rounded-md bg-light-surface-container-lowest border-0 shadow-sm font-body text-body-md text-light-on-surface">
+              </div>
+              <div class="col-span-1 flex justify-end">
+                <button type="button" aria-label="Remove remedy" class="inline-flex items-center justify-center w-8 h-8 rounded-full text-light-on-surface-variant hover:text-light-error">
+                  <span class="material-symbols-outlined text-body-lg" aria-hidden="true">close</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-gutter-sm items-center bg-light-surface-container-low p-gutter-sm rounded-lg">
+              <div class="col-span-5 flex items-center gap-gutter-xs bg-light-surface-container-lowest px-gutter-sm rounded-md shadow-sm">
+                <span class="material-symbols-outlined text-body-lg text-light-tertiary" aria-hidden="true">medication</span>
+                <input type="text" value="Nux Vomica" aria-label="Remedy Name" class="w-full py-gutter-sm border-0 bg-transparent font-body text-body-md text-light-on-surface focus:ring-0">
+              </div>
+              <div class="col-span-3">
+                <select aria-label="Potency" class="w-full px-gutter-sm py-gutter-sm rounded-md bg-light-surface-container-lowest border-0 shadow-sm font-mono text-mono-md text-light-primary">
+                  <option selected>30C</option>
+                  <option>200C</option>
+                  <option>1M</option>
+                  <option>10M</option>
+                  <option>Q</option>
+                </select>
+              </div>
+              <div class="col-span-3">
+                <input type="text" value="4 globules HS" aria-label="Dosage" class="w-full px-gutter-sm py-gutter-sm rounded-md bg-light-surface-container-lowest border-0 shadow-sm font-body text-body-md text-light-on-surface">
+              </div>
+              <div class="col-span-1 flex justify-end">
+                <button type="button" aria-label="Remove remedy" class="inline-flex items-center justify-center w-8 h-8 rounded-full text-light-on-surface-variant hover:text-light-error">
+                  <span class="material-symbols-outlined text-body-lg" aria-hidden="true">close</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-gutter-md pt-gutter-sm items-end">
+            <label class="sm:col-span-8 flex flex-col gap-gutter-xs">
+              <span class="font-body text-label-sm text-light-on-surface-variant" data-design-text-token="label-sm">Doctor&#39;s Private Clinical Notes</span>
+              <input type="text" value="Continue Bryonia 200C for 2 weeks; review if acidity persists." class="w-full px-gutter-md py-gutter-sm rounded-md bg-light-surface-container-low border-0 font-body text-body-md text-light-on-surface">
+            </label>
+            <label class="sm:col-span-4 flex flex-col gap-gutter-xs">
+              <span class="font-body text-label-sm text-light-on-surface-variant" data-design-text-token="label-sm">Fee (PKR)</span>
+              <input type="number" value="500" class="w-full px-gutter-md py-gutter-sm rounded-md bg-light-surface-container-low border-0 font-mono text-mono-md text-light-on-surface tabular-nums">
+            </label>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end pt-gutter-sm">
+          <button data-component-id="button-primary" data-component-type="button" data-component-variant="primary" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-gutter-sm px-gutter-xl py-gutter-md rounded-full bg-light-primary text-light-on-primary hover:bg-light-primary-container shadow-sm transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-body-lg" aria-hidden="true">done_all</span>
+            <span class="font-body text-label-lg" data-design-text-token="label-lg">Save &amp; Next Patient</span>
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+
+</body></html>
