@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { X, UserPlus, Phone, MapPin, User } from 'lucide-react';
-import { Patient } from '@/types';
+import { Patient, getDemographicCohort, DEMOGRAPHIC_CONFIG } from '@/types';
 import { LOCALITY_PRESETS } from '@/data/mockData';
 
 interface NewPatientDrawerProps {
@@ -152,10 +152,21 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
             </div>
           </div>
 
-          {/* Age + Gender */}
+          {/* Age + Demographic Category */}
           <div className="grid grid-cols-12 gap-3 items-end">
             <div className="col-span-4 flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#131C1A]">Age</label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#131C1A]">Age</label>
+                {age >= 60 ? (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#EDE8F5] text-[#2F293F]">
+                    Senior
+                  </span>
+                ) : age < 15 ? (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#FEF1D8] text-[#633600]">
+                    Child
+                  </span>
+                ) : null}
+              </div>
               <input
                 type="number"
                 value={age}
@@ -165,20 +176,44 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
             </div>
 
             <div className="col-span-8 flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#131C1A]">Gender</label>
+              <label className="text-xs font-bold text-[#131C1A]">Category</label>
               <div className="grid grid-cols-3 gap-1 bg-[#E9F0EE] p-1 rounded-xl">
-                {(['Male', 'Female', 'Child'] as const).map((g) => (
+                {[
+                  {
+                    key: 'Male' as const,
+                    label: 'Male',
+                    activeClass: 'bg-[#2B6684] text-white shadow-xs',
+                    dot: 'bg-[#2B6684]',
+                  },
+                  {
+                    key: 'Female' as const,
+                    label: 'Female',
+                    activeClass: 'bg-[#8A3C59] text-white shadow-xs',
+                    dot: 'bg-[#8A3C59]',
+                  },
+                  {
+                    key: 'Child' as const,
+                    label: 'Child',
+                    activeClass: 'bg-[#B86B08] text-white shadow-xs',
+                    dot: 'bg-[#B86B08]',
+                  },
+                ].map((item) => (
                   <button
-                    key={g}
+                    key={item.key}
                     type="button"
-                    onClick={() => setGender(g)}
-                    className={`py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                      gender === g
-                        ? 'bg-[#085E52] text-white shadow-xs'
+                    onClick={() => setGender(item.key)}
+                    className={`py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                      gender === item.key
+                        ? item.activeClass
                         : 'text-[#3A4B47] hover:bg-white/60'
                     }`}
                   >
-                    {g}
+                    <span
+                      className={`w-2 h-2 rounded-full ${item.dot} ${
+                        gender === item.key ? 'ring-1 ring-white' : ''
+                      }`}
+                    />
+                    {item.label}
                   </button>
                 ))}
               </div>

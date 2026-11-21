@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Search, Users, Banknote, Clock, TrendingUp } from 'lucide-react';
-import { Patient } from '@/types';
+import { Patient, getDemographicCohort, DEMOGRAPHIC_CONFIG } from '@/types';
 
 interface DailyRegisterViewProps {
   patients: Patient[];
@@ -20,6 +20,8 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
       relation: `${p.relationType} ${p.relativeName}`,
       locality: p.locality,
       phone: p.phone,
+      age: p.age,
+      gender: p.gender,
     }))
   );
 
@@ -211,6 +213,40 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                 Aggravated (2)
               </span>
             </div>
+
+            {/* Demographic Cohort Distribution */}
+            <div className="pt-2 border-t border-[#E1EBE8]/60 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#3A4B47] font-medium">Demographics</span>
+                <span className="font-['Spline_Sans_Mono'] text-[#5E706B] text-[10px]">
+                  48 visits
+                </span>
+              </div>
+              <div className="w-full h-2 rounded-full overflow-hidden flex bg-[#E9F0EE]">
+                <div className="h-full bg-[#2B6684]" style={{ width: '38%' }} title="Men 38%" />
+                <div className="h-full bg-[#8A3C59]" style={{ width: '42%' }} title="Women 42%" />
+                <div className="h-full bg-[#B86B08]" style={{ width: '12%' }} title="Children 12%" />
+                <div className="h-full bg-[#5B556D]" style={{ width: '8%' }} title="Seniors 8%" />
+              </div>
+              <div className="grid grid-cols-4 gap-1 text-[10px]">
+                <span className="flex items-center gap-1 text-[#2B6684] font-semibold truncate">
+                  <span className="w-2 h-2 rounded-full bg-[#2B6684] shrink-0" />
+                  Men (18)
+                </span>
+                <span className="flex items-center gap-1 text-[#8A3C59] font-semibold truncate">
+                  <span className="w-2 h-2 rounded-full bg-[#8A3C59] shrink-0" />
+                  Women (20)
+                </span>
+                <span className="flex items-center gap-1 text-[#B86B08] font-semibold truncate">
+                  <span className="w-2 h-2 rounded-full bg-[#B86B08] shrink-0" />
+                  Child (6)
+                </span>
+                <span className="flex items-center gap-1 text-[#5B556D] font-semibold truncate">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#5B556D] shrink-0" />
+                  Senior (4)
+                </span>
+              </div>
+            </div>
           </div>
         </article>
       </section>
@@ -245,24 +281,41 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                   </td>
                 </tr>
               ) : (
-                filteredVisits.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-[#F1F5F4] transition-colors">
-                    <td className="px-4 py-3 font-['Spline_Sans_Mono'] font-bold text-[#085E52]">
-                      #T-{String(item.tokenNo).padStart(3, '0')}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="font-bold text-[#131C1A] flex items-center gap-1.5">
-                        <span>{item.patientName}</span>
-                        {item.patientUrdu && (
-                          <span className="text-xs font-urdu text-[#085E52]">
-                            ({item.patientUrdu})
+                filteredVisits.map((item, idx) => {
+                  const cohort = getDemographicCohort(item.age, item.gender);
+                  const demo = DEMOGRAPHIC_CONFIG[cohort];
+
+                  return (
+                    <tr key={idx} className="hover:bg-[#F1F5F4] transition-colors">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`w-1 h-5 rounded-full shrink-0 ${demo.barColor}`}
+                            title={`${demo.label} (${item.age}y)`}
+                          />
+                          <span className="font-['Spline_Sans_Mono'] font-bold text-[#085E52]">
+                            #T-{String(item.tokenNo).padStart(3, '0')}
                           </span>
-                        )}
-                      </div>
-                      <div className="text-[11px] text-[#5E706B]">
-                        {item.relation} · {item.locality}
-                      </div>
-                    </td>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="font-bold text-[#131C1A] flex items-center gap-1.5">
+                          <span>{item.patientName}</span>
+                          {item.patientUrdu && (
+                            <span className="text-xs font-urdu text-[#085E52]">
+                              ({item.patientUrdu})
+                            </span>
+                          )}
+                          <span
+                            className={`text-[10px] font-['Spline_Sans_Mono'] font-bold px-1.5 py-0.5 rounded ${demo.chipBg} ${demo.chipText}`}
+                          >
+                            {item.age}y
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-[#5E706B]">
+                          {item.relation} · {item.locality}
+                        </div>
+                      </td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
@@ -294,7 +347,8 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                       Rs. {item.fee}
                     </td>
                   </tr>
-                ))
+                );
+              })
               )}
             </tbody>
           </table>

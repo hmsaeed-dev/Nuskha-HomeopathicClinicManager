@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { Search, Sparkles } from 'lucide-react';
-import { Patient } from '@/types';
+import { Patient, getDemographicCohort, DEMOGRAPHIC_CONFIG } from '@/types';
 
 interface PatientSearchRailProps {
   searchQuery: string;
@@ -75,6 +75,8 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
           ) : (
             filteredPatients.map((patient) => {
               const isSelected = patient.id === selectedPatientId;
+              const cohort = getDemographicCohort(patient.age, patient.gender);
+              const demo = DEMOGRAPHIC_CONFIG[cohort];
 
               return (
                 <div
@@ -82,52 +84,73 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                   role="button"
                   tabIndex={0}
                   onClick={() => onSelectPatient(patient)}
-                  className={`p-3 rounded-xl flex flex-col gap-1 cursor-pointer transition-all duration-150 ${
+                  className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 ${
                     isSelected
                       ? 'bg-[#085E52] text-white shadow-sm'
                       : 'bg-white text-[#131C1A] hover:bg-white/90 shadow-2xs'
                   }`}
                 >
-                  {/* Patient Name & MRN */}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 truncate">
-                      <span
-                        className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
-                          isSelected ? 'text-white' : 'text-[#131C1A]'
-                        }`}
-                      >
-                        {patient.fullName}
-                      </span>
-                      {patient.urduName && (
+                  {/* Demographic Vertical Indicator Bar */}
+                  <div
+                    className={`w-1 self-stretch rounded-full shrink-0 ${
+                      isSelected ? 'bg-white/80' : demo.barColor
+                    }`}
+                    title={`${demo.label} (${patient.age}y)`}
+                  />
+
+                  <div className="flex-1 min-w-0 flex flex-col gap-1">
+                    {/* Patient Name & MRN */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 truncate">
                         <span
-                          className={`text-xs font-urdu opacity-85 truncate ${
-                            isSelected ? 'text-[#8FE0D1]' : 'text-[#085E52]'
+                          className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
+                            isSelected ? 'text-white' : 'text-[#131C1A]'
                           }`}
                         >
-                          {patient.urduName}
+                          {patient.fullName}
                         </span>
-                      )}
+                        {patient.urduName && (
+                          <span
+                            className={`text-xs font-urdu opacity-85 truncate ${
+                              isSelected ? 'text-[#8FE0D1]' : 'text-[#085E52]'
+                            }`}
+                          >
+                            {patient.urduName}
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        className={`font-['Spline_Sans_Mono'] text-[11px] shrink-0 font-medium ${
+                          isSelected ? 'text-[#8FE0D1]' : 'text-[#5E706B]'
+                        }`}
+                      >
+                        {patient.mrn}
+                      </span>
                     </div>
-                    <span
-                      className={`font-['Spline_Sans_Mono'] text-[11px] shrink-0 font-medium ${
-                        isSelected ? 'text-[#8FE0D1]' : 'text-[#5E706B]'
-                      }`}
-                    >
-                      {patient.mrn}
-                    </span>
-                  </div>
 
-                  {/* Relation & Locality */}
-                  <p
-                    className={`text-xs truncate ${
-                      isSelected ? 'text-white/85' : 'text-[#3A4B47]'
-                    }`}
-                  >
-                    <span className="font-semibold">
-                      {patient.relationType} {patient.relativeName}
-                    </span>{' '}
-                    · {patient.locality}
-                  </p>
+                    {/* Relation & Locality & Demographic Age Chip */}
+                    <div className="flex items-center justify-between gap-2">
+                      <p
+                        className={`text-xs truncate ${
+                          isSelected ? 'text-white/85' : 'text-[#3A4B47]'
+                        }`}
+                      >
+                        <span className="font-semibold">
+                          {patient.relationType} {patient.relativeName}
+                        </span>{' '}
+                        · {patient.locality}
+                      </p>
+                      <span
+                        className={`text-[10px] font-['Spline_Sans_Mono'] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                          isSelected
+                            ? 'bg-white/20 text-white'
+                            : `${demo.chipBg} ${demo.chipText}`
+                        }`}
+                      >
+                        {patient.age}y
+                      </span>
+                    </div>
+                  </div>
                 </div>
               );
             })

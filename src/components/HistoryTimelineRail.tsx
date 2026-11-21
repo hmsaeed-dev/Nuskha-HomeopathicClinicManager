@@ -15,7 +15,7 @@ import {
   Phone,
   MapPin,
 } from 'lucide-react';
-import { Patient, PastVisit, ReactionType } from '@/types';
+import { Patient, PastVisit, ReactionType, getDemographicCohort, DEMOGRAPHIC_CONFIG } from '@/types';
 
 interface HistoryTimelineRailProps {
   patient: Patient;
@@ -65,6 +65,9 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
     }
   };
 
+  const cohort = getDemographicCohort(patient.age, patient.gender);
+  const demo = DEMOGRAPHIC_CONFIG[cohort];
+
   return (
     <section className="rounded-2xl bg-white p-5 shadow-xs flex flex-col gap-5 h-full overflow-hidden">
       {/* Patient Identity Anchor (Dark Botanical Teal Card) */}
@@ -82,7 +85,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
               )}
             </div>
 
-            <p className="text-xs text-[#8FE0D1] flex items-center gap-2 flex-wrap">
+            <div className="text-xs text-[#8FE0D1] flex items-center gap-2 flex-wrap mt-0.5">
               <span className="font-semibold">
                 {patient.relationType} {patient.relativeName}
                 {patient.relativeUrduName && (
@@ -90,10 +93,13 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                 )}
               </span>
               <span>·</span>
-              <span>{patient.age} yrs</span>
-              <span>·</span>
-              <span>{patient.gender}</span>
-            </p>
+              <span
+                className={`px-2 py-0.5 rounded-md font-['Spline_Sans_Mono'] text-[11px] font-bold ${demo.chipDarkBg} ${demo.chipDarkText}`}
+                title={demo.label}
+              >
+                {patient.age} yrs
+              </span>
+            </div>
           </div>
 
           <div className="flex flex-col items-end gap-1 shrink-0">
