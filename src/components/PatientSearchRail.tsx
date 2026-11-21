@@ -75,11 +75,6 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
           ) : (
             filteredPatients.map((patient) => {
               const isSelected = patient.id === selectedPatientId;
-              const initials = patient.fullName
-                .split(' ')
-                .map((n) => n[0])
-                .slice(0, 2)
-                .join('');
 
               return (
                 <div
@@ -87,64 +82,52 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                   role="button"
                   tabIndex={0}
                   onClick={() => onSelectPatient(patient)}
-                  className={`p-3 rounded-xl flex items-center gap-3 cursor-pointer transition-all duration-150 ${
+                  className={`p-3 rounded-xl flex flex-col gap-1 cursor-pointer transition-all duration-150 ${
                     isSelected
                       ? 'bg-[#085E52] text-white shadow-sm'
                       : 'bg-white text-[#131C1A] hover:bg-white/90 shadow-2xs'
                   }`}
                 >
-                  {/* Monogram Avatar */}
-                  <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center font-['Schibsted_Grotesk'] text-xs font-bold shrink-0 ${
-                      isSelected
-                        ? 'bg-[#0E7668] text-white'
-                        : 'bg-[#D8F0E9] text-[#085E52]'
-                    }`}
-                  >
-                    {initials}
-                  </div>
-
-                  {/* Patient Name & Secondary Disambiguator */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-1">
-                      <div className="flex items-center gap-1.5 truncate">
-                        <span
-                          className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
-                            isSelected ? 'text-white' : 'text-[#131C1A]'
-                          }`}
-                        >
-                          {patient.fullName}
-                        </span>
-                        {patient.urduName && (
-                          <span
-                            className={`text-xs font-urdu opacity-85 truncate ${
-                              isSelected ? 'text-[#8FE0D1]' : 'text-[#085E52]'
-                            }`}
-                          >
-                            {patient.urduName}
-                          </span>
-                        )}
-                      </div>
+                  {/* Patient Name & MRN */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 truncate">
                       <span
-                        className={`font-['Spline_Sans_Mono'] text-[11px] shrink-0 font-medium ${
-                          isSelected ? 'text-[#8FE0D1]' : 'text-[#5E706B]'
+                        className={`font-['Schibsted_Grotesk'] text-sm font-bold truncate ${
+                          isSelected ? 'text-white' : 'text-[#131C1A]'
                         }`}
                       >
-                        {patient.mrn}
+                        {patient.fullName}
                       </span>
+                      {patient.urduName && (
+                        <span
+                          className={`text-xs font-urdu opacity-85 truncate ${
+                            isSelected ? 'text-[#8FE0D1]' : 'text-[#085E52]'
+                          }`}
+                        >
+                          {patient.urduName}
+                        </span>
+                      )}
                     </div>
-
-                    <p
-                      className={`text-xs truncate mt-0.5 ${
-                        isSelected ? 'text-white/85' : 'text-[#3A4B47]'
+                    <span
+                      className={`font-['Spline_Sans_Mono'] text-[11px] shrink-0 font-medium ${
+                        isSelected ? 'text-[#8FE0D1]' : 'text-[#5E706B]'
                       }`}
                     >
-                      <span className="font-semibold">
-                        {patient.relationType} {patient.relativeName}
-                      </span>{' '}
-                      · {patient.locality}
-                    </p>
+                      {patient.mrn}
+                    </span>
                   </div>
+
+                  {/* Relation & Locality */}
+                  <p
+                    className={`text-xs truncate ${
+                      isSelected ? 'text-white/85' : 'text-[#3A4B47]'
+                    }`}
+                  >
+                    <span className="font-semibold">
+                      {patient.relationType} {patient.relativeName}
+                    </span>{' '}
+                    · {patient.locality}
+                  </p>
                 </div>
               );
             })
