@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Stethoscope, UserPlus, FileSpreadsheet, LayoutDashboard, Clock } from 'lucide-react';
+import { Stethoscope, UserPlus, FileSpreadsheet, LayoutDashboard, Clock, Users } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'opd' | 'analytics';
-  onTabChange: (tab: 'opd' | 'analytics') => void;
+  activeTab: 'opd' | 'analytics' | 'patients';
+  onTabChange: (tab: 'opd' | 'analytics' | 'patients') => void;
   onOpenNewPatient: () => void;
   todayCount: number;
 }
@@ -60,6 +60,17 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <FileSpreadsheet className="w-4 h-4" />
               <span>Daily Register</span>
+            </button>
+            <button
+              onClick={() => onTabChange('patients')}
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
+                activeTab === 'patients'
+                  ? 'bg-[#D8F0E9] text-[#0E3B33]'
+                  : 'text-[#3A4B47] hover:bg-[#E9F0EE] hover:text-[#131C1A]'
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              <span>Patients</span>
             </button>
           </nav>
         </div>

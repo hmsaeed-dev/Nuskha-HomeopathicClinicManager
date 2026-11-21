@@ -7,6 +7,7 @@ import { HistoryTimelineRail } from '@/components/HistoryTimelineRail';
 import { ConsultationComposer } from '@/components/ConsultationComposer';
 import { NewPatientDrawer } from '@/components/NewPatientDrawer';
 import { DailyRegisterView } from '@/components/DailyRegisterView';
+import { PatientsView } from '@/components/PatientsView';
 import { INITIAL_PATIENTS } from '@/data/mockData';
 import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
 
@@ -15,7 +16,7 @@ export default function Home() {
   const [selectedPatientId, setSelectedPatientId] = useState<string>(INITIAL_PATIENTS[0].id);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isNewPatientOpen, setIsNewPatientOpen] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'opd' | 'analytics'>('opd');
+  const [activeTab, setActiveTab] = useState<'opd' | 'analytics' | 'patients'>('opd');
   const [todayCount, setTodayCount] = useState<number>(48);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -70,8 +71,14 @@ export default function Home() {
   }, []);
 
   // Handle Tab Switch
-  const handleTabChange = (tab: 'opd' | 'analytics') => {
+  const handleTabChange = (tab: 'opd' | 'analytics' | 'patients') => {
     setActiveTab(tab);
+  };
+
+  // Select patient from master archive and switch to OPD consultation
+  const handleSelectPatientForOPD = (patient: Patient) => {
+    setSelectedPatientId(patient.id);
+    setActiveTab('opd');
   };
 
   // Register new patient
@@ -150,7 +157,7 @@ export default function Home() {
         todayCount={todayCount}
       />
 
-      {/* Main Content Area: OPD Workspace vs Daily Register Tab */}
+      {/* Main Content Area: OPD Workspace vs Daily Register Tab vs Patients Archive Tab */}
       {activeTab === 'opd' ? (
         <main className="flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
           {/* Pane 1 (Left 3 cols): Find Patient */}
@@ -179,9 +186,16 @@ export default function Home() {
             />
           </div>
         </main>
-      ) : (
+      ) : activeTab === 'analytics' ? (
         <main className="flex-1 p-4 sm:p-5 lg:p-6 max-w-7xl w-full mx-auto">
           <DailyRegisterView patients={patients} />
+        </main>
+      ) : (
+        <main className="flex-1 p-4 sm:p-5 lg:p-6 max-w-7xl w-full mx-auto">
+          <PatientsView
+            patients={patients}
+            onSelectPatientForOPD={handleSelectPatientForOPD}
+          />
         </main>
       )}
 
