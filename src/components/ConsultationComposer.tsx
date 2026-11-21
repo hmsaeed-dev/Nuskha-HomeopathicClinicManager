@@ -157,7 +157,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           </span>
         </div>
 
-        {/* Repeat Last Rx Button */}
+        {/* Repeat Last Button */}
         <button
           type="button"
           onClick={handleRepeatLastRx}
@@ -165,7 +165,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           title="Repeat Previous Prescription (Alt+R)"
         >
           <RotateCcw className="w-3.5 h-3.5 text-[#085E52]" />
-          <span>Repeat Last Rx</span>
+          <span>Repeat Last</span>
           <kbd className="px-1 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-white/60 text-[#085E52] border border-[#085E52]/20">
             Alt+R
           </kbd>
@@ -176,7 +176,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold text-[#131C1A]">
-            Response to Previous Remedy
+            Medicine Effect
           </label>
           <span className="text-[10px] text-[#5E706B] font-['Spline_Sans_Mono']">
             Keys [1] to [5]
@@ -266,11 +266,11 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         </div>
       </div>
 
-      {/* 2. Chief Complaints & Quick Categorized Tags */}
+      {/* 2. Symptoms & Quick Categorized Tags */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
           <label htmlFor="complaints" className="text-xs font-bold text-[#131C1A]">
-            Chief Complaints & Symptoms
+            Symptoms
           </label>
           {/* Category Tabs */}
           <div className="flex items-center gap-1">
@@ -312,16 +312,16 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           rows={2}
           value={symptoms}
           onChange={(e) => setSymptoms(e.target.value)}
-          placeholder="Describe symptoms, modalities, aggravation..."
+          placeholder="Describe symptoms..."
           className="w-full px-3 py-2 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52] focus:bg-white transition-all shadow-xs"
         />
       </div>
 
-      {/* 3. Prescription Set with Potency, Vehicle & Dosage Macros */}
+      {/* 3. Prescription with Potency, Vehicle & Presets */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <span className="font-['Schibsted_Grotesk'] text-xs font-bold text-[#131C1A] flex items-center gap-1.5">
-            Prescription Set ({prescriptions.length})
+            Prescription ({prescriptions.length})
           </span>
           <button
             type="button"
@@ -329,7 +329,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
             className="inline-flex items-center gap-1 text-xs font-bold text-[#085E52] hover:text-[#0E7668] transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add Remedy</span>
+            <span>Add Medicine</span>
             <kbd className="px-1 py-0.2 rounded text-[10px] font-['Spline_Sans_Mono'] bg-[#E9F0EE] border border-[#C9D8D3] text-[#3A4B47]">
               Alt+A
             </kbd>
@@ -360,7 +360,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                         handleUpdatePrescription(rx.id, 'remedy', e.target.value)
                       }
                       className="w-full text-xs font-semibold text-[#131C1A] bg-transparent border-0 p-0 focus:outline-none"
-                      placeholder="Remedy Name"
+                      placeholder="Medicine Name"
                     />
                   </div>
 
@@ -432,14 +432,14 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                     type="button"
                     onClick={() => handleRemoveRemedy(rx.id)}
                     className="p-1 rounded text-[#5E706B] hover:text-[#BA1A1A] hover:bg-white transition-colors"
-                    title="Remove remedy"
+                    title="Remove medicine"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Row 2: Dosage Input + 1-Click Dosage Macro Chips */}
+              {/* Row 2: Dosage Input + Presets */}
               <div className="flex flex-col gap-1">
                 <input
                   type="text"
@@ -447,13 +447,13 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
                   onChange={(e) =>
                     handleUpdatePrescription(rx.id, 'dosage', e.target.value)
                   }
-                  placeholder="Dosage instruction (e.g. 3 drops BD in water)"
+                  placeholder="Dosage (e.g. 3 drops BD in water)"
                   className="w-full px-2.5 py-1 rounded-md bg-white border border-[#C9D8D3] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
                 />
 
-                {/* Macro Chips */}
+                {/* Presets */}
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-[10px] text-[#5E706B] font-medium">Quick Dosage:</span>
+                  <span className="text-[10px] text-[#5E706B] font-medium">Presets:</span>
                   {DOSAGE_MACROS.map((macro) => (
                     <button
                       key={macro}
@@ -475,14 +475,14 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       <div className="grid grid-cols-12 gap-3 pt-2 border-t border-[#C9D8D3]/50">
         <div className="col-span-8 flex flex-col gap-1">
           <label htmlFor="doctor-notes" className="text-xs font-bold text-[#131C1A]">
-            Doctor&#39;s Private Notes
+            Doctor Notes
           </label>
           <input
             id="doctor-notes"
             type="text"
             value={doctorNotes}
             onChange={(e) => setDoctorNotes(e.target.value)}
-            placeholder="Special instructions or follow-up note..."
+            placeholder="Follow-up notes..."
             className="w-full px-3 py-1.5 rounded-lg bg-[#F7FAF8] border border-[#C9D8D3] text-xs text-[#131C1A] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
           />
         </div>
@@ -490,7 +490,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <div className="col-span-4 flex flex-col gap-1">
           <div className="flex items-center justify-between">
             <label htmlFor="fee" className="text-xs font-bold text-[#131C1A]">
-              Fee (PKR)
+              Fee (Rs.)
             </label>
             <span className="text-[10px] text-[#085E52] font-semibold">{feeStatus}</span>
           </div>
@@ -514,7 +514,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           className="w-full py-3 rounded-xl bg-[#085E52] text-white hover:bg-[#0E7668] shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98"
         >
           <CheckCircle2 className="w-5 h-5 text-white" />
-          <span>Save &amp; Next Patient</span>
+          <span>Save &amp; Next</span>
           <kbd className="px-2 py-0.5 rounded text-[11px] font-['Spline_Sans_Mono'] bg-white/20 text-white font-semibold">
             Ctrl + ↵
           </kbd>

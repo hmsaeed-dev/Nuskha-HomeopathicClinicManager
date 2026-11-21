@@ -34,7 +34,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
             Find Patient
           </label>
           <span className="text-[11px] text-[#3A4B47] flex items-center gap-1 font-['Spline_Sans_Mono']">
-            Phonetic + Disambiguation
+            Smart Search
           </span>
         </div>
 
@@ -55,15 +55,15 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
         </div>
       </div>
 
-      {/* Disambiguated Search Results */}
+      {/* Search Results */}
       <section className="flex flex-col gap-2 flex-1 min-h-[200px] overflow-hidden">
         <div className="flex items-center justify-between">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#3A4B47]">
-            Matching Patients ({filteredPatients.length})
+            Patients ({filteredPatients.length})
           </h2>
           {searchQuery && (
             <span className="text-[10px] text-[#085E52] font-semibold flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Live Filter
+              <Sparkles className="w-3 h-3" /> Live
             </span>
           )}
         </div>
@@ -71,9 +71,9 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
         <div className="flex flex-col gap-1.5 overflow-y-auto pr-1 flex-1">
           {filteredPatients.length === 0 ? (
             <div className="text-center py-8 text-xs text-[#5E706B] bg-white/60 rounded-lg p-4 border border-dashed border-[#C9D8D3]">
-              No matching records found.
+              No patients found.
               <div className="mt-1 text-[11px] text-[#085E52] font-semibold">
-                Press F2 to register new patient
+                Press F2 for new patient
               </div>
             </div>
           ) : (
@@ -161,10 +161,10 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
         <div className="flex items-center justify-between">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-[#3A4B47] flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5 text-[#085E52]" />
-            Waiting Queue ({queue.length})
+            Waiting ({queue.length})
           </h2>
           <span className="text-[10px] font-['Spline_Sans_Mono'] text-[#5E706B]">
-            Daily Tokens
+            Tokens
           </span>
         </div>
 

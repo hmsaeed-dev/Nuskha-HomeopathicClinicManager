@@ -69,14 +69,14 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <h2 className="font-['Schibsted_Grotesk'] text-lg font-bold text-[#131C1A]">
-                  New Patient Walk-in
+                  New Patient
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#D8F0E9] text-[#085E52] font-['Spline_Sans_Mono'] text-xs font-bold">
                   Token #T-{String(nextDailyToken).padStart(3, '0')}
                 </span>
               </div>
               <span className="text-xs text-[#3A4B47]">
-                Quick registration for today&#39;s OPD
+                Register for today&#39;s OPD
               </span>
             </div>
           </div>
@@ -95,7 +95,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           <div className="grid grid-cols-12 gap-3">
             <div className="col-span-7 flex flex-col gap-1">
               <label className="text-xs font-bold text-[#131C1A]">
-                Patient Full Name <span className="text-[#BA1A1A]">*</span>
+                Patient Name <span className="text-[#BA1A1A]">*</span>
               </label>
               <input
                 type="text"
@@ -139,7 +139,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 
             <div className="col-span-9 flex flex-col gap-1">
               <label className="text-xs font-bold text-[#131C1A]">
-                Guardian / Spouse Name <span className="text-[#BA1A1A]">*</span>
+                Guardian / Relative Name <span className="text-[#BA1A1A]">*</span>
               </label>
               <input
                 type="text"
@@ -155,7 +155,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           {/* Age + Gender */}
           <div className="grid grid-cols-12 gap-3 items-end">
             <div className="col-span-4 flex flex-col gap-1">
-              <label className="text-xs font-bold text-[#131C1A]">Age (Years)</label>
+              <label className="text-xs font-bold text-[#131C1A]">Age</label>
               <input
                 type="number"
                 value={age}
@@ -205,7 +205,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           {/* Locality with 1-Tap Neighborhood Chips */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-[#131C1A]">
-              Mohallah / Locality
+              Area / Locality
             </label>
             <input
               type="text"
@@ -236,7 +236,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           {/* 1-Tap Consultation Fee Presets */}
           <div className="flex flex-col gap-1.5 pt-2 border-t border-[#C9D8D3]/60">
             <label className="text-xs font-bold text-[#131C1A]">
-              Initial Consultation Fee
+              Consultation Fee
             </label>
             <div className="grid grid-cols-4 gap-1.5">
               {[500, 300, 0].map((amount) => (
@@ -258,7 +258,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 onClick={() => setFee(0)}
                 className="py-2 rounded-lg text-xs font-bold bg-[#FFE8DF] text-[#7A402A] border border-[#FFE8DF] hover:bg-[#ffdacf]"
               >
-                Due Later
+                Due
               </button>
             </div>
           </div>
@@ -270,7 +270,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               className="w-full py-3 rounded-xl bg-[#085E52] text-white hover:bg-[#0E7668] shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98"
             >
               <UserPlus className="w-5 h-5 text-white" />
-              <span>Add to Queue &amp; Open Consultation</span>
+              <span>Save &amp; Start Visit</span>
             </button>
           </div>
         </form>

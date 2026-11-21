@@ -58,7 +58,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <h1 className="font-['Schibsted_Grotesk'] text-xl font-bold text-[#131C1A]">
-                Daily OPD Register &amp; Analytics
+                Daily Register
               </h1>
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#085E52] text-white font-['Spline_Sans_Mono'] font-bold">
                 Live Session
@@ -83,7 +83,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* KPI 1 */}
             <article className="rounded-xl bg-[#122B27] text-white p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#085E52]/40">
-              <span className="text-xs font-semibold text-[#8FE0D1]">Patients Seen Today</span>
+              <span className="text-xs font-semibold text-[#8FE0D1]">Patients Seen</span>
               <div className="flex items-baseline gap-2">
                 <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-white">48</span>
                 <span className="font-['Spline_Sans_Mono'] text-xs text-[#8FE0D1]">/ 100 target</span>
@@ -93,7 +93,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
 
             {/* KPI 2 */}
             <article className="rounded-xl bg-[#D8F0E9] text-[#0E3B33] p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#085E52]/20">
-              <span className="text-xs font-semibold text-[#0E3B33]">Total Fees Collected</span>
+              <span className="text-xs font-semibold text-[#0E3B33]">Total Fees</span>
               <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-[#085E52]">
                 Rs. 22,500
               </span>
@@ -102,20 +102,20 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
 
             {/* KPI 3 */}
             <article className="rounded-xl bg-[#FFE8DF] text-[#4D2010] p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#7A402A]/20">
-              <span className="text-xs font-semibold text-[#4D2010]">New vs. Follow-up</span>
+              <span className="text-xs font-semibold text-[#4D2010]">New vs. Return</span>
               <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-[#7A402A]">
                 11 : 37
               </span>
-              <p className="text-[11px] text-[#7A402A]/80">23% New Walk-ins · 77% Follow-ups</p>
+              <p className="text-[11px] text-[#7A402A]/80">23% New · 77% Return</p>
             </article>
 
             {/* KPI 4 */}
             <article className="rounded-xl bg-[#D2EEFA] text-[#063245] p-4 shadow-sm flex flex-col justify-between gap-2 border border-[#0C5A7A]/20">
-              <span className="text-xs font-semibold text-[#063245]">Avg. Consultation Pace</span>
+              <span className="text-xs font-semibold text-[#063245]">Avg. Time / Patient</span>
               <span className="font-['Schibsted_Grotesk'] text-3xl font-bold text-[#0C5A7A]">
                 2m 18s
               </span>
-              <p className="text-[11px] text-[#0C5A7A]/80">On pace for 100-patient day</p>
+              <p className="text-[11px] text-[#0C5A7A]/80">On track for 100</p>
             </article>
           </section>
 
@@ -126,10 +126,10 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-['Schibsted_Grotesk'] text-sm font-bold text-[#131C1A]">
-                    Hourly Patient Throughput
+                    Patients per Hour
                   </h3>
                   <span className="text-xs text-[#5E706B]">
-                    Peak rush 10 AM – 12 PM · 48 consultations logged
+                    Peak 10 AM – 12 PM · 48 visits logged
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-xs">
@@ -198,7 +198,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
             {/* Case Mix & Outcomes */}
             <article className="lg:col-span-4 rounded-xl bg-[#F7FAF8] p-5 border border-[#C9D8D3] shadow-xs flex flex-col justify-between gap-3">
               <h3 className="font-['Schibsted_Grotesk'] text-sm font-bold text-[#131C1A]">
-                Remedy Outcome Breakdown
+                Patient Progress
               </h3>
 
               <div className="flex flex-col gap-3">
@@ -242,7 +242,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
           <section className="rounded-xl bg-[#F7FAF8] p-5 border border-[#C9D8D3] shadow-xs flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="font-['Schibsted_Grotesk'] text-sm font-bold text-[#131C1A]">
-                Today&#39;s Patient Register ({filteredVisits.length})
+                Today&#39;s Log ({filteredVisits.length})
               </h3>
               <div className="relative flex items-center">
                 <Search className="w-4 h-4 text-[#5E706B] absolute left-2.5 pointer-events-none" />
@@ -250,7 +250,7 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
                   type="search"
                   value={filterText}
                   onChange={(e) => setFilterText(e.target.value)}
-                  placeholder="Filter by patient or remedy..."
+                  placeholder="Search patient or medicine..."
                   className="pl-8 pr-3 py-1.5 rounded-lg bg-white border border-[#C9D8D3] text-xs text-[#131C1A] placeholder:text-[#5E706B] focus:outline-none focus:ring-2 focus:ring-[#085E52]"
                 />
               </div>
@@ -262,8 +262,8 @@ export const DailyRegisterModal: React.FC<DailyRegisterModalProps> = ({
                   <tr>
                     <th className="px-4 py-2.5 font-bold">Token</th>
                     <th className="px-4 py-2.5 font-bold">Patient &amp; Guardian</th>
-                    <th className="px-4 py-2.5 font-bold">Outcome</th>
-                    <th className="px-4 py-2.5 font-bold">Prescriptions</th>
+                    <th className="px-4 py-2.5 font-bold">Result</th>
+                    <th className="px-4 py-2.5 font-bold">Medicines</th>
                     <th className="px-4 py-2.5 font-bold text-right">Fee</th>
                   </tr>
                 </thead>

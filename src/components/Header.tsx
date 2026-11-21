@@ -55,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
-              <span>OPD Workspace</span>
+              <span>OPD</span>
             </button>
             <button
               onClick={() => onTabChange('analytics')}
@@ -66,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <FileSpreadsheet className="w-4 h-4" />
-              <span>Daily Register & Analytics</span>
+              <span>Daily Register</span>
             </button>
           </nav>
         </div>
@@ -103,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {todayCount} / {targetCount}
               </span>
               <span className="text-[10px] text-[#3A4B47] font-medium leading-none">
-                Today&#39;s Consultations
+                Visits Today
               </span>
             </div>
           </div>
@@ -115,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#085E52] text-white hover:bg-[#0E7668] shadow-sm transition-all duration-150 active:scale-98"
           >
             <UserPlus className="w-4 h-4" />
-            <span className="text-xs font-bold">New Walk-in</span>
+            <span className="text-xs font-bold">New Patient</span>
             <kbd className="hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-['Spline_Sans_Mono'] bg-white/20 text-white font-semibold">
               F2
             </kbd>
