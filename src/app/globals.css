@@ -1,77 +1,77 @@
-@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Schibsted+Grotesk:wght@600;700&family=Spline+Sans+Mono:wght@500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Schibsted+Grotesk:wght@600;700&family=Spline+Sans+Mono:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 /* ==========================================================================
-   BRAND COLOR VARIABLES (Single Source of Truth for Brand Identity)
-   All colors are locked here. Modify here to change the entire app's theme.
+   HIGH-CONTRAST BRAND COLOR VARIABLES (WCAG AAA Accessible & Crisp)
+   All colors locked into CSS variables for single source of truth.
    ========================================================================== */
 :root {
   /* Brand Core & Surfaces */
-  --brand-primary: #085e52;
-  --brand-primary-hover: #064940;
-  --brand-primary-container: #d8f0e9;
-  --brand-primary-dark: #0e3b33;
-  --brand-secondary: #3d665e;
-  --brand-surface: #f1f5f4;
-  --brand-surface-subtle: #e9f0ee;
+  --brand-primary: #075247;
+  --brand-primary-hover: #043831;
+  --brand-primary-container: #d2ebe4;
+  --brand-primary-dark: #052620;
+  --brand-secondary: #2c4e47;
+  --brand-surface: #eef3f1;
+  --brand-surface-subtle: #e2ebe8;
   --brand-surface-card: #ffffff;
-  --brand-dark: #122b27;
+  --brand-dark: #0d221f;
   --brand-dark-accent: #8fe0d1;
 
-  /* Typography & Content Colors */
-  --content-primary: #131c1a;
-  --content-secondary: #3a4b47;
-  --content-muted: #5e706b;
-  --border-subtle: #c9d8d3;
-  --border-strong: #8fa59e;
+  /* Typography & Content Colors (High Contrast - No Faint Muted Grays) */
+  --content-primary: #101816;
+  --content-secondary: #22322f;
+  --content-muted: #384c47;
+  --border-subtle: #b6cac4;
+  --border-strong: #5d746e;
 
-  /* Clinical Reaction States */
-  --reaction-improved: #146c43;
-  --reaction-improved-container: #d1f2e1;
-  --reaction-stable: #8f4f00;
-  --reaction-stable-container: #ffe5c2;
-  --reaction-aggravated: #ba1a1a;
-  --reaction-aggravated-container: #ffdad6;
-  --reaction-new: #0c5a7a;
-  --reaction-new-container: #d2eefa;
-  --reaction-first: #085e52;
-  --reaction-first-container: #d8f0e9;
+  /* Clinical Reaction States (Deep Saturation on High Contrast Containers) */
+  --reaction-improved: #0c5734;
+  --reaction-improved-container: #c4ecd7;
+  --reaction-stable: #783f00;
+  --reaction-stable-container: #fde0ba;
+  --reaction-aggravated: #a01010;
+  --reaction-aggravated-container: #ffd5d0;
+  --reaction-new: #074a66;
+  --reaction-new-container: #cbe9f7;
+  --reaction-first: #075247;
+  --reaction-first-container: #d2ebe4;
 
-  /* Demographic Cohorts: Adult Male */
-  --demo-male: #2b6684;
-  --demo-male-container: #dceef7;
-  --demo-male-dark: #0e2633;
-  --demo-male-selected: #1d516b;
-  --demo-male-hover: #256280;
-  --demo-male-accent: #a5d4ec;
-  --demo-male-text: #113e54;
+  /* Demographic Cohorts: Adult Male (High Contrast) */
+  --demo-male: #1f5570;
+  --demo-male-container: #d4ecf7;
+  --demo-male-dark: #0a202c;
+  --demo-male-selected: #164257;
+  --demo-male-hover: #1f5570;
+  --demo-male-accent: #d8effa;
+  --demo-male-text: #082837;
 
-  /* Demographic Cohorts: Adult Female */
-  --demo-female: #8a3c59;
-  --demo-female-container: #fcdeea;
-  --demo-female-dark: #301220;
-  --demo-female-selected: #7a2846;
-  --demo-female-hover: #8f3354;
-  --demo-female-accent: #f8bad1;
-  --demo-female-text: #541930;
+  /* Demographic Cohorts: Adult Female (High Contrast) */
+  --demo-female: #752e47;
+  --demo-female-container: #fae0ec;
+  --demo-female-dark: #270c18;
+  --demo-female-selected: #661f37;
+  --demo-female-hover: #752e47;
+  --demo-female-accent: #fbe3ee;
+  --demo-female-text: #3c0c1e;
 
-  /* Demographic Cohorts: Child */
-  --demo-child: #b86b08;
-  --demo-child-container: #fef1d8;
-  --demo-child-dark: #331c02;
-  --demo-child-selected: #995503;
-  --demo-child-hover: #b36404;
-  --demo-child-accent: #fcd698;
-  --demo-child-text: #633600;
+  /* Demographic Cohorts: Child (High Contrast) */
+  --demo-child: #9e5800;
+  --demo-child-container: #feeacf;
+  --demo-child-dark: #291500;
+  --demo-child-selected: #7e4300;
+  --demo-child-hover: #9e5800;
+  --demo-child-accent: #fdedd2;
+  --demo-child-text: #452300;
 
-  /* Demographic Cohorts: Senior */
-  --demo-senior: #5b556d;
-  --demo-senior-container: #ede8f5;
-  --demo-senior-dark: #221f2b;
-  --demo-senior-selected: #464057;
-  --demo-senior-hover: #544d67;
-  --demo-senior-accent: #c4bcd8;
-  --demo-senior-text: #2f293f;
+  /* Demographic Cohorts: Senior (High Contrast) */
+  --demo-senior: #4d465f;
+  --demo-senior-container: #eae4f5;
+  --demo-senior-dark: #1b1724;
+  --demo-senior-selected: #3c364c;
+  --demo-senior-hover: #4d465f;
+  --demo-senior-accent: #ece7f7;
+  --demo-senior-text: #211c2c;
 }
 
 @theme {
@@ -140,7 +140,7 @@
 }
 
 /* ==========================================================================
-   EXPLICIT BRAND UTILITIES (Guarantees immediate styling even if dynamic)
+   EXPLICIT HIGH-CONTRAST BRAND UTILITIES
    ========================================================================== */
 .bg-brand-primary { background-color: var(--brand-primary); }
 .bg-brand-primary-hover:hover { background-color: var(--brand-primary-hover); }
@@ -156,6 +156,7 @@
 .text-content-secondary { color: var(--content-secondary); }
 .text-content-muted { color: var(--content-muted); }
 .border-border-subtle { border-color: var(--border-subtle); }
+.border-border-strong { border-color: var(--border-strong); }
 
 /* Reactions */
 .bg-reaction-improved { background-color: var(--reaction-improved); }
@@ -222,16 +223,16 @@ body {
 
 /* Custom scrollbars for clinical density */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--brand-surface-subtle);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
+  background: var(--border-strong);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
+  background: var(--content-muted);
 }

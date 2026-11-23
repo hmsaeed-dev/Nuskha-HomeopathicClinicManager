@@ -67,12 +67,12 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
   };
 
   return (
-    <div className="p-3.5 rounded-xl bg-brand-surface-subtle shadow-2xs flex flex-col gap-2.5">
+    <div className="p-3.5 rounded-xl bg-brand-surface-subtle shadow-2xs flex flex-col gap-2.5 border border-border-subtle">
       {/* Row 1: Remedy + Potency + Vehicle + Delete */}
       <div className="grid grid-cols-12 gap-2 items-center">
         {/* Remedy Name Input with Autocomplete */}
         <div className="col-span-5 relative">
-          <div className="flex items-center gap-1.5 px-2.5 py-2 bg-white rounded-lg shadow-2xs focus-within:ring-2 focus-within:ring-brand-primary">
+          <div className="flex items-center gap-1.5 px-2.5 py-2 bg-white rounded-lg shadow-2xs border border-border-subtle focus-within:ring-2 focus-within:ring-brand-primary focus-within:border-brand-primary">
             {prescription.vehicle.includes('Drops') ? (
               <Droplet className="w-4 h-4 text-brand-primary shrink-0" />
             ) : (
@@ -84,14 +84,14 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
               onFocus={onOpenSearch}
               onKeyDown={handleInputKeyDown}
               onChange={handleInputChange}
-              className="w-full text-xs font-semibold text-content-primary bg-transparent border-0 p-0 focus:outline-none"
-              placeholder="Medicine Name (↓ to browse)"
+              className="w-full text-xs font-bold text-content-primary bg-transparent border-0 p-0 focus:outline-none placeholder:text-content-secondary placeholder:font-normal"
+              placeholder="Medicine Name (↓ browse)"
             />
           </div>
 
           {/* Autocomplete Dropdown with Keyboard Highlight */}
           {isSearchActive && filteredRemedies.length > 0 && (
-            <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-lg max-h-44 overflow-y-auto p-1 border border-border-subtle">
+            <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-xl max-h-48 overflow-y-auto p-1 border-2 border-border-strong">
               {filteredRemedies.map((remedyName, index) => {
                 const isHighlighted = index === highlightedIndex;
 
@@ -104,15 +104,15 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
                       onUpdateField('remedy', remedyName);
                       onCloseSearch();
                     }}
-                    className={`w-full text-left px-3 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer flex items-center justify-between ${
+                    className={`w-full text-left px-3 py-2 text-xs font-bold rounded-md transition-colors cursor-pointer flex items-center justify-between ${
                       isHighlighted
-                        ? 'bg-brand-primary-container text-brand-primary font-bold'
+                        ? 'bg-brand-primary-container text-brand-primary-dark'
                         : 'text-content-primary hover:bg-brand-surface-subtle'
                     }`}
                   >
                     <span>{remedyName}</span>
                     {isHighlighted && (
-                      <kbd className="text-[10px] font-mono px-1 rounded bg-brand-primary/10 text-brand-primary">
+                      <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-brand-primary text-white font-bold">
                         ↵ select
                       </kbd>
                     )}
@@ -128,7 +128,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           <select
             value={prescription.potency}
             onChange={(e) => onUpdateField('potency', e.target.value)}
-            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-xs font-mono font-bold text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
+            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-xs font-mono font-bold text-brand-primary border border-border-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
           >
             {COMMON_POTENCIES.map((potency) => (
               <option key={potency} value={potency}>
@@ -143,7 +143,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           <select
             value={prescription.vehicle}
             onChange={(e) => onUpdateField('vehicle', e.target.value as DispensingVehicle)}
-            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-[11px] font-medium text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
+            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-[11px] font-bold text-content-primary border border-border-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
           >
             {DISPENSING_VEHICLES.map((vehicle) => (
               <option key={vehicle} value={vehicle}>
@@ -158,7 +158,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           <button
             type="button"
             onClick={onRemove}
-            className="p-1 rounded text-content-muted hover:text-reaction-aggravated hover:bg-white transition-colors cursor-pointer"
+            className="p-1 rounded text-content-secondary hover:text-reaction-aggravated hover:bg-white transition-colors cursor-pointer"
             title="Remove medicine"
           >
             <Trash2 className="w-4 h-4" />
@@ -172,19 +172,19 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           type="text"
           value={prescription.dosage}
           onChange={(e) => onUpdateField('dosage', e.target.value)}
-          placeholder="Dosage (e.g. 3 drops BD in water)"
-          className="w-full px-2.5 py-1.5 rounded-lg bg-white shadow-2xs text-xs text-content-primary placeholder:text-content-muted focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          placeholder="Dosage instructions (e.g. 3 drops BD in water)"
+          className="w-full px-3 py-1.5 rounded-lg bg-white shadow-2xs text-xs font-semibold text-content-primary placeholder:text-content-secondary placeholder:font-normal border border-border-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary"
         />
 
         {/* Presets */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[10px] text-content-muted font-medium">Presets:</span>
+          <span className="text-[11px] text-content-primary font-bold">Presets:</span>
           {DOSAGE_MACROS.map((macro) => (
             <button
               key={macro}
               type="button"
               onClick={() => onUpdateField('dosage', macro)}
-              className="text-[10px] px-2 py-0.5 rounded-full bg-white hover:bg-brand-primary-container text-brand-primary shadow-2xs transition-colors cursor-pointer"
+              className="text-[11px] px-2.5 py-0.5 rounded-full bg-white hover:bg-brand-primary-container text-brand-primary-dark font-bold shadow-2xs transition-colors border border-border-subtle cursor-pointer"
             >
               {macro}
             </button>

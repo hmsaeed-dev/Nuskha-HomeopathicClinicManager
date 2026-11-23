@@ -79,7 +79,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       const isInputFocused =
         targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select';
 
-      // 1. Ctrl + Enter (or Cmd + Enter): Save & Next (Active everywhere, even inside inputs)
+      // 1. Ctrl + Enter (or Cmd + Enter): Save & Next
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
         handleSave();
@@ -101,7 +101,6 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       }
 
       // 4. Reactions: Keys [1] to [5]
-      // Plain 1-5 when not typing in an input/textarea, OR Alt + 1-5 anytime
       const reactionKeys: Record<string, ReactionType> = {
         '1': 'Improved',
         '2': 'No Change',
@@ -124,15 +123,15 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   }, [handleSave, handleRepeatLastRx, handleAddRemedy, setReaction]);
 
   return (
-    <section className="rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 sm:gap-6 h-full overflow-y-auto">
+    <section className="rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 sm:gap-6 h-full overflow-y-auto border border-border-subtle">
       {/* Top Consultation Header */}
       <div className="flex items-center justify-between gap-2 pb-1">
         <div className="flex flex-col">
           <h2 className="font-display text-lg font-bold text-content-primary">
             Today&#39;s Consultation
           </h2>
-          <span className="font-mono text-xs text-content-muted">
-            Visit #{patient.totalVisits + 1}
+          <span className="font-mono text-xs font-bold text-brand-primary">
+            Consultation Visit #{patient.totalVisits + 1}
           </span>
         </div>
 
@@ -140,12 +139,12 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleRepeatLastRx}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} hover:opacity-90 text-xs font-semibold transition-all active:scale-98 cursor-pointer`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} border border-current/25 hover:shadow-xs text-xs font-bold transition-all active:scale-98 cursor-pointer`}
           title="Repeat Previous Prescription (Alt+R)"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-4 h-4" />
           <span>Repeat Last</span>
-          <kbd className="px-1 py-0.5 rounded text-[10px] font-mono bg-black/5 font-semibold">
+          <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-white text-content-primary border border-border-subtle font-bold">
             Alt+R
           </kbd>
         </button>
@@ -160,15 +159,15 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       {/* 2. Symptoms */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="complaints" className="text-xs font-bold text-content-primary">
-          Symptoms
+          Symptoms &amp; Clinical Observations
         </label>
         <textarea
           id="complaints"
           rows={3}
           value={symptoms}
           onChange={(e) => setSymptoms(e.target.value)}
-          placeholder="Type patient symptoms, complaints, modalities... (Ctrl+Enter to save)"
-          className="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface-subtle text-sm text-content-primary placeholder:text-content-muted focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all shadow-2xs resize-none"
+          placeholder="Type patient symptoms, modalities, complaints... (Ctrl+Enter to save)"
+          className="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface-subtle text-sm text-content-primary font-medium placeholder:text-content-secondary placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all shadow-2xs resize-none border border-border-subtle"
         />
       </div>
 
@@ -176,17 +175,17 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       <div className="flex flex-col gap-2.5">
         <div className="flex items-center justify-between">
           <span className="font-display text-xs font-bold text-content-primary flex items-center gap-1.5">
-            Prescription ({prescriptions.length})
+            Prescription Table ({prescriptions.length} items)
           </span>
           <button
             type="button"
             onClick={handleAddRemedy}
-            className="inline-flex items-center gap-1 text-xs font-bold text-brand-primary hover:text-brand-primary-hover transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-brand-primary bg-brand-primary-container border border-brand-primary/20 hover:bg-brand-primary hover:text-white transition-colors cursor-pointer"
             title="Add Medicine Row (Alt+A)"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             <span>Add Medicine</span>
-            <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-brand-surface text-content-secondary">
+            <kbd className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-white text-content-primary border border-border-subtle">
               Alt+A
             </kbd>
           </button>
@@ -213,7 +212,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           <label className="text-xs font-bold text-content-primary">
             Course Duration
           </label>
-          <span className="text-[10px] text-content-muted font-mono">
+          <span className="text-[11px] text-content-primary font-mono font-bold">
             {durationDays} Days Supply
           </span>
         </div>
@@ -224,10 +223,10 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
               key={days}
               type="button"
               onClick={() => setDurationDays(days)}
-              className={`py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                 durationDays === days
-                  ? `${demo.bannerTokenBg} text-white shadow-xs`
-                  : 'bg-brand-surface-subtle text-content-secondary hover:bg-brand-surface'
+                  ? `${demo.bannerTokenBg} text-white shadow-xs border-transparent`
+                  : 'bg-brand-surface-subtle text-content-primary border-border-subtle hover:bg-white hover:border-border-strong'
               }`}
             >
               {days === 7 ? '1 Week (7d)' : days === 30 ? '1 Month (30d)' : `${days} Days`}
@@ -240,15 +239,15 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       <div className="grid grid-cols-12 gap-3 pt-1">
         <div className="col-span-8 flex flex-col gap-1.5">
           <label htmlFor="doctor-notes" className="text-xs font-bold text-content-primary">
-            Doctor Notes
+            Doctor Notes &amp; Follow-up Advice
           </label>
           <input
             id="doctor-notes"
             type="text"
             value={doctorNotes}
             onChange={(e) => setDoctorNotes(e.target.value)}
-            placeholder="Follow-up notes..."
-            className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle text-xs text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-2xs"
+            placeholder="Clinical follow-up notes..."
+            className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle text-xs font-semibold text-content-primary placeholder:text-content-secondary placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-2xs border border-border-subtle"
           />
         </div>
 
@@ -257,7 +256,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
             <label htmlFor="fee" className="text-xs font-bold text-content-primary">
               Fee ({CLINIC_CONFIG.currency})
             </label>
-            <span className="text-[10px] text-brand-primary font-semibold">{feeStatus}</span>
+            <span className="text-xs text-brand-primary font-bold">{feeStatus}</span>
           </div>
           <div className="relative flex items-center">
             <input
@@ -265,7 +264,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
               type="number"
               value={fee}
               onChange={(e) => setFee(Number(e.target.value))}
-              className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle text-xs font-mono font-bold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-2xs"
+              className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle text-xs font-mono font-bold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-2xs border border-border-subtle"
             />
           </div>
         </div>
@@ -276,12 +275,12 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className={`w-full py-3 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98 cursor-pointer`}
+          className={`w-full py-3.5 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98 cursor-pointer border border-white/20`}
           title="Save & Proceed to Next Patient (Ctrl + Enter)"
         >
           <CheckCircle2 className="w-5 h-5 text-white" />
           <span>Save &amp; Next</span>
-          <kbd className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/20 text-white font-semibold">
+          <kbd className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/25 text-white font-bold border border-white/30">
             Ctrl + ↵
           </kbd>
         </button>

@@ -17,16 +17,16 @@ export const ReactionSelector: React.FC<ReactionSelectorProps> = ({
   const getReactionIcon = (reaction: ReactionType) => {
     switch (reaction) {
       case 'Improved':
-        return <TrendingUp className="w-3.5 h-3.5" />;
+        return <TrendingUp className="w-4 h-4" />;
       case 'No Change':
-        return <Minus className="w-3.5 h-3.5" />;
+        return <Minus className="w-4 h-4" />;
       case 'Aggravated':
-        return <TrendingDown className="w-3.5 h-3.5" />;
+        return <TrendingDown className="w-4 h-4" />;
       case 'New':
-        return <Sparkles className="w-3.5 h-3.5" />;
+        return <Sparkles className="w-4 h-4" />;
       case 'First Visit':
       default:
-        return <User className="w-3.5 h-3.5" />;
+        return <User className="w-4 h-4" />;
     }
   };
 
@@ -36,12 +36,12 @@ export const ReactionSelector: React.FC<ReactionSelectorProps> = ({
         <label className="text-xs font-bold text-content-primary">
           Medicine Effect
         </label>
-        <span className="text-[10px] text-content-muted font-mono">
+        <span className="text-[11px] text-content-secondary font-bold font-mono">
           Keys [1] to [5]
         </span>
       </div>
 
-      <div className="grid grid-cols-5 gap-1.5 bg-brand-surface-subtle p-1.5 rounded-xl">
+      <div className="grid grid-cols-5 gap-1.5 bg-brand-surface-subtle p-1.5 rounded-xl border border-border-subtle">
         {REACTION_TYPES.map((reaction) => {
           const config = REACTION_CONFIG[reaction];
           const isSelected = currentReaction === reaction;
@@ -51,7 +51,7 @@ export const ReactionSelector: React.FC<ReactionSelectorProps> = ({
               key={reaction}
               type="button"
               onClick={() => onSelectReaction(reaction)}
-              className={`py-2 px-1 rounded-lg flex flex-col items-center gap-1 text-[11px] font-semibold transition-all ${
+              className={`py-2 px-1 rounded-lg flex flex-col items-center gap-1.5 text-xs font-bold transition-all cursor-pointer ${
                 isSelected ? config.activeButtonClass : config.idleButtonClass
               }`}
             >
@@ -60,8 +60,10 @@ export const ReactionSelector: React.FC<ReactionSelectorProps> = ({
                 <span className="truncate">{config.label}</span>
               </span>
               <kbd
-                className={`px-1 rounded text-[9px] font-mono ${
-                  isSelected ? 'bg-white/20 text-white' : 'bg-black/5 text-content-muted'
+                className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${
+                  isSelected
+                    ? 'bg-white/25 text-white border border-white/40'
+                    : 'bg-white text-content-primary border border-border-subtle shadow-2xs'
                 }`}
               >
                 {config.shortcut}

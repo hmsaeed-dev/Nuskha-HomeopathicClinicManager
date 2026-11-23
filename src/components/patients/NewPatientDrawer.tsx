@@ -58,7 +58,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
     <div className="fixed inset-0 z-50 flex justify-end bg-black/45 backdrop-blur-xs transition-opacity duration-150">
       <aside className="w-full max-w-lg bg-white shadow-2xl flex flex-col h-full overflow-hidden animate-in slide-in-from-right duration-200">
         {/* Drawer Header */}
-        <header className="px-6 py-4 bg-brand-surface-subtle flex items-center justify-between gap-3">
+        <header className="px-6 py-4 bg-brand-surface-subtle border-b border-border-subtle flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center font-display text-sm font-bold shadow-xs">
               <UserPlus className="w-5 h-5" />
@@ -67,7 +67,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               <h2 className="font-display text-lg font-bold text-content-primary">
                 New Patient
               </h2>
-              <span className="text-xs text-content-secondary">
+              <span className="text-xs text-content-secondary font-medium">
                 Register for today&#39;s OPD
               </span>
             </div>
@@ -75,7 +75,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-content-secondary hover:bg-brand-primary-container hover:text-content-primary transition-colors"
+            className="p-1.5 rounded-full text-content-secondary hover:bg-brand-primary-container hover:text-content-primary transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -94,7 +94,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="e.g. Muhammad Tariq"
-              className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
@@ -105,7 +105,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               <select
                 value={relationType}
                 onChange={(e) => setRelationType(e.target.value as 's/o' | 'w/o' | 'd/o')}
-                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
               >
                 <option value="s/o">s/o (Son of)</option>
                 <option value="w/o">w/o (Wife of)</option>
@@ -122,7 +122,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 value={relativeName}
                 onChange={(e) => setRelativeName(e.target.value)}
                 placeholder="e.g. Abdul Rehman"
-                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary"
               />
             </div>
           </div>
@@ -137,7 +137,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 max="120"
                 value={age}
                 onChange={(e) => setAge(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -145,7 +145,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value as 'Male' | 'Female' | 'Child')}
-                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -158,13 +158,13 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-content-primary">Mobile Phone</label>
             <div className="relative flex items-center">
-              <Phone className="w-4 h-4 text-content-muted absolute left-3 pointer-events-none" />
+              <Phone className="w-4 h-4 text-content-secondary absolute left-3 pointer-events-none" />
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="0300-1234567"
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-surface-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary font-mono"
               />
             </div>
           </div>
@@ -173,14 +173,14 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-content-primary">Locality / Area</label>
             <div className="relative flex items-center">
-              <MapPin className="w-4 h-4 text-content-muted absolute left-3 pointer-events-none" />
+              <MapPin className="w-4 h-4 text-content-secondary absolute left-3 pointer-events-none" />
               <input
                 type="text"
                 list="localities-list"
                 value={locality}
                 onChange={(e) => setLocality(e.target.value)}
                 placeholder="Select or enter area..."
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-surface-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary"
               />
               <datalist id="localities-list">
                 {LOCALITY_PRESETS.map((loc) => (
@@ -192,13 +192,13 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 
           {/* Today's Token & Initial OPD Fee */}
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="p-3 rounded-xl bg-brand-surface-subtle flex flex-col justify-between">
-              <span className="text-[11px] text-content-secondary">Token Number</span>
+            <div className="p-3 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col justify-between">
+              <span className="text-[11px] font-bold text-content-secondary">Token Number</span>
               <span className="font-mono text-xl font-bold text-brand-primary">
                 #{nextDailyToken}
               </span>
             </div>
-            <div className="p-3 rounded-xl bg-brand-surface-subtle flex flex-col gap-1">
+            <div className="p-3 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col gap-1">
               <label className="text-[11px] font-bold text-content-secondary">
                 Fee ({CLINIC_CONFIG.currency})
               </label>
@@ -206,7 +206,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 type="number"
                 value={fee}
                 onChange={(e) => setFee(Number(e.target.value))}
-                className="w-full px-2 py-1 bg-white rounded-lg text-sm font-mono font-bold text-content-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+                className="w-full px-2 py-1 bg-white border border-border-subtle rounded-lg text-sm font-mono font-bold text-content-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
               />
             </div>
           </div>
@@ -216,13 +216,13 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-border-subtle text-xs font-bold text-content-secondary hover:bg-brand-surface-subtle transition-colors"
+              className="flex-1 py-2.5 rounded-xl border border-border-strong text-xs font-bold text-content-primary hover:bg-brand-surface-subtle transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-bold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all"
+              className="flex-1 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-bold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all cursor-pointer"
             >
               Register &amp; Open OPD
             </button>

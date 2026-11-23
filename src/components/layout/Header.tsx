@@ -47,10 +47,10 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/"
               title="OPD Workspace Page (F1)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer border ${
                 isOpdActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
-                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
+                  ? 'bg-brand-primary-container text-brand-primary-dark border-border-subtle shadow-2xs'
+                  : 'text-content-secondary border-transparent hover:bg-brand-surface-subtle hover:text-content-primary hover:border-border-subtle'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -60,10 +60,10 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/register"
               title="Daily Register Page (F3)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer border ${
                 isRegisterActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
-                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
+                  ? 'bg-brand-primary-container text-brand-primary-dark border-border-subtle shadow-2xs'
+                  : 'text-content-secondary border-transparent hover:bg-brand-surface-subtle hover:text-content-primary hover:border-border-subtle'
               }`}
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -73,10 +73,10 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/patients"
               title="Patients Archive Page (F4)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer border ${
                 isPatientsActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
-                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
+                  ? 'bg-brand-primary-container text-brand-primary-dark border-border-subtle shadow-2xs'
+                  : 'text-content-secondary border-transparent hover:bg-brand-surface-subtle hover:text-content-primary hover:border-border-subtle'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -88,11 +88,11 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Live Session Counter & Walk-in Action */}
         <div className="flex items-center gap-3">
           {/* Real-time Session Chip */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-surface-subtle text-content-primary text-xs font-medium">
-            <Clock className="w-3.5 h-3.5 text-content-muted" />
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-surface-subtle border border-border-subtle text-content-primary text-xs font-semibold">
+            <Clock className="w-3.5 h-3.5 text-content-secondary" />
             <span>Today&#39;s OPD:</span>
             <span className="font-mono font-bold text-brand-primary">{todayCount}</span>
-            <span className="text-content-muted text-[11px]">seen</span>
+            <span className="text-content-secondary text-[11px] font-semibold">seen</span>
           </div>
 
           {/* New Patient Registration Trigger (F2) */}
