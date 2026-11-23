@@ -1,163 +1,72 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Header } from '@/components/Header';
-import { PatientSearchRail } from '@/components/PatientSearchRail';
-import { HistoryTimelineRail } from '@/components/HistoryTimelineRail';
-import { ConsultationComposer } from '@/components/ConsultationComposer';
-import { NewPatientDrawer } from '@/components/NewPatientDrawer';
-import { DailyRegisterView } from '@/components/DailyRegisterView';
-import { PatientsView } from '@/components/PatientsView';
-import { INITIAL_PATIENTS } from '@/data/mockData';
-import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
+import React, { useState, useRef } from 'react';
+import { Header } from '@/components/layout/Header';
+import { PatientSearchRail } from '@/components/patients/PatientSearchRail';
+import { HistoryTimelineRail } from '@/components/history/HistoryTimelineRail';
+import { ConsultationComposer } from '@/components/opd/ConsultationComposer';
+import { NewPatientDrawer } from '@/components/patients/NewPatientDrawer';
+import { DailyRegisterView } from '@/components/register/DailyRegisterView';
+import { PatientsView } from '@/components/archive/PatientsView';
+import { usePatients } from '@/hooks/usePatients';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { Patient } from '@/types';
+
+type ActiveTab = 'opd' | 'analytics' | 'patients';
 
 export default function Home() {
-  const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS);
-  const [selectedPatientId, setSelectedPatientId] = useState<string>(INITIAL_PATIENTS[0].id);
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('opd');
   const [isNewPatientOpen, setIsNewPatientOpen] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'opd' | 'analytics' | 'patients'>('opd');
-  const [todayCount, setTodayCount] = useState<number>(48);
-
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedPatient =
-    patients.find((p) => p.id === selectedPatientId) || patients[0];
+  // Separation of Concerns: Domain state and operations managed by hook
+  const {
+    patients,
+    selectedPatient,
+    selectedPatientId,
+    setSelectedPatientId,
+    searchQuery,
+    setSearchQuery,
+    filteredPatients,
+    todayCount,
+    registerPatient,
+    saveConsultation,
+  } = usePatients();
 
-  // Disambiguated Filter Logic
-  const filteredPatients = patients.filter((p) => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return true;
-    return (
-      p.fullName.toLowerCase().includes(q) ||
-      p.relativeName.toLowerCase().includes(q) ||
-      p.phone.includes(q) ||
-      p.mrn.toLowerCase().includes(q) ||
-      p.locality.toLowerCase().includes(q)
-    );
+  // Separation of Concerns: Global keyboard shortcuts (F2, Alt+S, Escape)
+  useKeyboardShortcuts({
+    onOpenNewPatient: () => setIsNewPatientOpen(true),
+    onFocusSearch: () => {
+      searchInputRef.current?.focus();
+      searchInputRef.current?.select();
+    },
+    onCloseModals: () => setIsNewPatientOpen(false),
   });
 
-  // Global Keyboard Shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is inside an input/textarea (except for Alt combinations)
-      const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
-      const isInputFocused = targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select';
-
-      // F2: Open New Patient
-      if (e.key === 'F2') {
-        e.preventDefault();
-        setIsNewPatientOpen(true);
-        return;
-      }
-
-      // Alt + S or / : Focus Search Bar
-      if ((e.altKey && (e.key === 's' || e.key === 'S')) || (!isInputFocused && e.key === '/')) {
-        e.preventDefault();
-        searchInputRef.current?.focus();
-        searchInputRef.current?.select();
-        return;
-      }
-
-      // Esc: Close drawers / modals
-      if (e.key === 'Escape') {
-        setIsNewPatientOpen(false);
-        return;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Handle Tab Switch
-  const handleTabChange = (tab: 'opd' | 'analytics' | 'patients') => {
-    setActiveTab(tab);
-  };
-
-  // Select patient from master archive and switch to OPD consultation
+  // Switch to OPD consultation when selecting a patient from archive
   const handleSelectPatientForOPD = (patient: Patient) => {
     setSelectedPatientId(patient.id);
     setActiveTab('opd');
   };
 
-  // Register new patient
-  const handleRegisterPatient = (
-    newPatientData: Omit<Patient, 'id' | 'pastVisits'> & { initialFee: number }
-  ) => {
-    const newId = `p-${Date.now()}`;
-    const newPatient: Patient = {
-      ...newPatientData,
-      id: newId,
-      pastVisits: [],
-      severityTrend: {
-        overallRelief: 'First Visit',
-        history: [{ label: 'Today', date: '21 Nov 2026', score: 100 }],
-      },
-    };
-
-    setPatients((prev) => [newPatient, ...prev]);
-    setSelectedPatientId(newId);
-    setTodayCount((prev) => prev + 1);
-  };
-
-  // Save consultation for current patient
-  const handleSaveConsultation = (data: {
-    reaction: ReactionType;
-    symptoms: string;
-    prescriptions: PrescriptionItem[];
-    doctorNotes: string;
-    durationDays?: number;
-    fee: number;
-    feeStatus: 'Paid' | 'Free' | 'Due';
-  }) => {
-    const newVisit: PastVisit = {
-      id: `v-${Date.now()}`,
-      patientId: selectedPatient.id,
-      date: '21 Nov 2026',
-      tokenNo: todayCount + 1,
-      reaction: data.reaction,
-      symptoms: data.symptoms,
-      prescriptions: data.prescriptions,
-      doctorNotes: data.doctorNotes,
-      durationDays: data.durationDays || 15,
-      fee: data.fee,
-      feeStatus: data.feeStatus,
-    };
-
-    // Update patient's pastVisits
-    setPatients((prev) =>
-      prev.map((p) => {
-        if (p.id === selectedPatient.id) {
-          return {
-            ...p,
-            totalVisits: p.totalVisits + 1,
-            lastVisitDate: 'Today',
-            pastVisits: [newVisit, ...p.pastVisits],
-          };
-        }
-        return p;
-      })
-    );
-
-    setTodayCount((prev) => prev + 1);
-
-    // Focus search bar for rapid next consultation
+  // Wrap save consultation to refocus search for rapid OPD throughput
+  const handleSaveConsultation = (data: Parameters<typeof saveConsultation>[0]) => {
+    saveConsultation(data);
     searchInputRef.current?.focus();
     searchInputRef.current?.select();
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F1F5F4] text-[#131C1A]">
+    <div className="min-h-screen flex flex-col bg-brand-surface text-content-primary">
       {/* Top Application Shell */}
       <Header
         activeTab={activeTab}
-        onTabChange={handleTabChange}
+        onTabChange={setActiveTab}
         onOpenNewPatient={() => setIsNewPatientOpen(true)}
         todayCount={todayCount}
       />
 
-      {/* Main Content Area: OPD Workspace vs Daily Register Tab vs Patients Archive Tab */}
+      {/* Main Content Area */}
       {activeTab === 'opd' ? (
         <main className="flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
           {/* Pane 1 (Left 3 cols): Find Patient */}
@@ -199,11 +108,11 @@ export default function Home() {
         </main>
       )}
 
-      {/* Slide-over Walk-In Drawer (F2) */}
+      {/* Slide-over Walk-In Registration Drawer (F2) */}
       <NewPatientDrawer
         isOpen={isNewPatientOpen}
         onClose={() => setIsNewPatientOpen(false)}
-        onRegisterPatient={handleRegisterPatient}
+        onRegisterPatient={registerPatient}
         nextDailyToken={todayCount + 1}
       />
     </div>

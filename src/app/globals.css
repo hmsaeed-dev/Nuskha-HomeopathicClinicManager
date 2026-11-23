@@ -1,35 +1,222 @@
 @import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Schibsted+Grotesk:wght@600;700&family=Spline+Sans+Mono:wght@500;600&display=swap');
 @import "tailwindcss";
 
+/* ==========================================================================
+   BRAND COLOR VARIABLES (Single Source of Truth for Brand Identity)
+   All colors are locked here. Modify here to change the entire app's theme.
+   ========================================================================== */
+:root {
+  /* Brand Core & Surfaces */
+  --brand-primary: #085e52;
+  --brand-primary-hover: #064940;
+  --brand-primary-container: #d8f0e9;
+  --brand-primary-dark: #0e3b33;
+  --brand-secondary: #3d665e;
+  --brand-surface: #f1f5f4;
+  --brand-surface-subtle: #e9f0ee;
+  --brand-surface-card: #ffffff;
+  --brand-dark: #122b27;
+  --brand-dark-accent: #8fe0d1;
+
+  /* Typography & Content Colors */
+  --content-primary: #131c1a;
+  --content-secondary: #3a4b47;
+  --content-muted: #5e706b;
+  --border-subtle: #c9d8d3;
+  --border-strong: #8fa59e;
+
+  /* Clinical Reaction States */
+  --reaction-improved: #146c43;
+  --reaction-improved-container: #d1f2e1;
+  --reaction-stable: #8f4f00;
+  --reaction-stable-container: #ffe5c2;
+  --reaction-aggravated: #ba1a1a;
+  --reaction-aggravated-container: #ffdad6;
+  --reaction-new: #0c5a7a;
+  --reaction-new-container: #d2eefa;
+  --reaction-first: #085e52;
+  --reaction-first-container: #d8f0e9;
+
+  /* Demographic Cohorts: Adult Male */
+  --demo-male: #2b6684;
+  --demo-male-container: #dceef7;
+  --demo-male-dark: #0e2633;
+  --demo-male-selected: #1d516b;
+  --demo-male-hover: #256280;
+  --demo-male-accent: #a5d4ec;
+  --demo-male-text: #113e54;
+
+  /* Demographic Cohorts: Adult Female */
+  --demo-female: #8a3c59;
+  --demo-female-container: #fcdeea;
+  --demo-female-dark: #301220;
+  --demo-female-selected: #7a2846;
+  --demo-female-hover: #8f3354;
+  --demo-female-accent: #f8bad1;
+  --demo-female-text: #541930;
+
+  /* Demographic Cohorts: Child */
+  --demo-child: #b86b08;
+  --demo-child-container: #fef1d8;
+  --demo-child-dark: #331c02;
+  --demo-child-selected: #995503;
+  --demo-child-hover: #b36404;
+  --demo-child-accent: #fcd698;
+  --demo-child-text: #633600;
+
+  /* Demographic Cohorts: Senior */
+  --demo-senior: #5b556d;
+  --demo-senior-container: #ede8f5;
+  --demo-senior-dark: #221f2b;
+  --demo-senior-selected: #464057;
+  --demo-senior-hover: #544d67;
+  --demo-senior-accent: #c4bcd8;
+  --demo-senior-text: #2f293f;
+}
+
 @theme {
-  --color-success: #146c43;
-  --color-on-success: #ffffff;
-  --color-success-container: #d1f2e1;
-  --color-warning: #8f4f00;
-  --color-warning-container: #ffe5c2;
-  --color-info: #0c5a7a;
-  --color-info-container: #d2eefa;
-  --color-primary: #085e52;
-  --color-primary-container: #0e7668;
-  --color-secondary: #3d665e;
-  --color-secondary-container: #d8f0e9;
-  --color-tertiary: #7a402a;
-  --color-tertiary-container: #ffe8df;
-  --color-surface-bg: #f1f5f4;
-  --color-surface-low: #e9f0ee;
-  --color-surface-lowest: #ffffff;
-  --color-inverse-surface: #122b27;
-  --color-inverse-on-surface: #f4faf8;
-  --color-inverse-primary: #8fe0d1;
-  --color-outline-border: #c9d8d3;
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-primary-container: var(--brand-primary-container);
+  --color-brand-primary-dark: var(--brand-primary-dark);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-surface-subtle: var(--brand-surface-subtle);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-dark-accent: var(--brand-dark-accent);
+
+  --color-content-primary: var(--content-primary);
+  --color-content-secondary: var(--content-secondary);
+  --color-content-muted: var(--content-muted);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-reaction-improved: var(--reaction-improved);
+  --color-reaction-improved-container: var(--reaction-improved-container);
+  --color-reaction-stable: var(--reaction-stable);
+  --color-reaction-stable-container: var(--reaction-stable-container);
+  --color-reaction-aggravated: var(--reaction-aggravated);
+  --color-reaction-aggravated-container: var(--reaction-aggravated-container);
+  --color-reaction-new: var(--reaction-new);
+  --color-reaction-new-container: var(--reaction-new-container);
+  --color-reaction-first: var(--reaction-first);
+  --color-reaction-first-container: var(--reaction-first-container);
+
+  --color-demo-male: var(--demo-male);
+  --color-demo-male-container: var(--demo-male-container);
+  --color-demo-male-dark: var(--demo-male-dark);
+  --color-demo-male-selected: var(--demo-male-selected);
+  --color-demo-male-hover: var(--demo-male-hover);
+  --color-demo-male-accent: var(--demo-male-accent);
+  --color-demo-male-text: var(--demo-male-text);
+
+  --color-demo-female: var(--demo-female);
+  --color-demo-female-container: var(--demo-female-container);
+  --color-demo-female-dark: var(--demo-female-dark);
+  --color-demo-female-selected: var(--demo-female-selected);
+  --color-demo-female-hover: var(--demo-female-hover);
+  --color-demo-female-accent: var(--demo-female-accent);
+  --color-demo-female-text: var(--demo-female-text);
+
+  --color-demo-child: var(--demo-child);
+  --color-demo-child-container: var(--demo-child-container);
+  --color-demo-child-dark: var(--demo-child-dark);
+  --color-demo-child-selected: var(--demo-child-selected);
+  --color-demo-child-hover: var(--demo-child-hover);
+  --color-demo-child-accent: var(--demo-child-accent);
+  --color-demo-child-text: var(--demo-child-text);
+
+  --color-demo-senior: var(--demo-senior);
+  --color-demo-senior-container: var(--demo-senior-container);
+  --color-demo-senior-dark: var(--demo-senior-dark);
+  --color-demo-senior-selected: var(--demo-senior-selected);
+  --color-demo-senior-hover: var(--demo-senior-hover);
+  --color-demo-senior-accent: var(--demo-senior-accent);
+  --color-demo-senior-text: var(--demo-senior-text);
+
   --font-display: 'Schibsted Grotesk', sans-serif;
   --font-body: 'Commissioner', sans-serif;
   --font-mono: 'Spline Sans Mono', monospace;
 }
 
+/* ==========================================================================
+   EXPLICIT BRAND UTILITIES (Guarantees immediate styling even if dynamic)
+   ========================================================================== */
+.bg-brand-primary { background-color: var(--brand-primary); }
+.bg-brand-primary-hover:hover { background-color: var(--brand-primary-hover); }
+.bg-brand-primary-container { background-color: var(--brand-primary-container); }
+.text-brand-primary { color: var(--brand-primary); }
+.text-brand-primary-dark { color: var(--brand-primary-dark); }
+.bg-brand-surface { background-color: var(--brand-surface); }
+.bg-brand-surface-subtle { background-color: var(--brand-surface-subtle); }
+.bg-brand-dark { background-color: var(--brand-dark); }
+.text-brand-dark-accent { color: var(--brand-dark-accent); }
+
+.text-content-primary { color: var(--content-primary); }
+.text-content-secondary { color: var(--content-secondary); }
+.text-content-muted { color: var(--content-muted); }
+.border-border-subtle { border-color: var(--border-subtle); }
+
+/* Reactions */
+.bg-reaction-improved { background-color: var(--reaction-improved); }
+.bg-reaction-improved-container { background-color: var(--reaction-improved-container); }
+.text-reaction-improved { color: var(--reaction-improved); }
+
+.bg-reaction-stable { background-color: var(--reaction-stable); }
+.bg-reaction-stable-container { background-color: var(--reaction-stable-container); }
+.text-reaction-stable { color: var(--reaction-stable); }
+
+.bg-reaction-aggravated { background-color: var(--reaction-aggravated); }
+.bg-reaction-aggravated-container { background-color: var(--reaction-aggravated-container); }
+.text-reaction-aggravated { color: var(--reaction-aggravated); }
+
+.bg-reaction-new { background-color: var(--reaction-new); }
+.bg-reaction-new-container { background-color: var(--reaction-new-container); }
+.text-reaction-new { color: var(--reaction-new); }
+
+/* Demographics: Adult Male */
+.bg-demo-male { background-color: var(--demo-male); }
+.bg-demo-male-container { background-color: var(--demo-male-container); }
+.bg-demo-male-dark { background-color: var(--demo-male-dark); }
+.bg-demo-male-selected { background-color: var(--demo-male-selected); }
+.hover\:bg-demo-male-hover:hover { background-color: var(--demo-male-hover); }
+.text-demo-male { color: var(--demo-male); }
+.text-demo-male-accent { color: var(--demo-male-accent); }
+.text-demo-male-text { color: var(--demo-male-text); }
+
+/* Demographics: Adult Female */
+.bg-demo-female { background-color: var(--demo-female); }
+.bg-demo-female-container { background-color: var(--demo-female-container); }
+.bg-demo-female-dark { background-color: var(--demo-female-dark); }
+.bg-demo-female-selected { background-color: var(--demo-female-selected); }
+.hover\:bg-demo-female-hover:hover { background-color: var(--demo-female-hover); }
+.text-demo-female { color: var(--demo-female); }
+.text-demo-female-accent { color: var(--demo-female-accent); }
+.text-demo-female-text { color: var(--demo-female-text); }
+
+/* Demographics: Child */
+.bg-demo-child { background-color: var(--demo-child); }
+.bg-demo-child-container { background-color: var(--demo-child-container); }
+.bg-demo-child-dark { background-color: var(--demo-child-dark); }
+.bg-demo-child-selected { background-color: var(--demo-child-selected); }
+.hover\:bg-demo-child-hover:hover { background-color: var(--demo-child-hover); }
+.text-demo-child { color: var(--demo-child); }
+.text-demo-child-accent { color: var(--demo-child-accent); }
+.text-demo-child-text { color: var(--demo-child-text); }
+
+/* Demographics: Senior */
+.bg-demo-senior { background-color: var(--demo-senior); }
+.bg-demo-senior-container { background-color: var(--demo-senior-container); }
+.bg-demo-senior-dark { background-color: var(--demo-senior-dark); }
+.bg-demo-senior-selected { background-color: var(--demo-senior-selected); }
+.hover\:bg-demo-senior-hover:hover { background-color: var(--demo-senior-hover); }
+.text-demo-senior { color: var(--demo-senior); }
+.text-demo-senior-accent { color: var(--demo-senior-accent); }
+.text-demo-senior-text { color: var(--demo-senior-text); }
+
 body {
-  background-color: #f1f5f4;
-  color: #131c1a;
+  background-color: var(--brand-surface);
+  color: var(--content-primary);
   font-family: 'Commissioner', sans-serif;
 }
 
@@ -42,9 +229,9 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9d8d3;
+  background: var(--border-subtle);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #8fa59e;
+  background: var(--border-strong);
 }

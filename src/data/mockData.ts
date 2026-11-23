@@ -229,63 +229,10 @@ export const INITIAL_PATIENTS: Patient[] = [
   }
 ];
 
-export const COMMON_REMEDIES = [
-  'Aconitum Napellus',
-  'Allium Cepa',
-  'Apis Mellifica',
-  'Arnica Montana',
-  'Arsenicum Album',
-  'Belladonna',
-  'Bryonia Alba',
-  'Calcarea Carbonica',
-  'Carbo Vegetabilis',
-  'Causticum',
-  'Chamomilla',
-  'Cinchona (China)',
-  'Dulcamara',
-  'Gelsemium',
-  'Hepar Sulphuris',
-  'Hypericum',
-  'Ignatia Amara',
-  'Ipecacuanha',
-  'Lachesis',
-  'Lycopodium',
-  'Mercurius Solubilis',
-  'Natrum Muriaticum',
-  'Nux Vomica',
-  'Phosphorus',
-  'Pulsatilla',
-  'Rhus Toxicodendron',
-  'Ruta Graveolens',
-  'Sepia',
-  'Silicea',
-  'Sulphur',
-  'Thuja Occidentalis'
-];
-
-export const COMMON_POTENCIES = ['30C', '200C', '1M', '10M', '50M', 'Q (Mother Tincture)', '6X', '12X'];
-
-export const DISPENSING_VEHICLES: Array<'Pills (Globules)' | 'Drops (Water)' | 'Powder (Packets)' | 'Mother Tincture'> = [
-  'Drops (Water)',
-  'Pills (Globules)',
-  'Powder (Packets)',
-  'Mother Tincture'
-];
-
-export const DOSAGE_MACROS = [
-  '3 drops BD in water',
-  '4 pills TDS',
-  '1 powder HS',
-  '4 pills BD',
-  '1 dose SOS'
-];
-
-export const LOCALITY_PRESETS = [
-  'Taxila Cantt',
-  'Mohallah Farooqia',
-  'Wah Model Town',
-  'Lala Rukh',
-  'Sarai Kala',
-  'Museum Road',
-  'Faisal Hills'
-];
+export {
+  COMMON_REMEDIES,
+  COMMON_POTENCIES,
+  DISPENSING_VEHICLES,
+  DOSAGE_MACROS,
+  LOCALITY_PRESETS,
+} from '@/constants/clinical';
