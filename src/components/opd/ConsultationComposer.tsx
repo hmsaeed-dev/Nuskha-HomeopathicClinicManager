@@ -111,9 +111,8 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       const reactionKeys: Record<string, ReactionType> = {
         '1': 'Improved',
         '2': 'No Change',
-        '3': 'Aggravated',
-        '4': 'New',
-        '5': 'First Visit',
+        '3': 'Decline',
+        '4': 'First Visit',
       };
 
       if (e.key in reactionKeys) {
@@ -135,11 +134,11 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       {/* Top Consultation Header */}
       <div className="flex items-center justify-between gap-2 pb-1">
         <div className="flex flex-col">
-          <h2 className="font-display text-lg font-bold text-content-primary">
-            Today&#39;s Consultation
+          <h2 className="font-display text-xl font-bold text-content-primary">
+            Consultation
           </h2>
-          <span className="font-mono text-xs font-bold text-brand-primary">
-            Consultation Visit #{patient.totalVisits + 1}
+          <span className="text-sm font-bold text-brand-primary">
+            Visit {patient.totalVisits + 1}
           </span>
         </div>
 
@@ -151,10 +150,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           title="Repeat Previous Prescription (Alt+R)"
         >
           <RotateCcw className="w-4 h-4" />
-          <span>Repeat Last</span>
-          <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-white text-content-primary border border-border-subtle font-bold">
-            Alt+R
-          </kbd>
+          <span>Previous</span>
         </button>
       </div>
 
@@ -166,8 +162,8 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
 
       {/* 2. Symptoms */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="complaints" className="text-xs font-bold text-content-primary">
-          Symptoms &amp; Clinical Observations
+        <label htmlFor="complaints" className="text-md font-bold text-content-primary">
+          Observations
         </label>
         <textarea
           id="complaints"
@@ -182,20 +178,16 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       {/* 3. Prescription with Potency, Vehicle & Presets */}
       <div className="flex flex-col gap-2.5">
         <div className="flex items-center justify-between">
-          <span className="font-display text-xs font-bold text-content-primary flex items-center gap-1.5">
-            Prescription Table ({prescriptions.length} items)
+          <span className="font-display text-md font-bold text-content-primary flex items-center gap-1.5">
+            Prescriptions
           </span>
           <button
             type="button"
             onClick={handleAddRemedy}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-brand-primary bg-brand-primary-container hover:bg-brand-primary hover:text-white transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-2xl font-bold text-brand-primary hover:text-white transition-colors cursor-pointer"
             title="Add Medicine Row (Alt+A)"
           >
-            <Plus className="w-4 h-4" />
-            <span>Add Medicine</span>
-            <kbd className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-white text-content-primary border border-border-subtle">
-              Alt+A
-            </kbd>
+            <Plus className="w-6 h-6" />
           </button>
         </div>
 
@@ -217,15 +209,12 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       {/* 4. Course Duration */}
       <div className="flex flex-col gap-1.5 pt-1">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-bold text-content-primary">
+          <label className="text-md font-bold text-content-primary">
             Course Duration
           </label>
-          <span className="text-[11px] text-content-primary font-mono font-bold">
-            {durationDays} Days Supply
-          </span>
         </div>
 
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {clinicConfig.availableCourseDurations.map((days) => (
             <button
               key={days}
@@ -246,8 +235,8 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       {/* 5. Doctor's Notes & Consultation Fee */}
       <div className="grid grid-cols-12 gap-3 pt-1">
         <div className="col-span-8 flex flex-col gap-1.5">
-          <label htmlFor="doctor-notes" className="text-xs font-bold text-content-primary">
-            Doctor Notes &amp; Follow-up Advice
+          <label htmlFor="doctor-notes" className="text-md font-bold text-content-primary">
+            Doctor Notes
           </label>
           <input
             id="doctor-notes"
@@ -283,14 +272,11 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className={`w-full py-3.5 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98 cursor-pointer`}
+          className={`w-full py-3.5 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-md font-bold transition-all active:scale-98 cursor-pointer`}
           title="Save & Proceed to Next Patient (Ctrl + Enter)"
         >
+          <span>Save</span>
           <CheckCircle2 className="w-5 h-5 text-white" />
-          <span>Save &amp; Next</span>
-          <kbd className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/25 text-white font-bold border border-white/30">
-            Ctrl + ↵
-          </kbd>
         </button>
       </div>
     </section>

@@ -129,7 +129,7 @@ const SHORTCUT_LIST: ShortcutItem[] = [
     id: 'rx-3',
     category: 'Consultation',
     keys: ['3'],
-    description: 'Mark Remedy Reaction: "Aggravated"',
+    description: 'Mark Remedy Reaction: "Decline"',
     context: 'OPD Workspace',
   },
   {
@@ -269,9 +269,9 @@ export const SettingsModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-3 sm:p-5 transition-opacity duration-150">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-border-subtle flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-border-subtle flex flex-col h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Top Header */}
-        <header className="px-6 py-4 bg-brand-surface-subtle border-b border-border-subtle flex items-center justify-between gap-4">
+        <header className="px-6 py-4 bg-brand-surface-subtle flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-brand-primary text-white flex items-center justify-center font-bold shadow-xs">
               <Sliders className="w-5 h-5" />
@@ -279,30 +279,13 @@ export const SettingsModal: React.FC = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <h2 className="font-display text-lg font-bold text-content-primary">
-                  Settings &amp; Keyboard Shortcuts
+                  Settings
                 </h2>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-brand-primary-container text-brand-primary-dark font-bold border border-border-subtle">
-                  v0.2.0
-                </span>
               </div>
-              <p className="text-xs text-content-secondary font-medium">
-                Clinical fast-entry shortcuts &amp; practice configuration
-              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            {activeTab === 'shortcuts' && (
-              <button
-                type="button"
-                onClick={handlePrintDeskCard}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border-subtle bg-white hover:bg-brand-surface text-xs font-bold text-content-primary shadow-2xs transition-colors cursor-pointer"
-                title="Print 4x6 inch Desk Cheat Sheet"
-              >
-                <Printer className="w-4 h-4 text-brand-primary" />
-                <span>Print Desk Card</span>
-              </button>
-            )}
 
             <button
               type="button"
@@ -331,7 +314,7 @@ export const SettingsModal: React.FC = () => {
               >
                 <span className="flex items-center gap-2.5">
                   <Keyboard className="w-4 h-4" />
-                  <span>Keyboard Shortcuts</span>
+                  <span>Shortcuts</span>
                 </span>
                 <kbd
                   className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
@@ -434,15 +417,6 @@ export const SettingsModal: React.FC = () => {
                       className="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs text-content-primary font-medium placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
                   </div>
-
-                  {lastPressedKey && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-primary-container border border-border-subtle text-xs shrink-0">
-                      <span className="text-[11px] text-brand-primary-dark font-medium">Last pressed:</span>
-                      <kbd className="font-mono font-bold text-brand-primary bg-white px-1.5 py-0.5 rounded shadow-2xs text-[11px]">
-                        {lastPressedKey}
-                      </kbd>
-                    </div>
-                  )}
                 </div>
 
                 {/* Shortcuts Grid by Categories */}
@@ -453,15 +427,12 @@ export const SettingsModal: React.FC = () => {
 
                     return (
                       <div key={cat} className="flex flex-col gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-content-secondary">
-                          {cat} Shortcuts
-                        </span>
 
                         <div className="grid grid-cols-1 gap-2">
                           {itemsInCat.map((item) => (
                             <div
                               key={item.id}
-                              className="p-3 rounded-xl bg-brand-surface-subtle flex items-center justify-between gap-3 hover:bg-brand-surface transition-colors"
+                              className="p-3 flex items-center justify-between gap-2 hover:bg-brand-surface transition-colors"
                             >
                               <div className="flex flex-col min-w-0">
                                 <span className="text-xs font-bold text-content-primary truncate">
@@ -475,7 +446,7 @@ export const SettingsModal: React.FC = () => {
                               <div className="flex items-center gap-1 shrink-0">
                                 {item.keys.map((k, kIdx) => (
                                   <React.Fragment key={kIdx}>
-                                    <kbd className="px-2 py-1 rounded-md text-xs font-mono font-bold bg-white text-content-primary border border-border-strong shadow-2xs min-w-[28px] text-center">
+                                    <kbd className="px-2 py-1 rounded-md text-xs font-mono font-bold bg-white text-content-primary min-w-7 text-center">
                                       {k}
                                     </kbd>
                                     {kIdx < item.keys.length - 1 && (
@@ -499,14 +470,8 @@ export const SettingsModal: React.FC = () => {
             {/* ========================================================= */}
             {activeTab === 'clinic' && (
               <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between pb-1 border-b border-border-subtle">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-display text-sm font-bold text-content-primary">
-                      Clinic &amp; Doctor Information
-                    </h3>
-                    <p className="text-xs text-content-secondary">
-                      Displayed on patient receipts, registers, and headers
-                    </p>
                   </div>
                   {showSavedFeedback && (
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-reaction-improved bg-reaction-improved-container px-2 py-0.5 rounded">
@@ -602,14 +567,10 @@ export const SettingsModal: React.FC = () => {
                 </div>
 
                 <div className="pt-2">
-                  <h4 className="font-display text-xs font-bold text-content-primary uppercase tracking-wider pb-2 border-b border-border-subtle">
-                    Clinical Defaults &amp; Fees
-                  </h4>
-
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3">
                     <div className="flex flex-col gap-1">
                       <label className="text-xs font-bold text-content-primary">
-                        Default OPD Fee
+                        Default Fee
                       </label>
                       <input
                         type="number"
@@ -662,14 +623,6 @@ export const SettingsModal: React.FC = () => {
             {/* ========================================================= */}
             {activeTab === 'macros' && (
               <div className="flex flex-col gap-4">
-                <div>
-                  <h3 className="font-display text-sm font-bold text-content-primary">
-                    Dosage Macros &amp; Presets
-                  </h3>
-                  <p className="text-xs text-content-secondary">
-                    One-click presets displayed in the prescription composer
-                  </p>
-                </div>
 
                 {/* Add new macro */}
                 <form onSubmit={handleAddMacroSubmit} className="flex items-center gap-2">

@@ -19,7 +19,7 @@ export interface ClinicConfig {
 export const CLINIC_CONFIG: ClinicConfig = {
   name: process.env.NEXT_PUBLIC_CLINIC_NAME || 'Nuskha',
   doctorName: process.env.NEXT_PUBLIC_DOCTOR_NAME || 'Dr. Aslam',
-  subtitle: process.env.NEXT_PUBLIC_CLINIC_SUBTITLE || 'Homoeopathic OPD Clinic',
+  subtitle: process.env.NEXT_PUBLIC_CLINIC_SUBTITLE || 'Homoeopathic Clinic',
   licenseNumber: process.env.NEXT_PUBLIC_CLINIC_LICENSE || 'DHMS / RHMP-4821',
   phone: process.env.NEXT_PUBLIC_CLINIC_PHONE || '0300-5551234',
   address: process.env.NEXT_PUBLIC_CLINIC_ADDRESS || 'Main Bazaar, Taxila Cantt',

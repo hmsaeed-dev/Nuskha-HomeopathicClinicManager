@@ -50,25 +50,12 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
               Daily Register
             </h1>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-brand-primary text-white font-mono font-bold">
-              Live Session
+              Live
             </span>
           </div>
           <p className="text-xs text-content-secondary mt-1">
-            {formatDate(new Date())} · {clinicConfig.sessionTimings} · {clinicConfig.doctorName} Clinic
+            {formatDate(new Date())}
           </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative flex items-center">
-            <Search className="w-4 h-4 text-content-secondary absolute left-3 pointer-events-none" />
-            <input
-              type="search"
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              placeholder="Search patient or medicine..."
-              className="pl-9 pr-3 py-2 rounded-xl bg-white border border-border-subtle text-xs text-content-primary placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-2xs w-64"
-            />
-          </div>
         </div>
       </div>
 
@@ -78,7 +65,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
         <article className="rounded-2xl bg-brand-dark text-white p-5 shadow-xs flex flex-col justify-between gap-3">
           <span className="text-xs font-bold text-brand-dark-accent">Patients Seen</span>
           <span className="font-display text-3xl font-bold text-white">48</span>
-          <p className="text-[11px] font-medium text-brand-dark-accent">Today&#39;s completed visits</p>
+          <p className="text-[11px] font-medium text-brand-dark-accent">Today&#39;s visits</p>
         </article>
 
         {/* KPI 2 */}
@@ -184,7 +171,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
 
         {/* Case Mix & Outcomes */}
         <article className="lg:col-span-4 rounded-2xl bg-white p-6 shadow-xs flex flex-col justify-between gap-4">
-          <h3 className="font-display text-sm font-bold text-content-primary">
+          <h3 className="font-display text-md font-bold text-content-primary">
             Patient Progress
           </h3>
 
@@ -218,13 +205,13 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
               </span>
               <span className="flex items-center gap-1.5 text-reaction-aggravated font-bold">
                 <span className="w-2.5 h-2.5 rounded-full bg-reaction-aggravated" />
-                Aggravated (2)
+                Decline (2)
               </span>
             </div>
 
             {/* Demographic Cohort Distribution */}
-            <div className="pt-2 border-t border-border-subtle flex flex-col gap-2">
-              <div className="flex items-center justify-between text-xs">
+            <div className="pt-2 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-md">
                 <span className="text-content-secondary font-semibold">Demographics</span>
                 <span className="font-mono text-content-secondary font-bold text-[10px]">
                   48 visits
@@ -259,11 +246,24 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
         </article>
       </section>
 
+      <div className="flex p-2 justify-center items-center gap-2 w-full">
+        <div className="relative flex w-full items-center">
+          <Search className="w-6 h-6 text-content-secondary absolute left-5 pointer-events-none" />
+          <input
+              type="search"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              placeholder="Search patients by name..."
+              className="pl-16 pr-3 py-4 rounded-xl bg-white border border-border-subtle text-md text-content-primary placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary shadow-2xs w-full"
+            />
+        </div>
+      </div>
+
       {/* Consultation Log Table */}
       <section className="rounded-2xl bg-white p-6 shadow-xs flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="font-display text-base font-bold text-content-primary">
-            Today&#39;s Log ({filteredVisits.length})
+            Today&#39;s Records ({filteredVisits.length})
           </h3>
           <span className="text-xs text-content-secondary font-medium">
             Showing recorded consultations for today&#39;s session

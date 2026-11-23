@@ -1,9 +1,9 @@
-export type ReactionType = 'Improved' | 'No Change' | 'Aggravated' | 'New' | 'First Visit';
+export type ReactionType = "Decline" | "No Change" | "Improved" | "First Visit";
 
-export type DispensingVehicle = 
-  | 'Pills (Globules)' 
-  | 'Drops (Water)' 
-  | 'Powder (Packets)' 
+export type DispensingVehicle =
+  | 'Pills (Globules)'
+  | 'Drops (Water)'
+  | 'Powder (Packets)'
   | 'Mother Tincture';
 
 export interface PrescriptionItem {
@@ -31,11 +31,11 @@ export interface PastVisit {
 }
 
 export interface ChiefComplaint {
-  id: string;
-  name: string; // e.g. "Migraine", "Gastric Acidity", "Knee Pain"
-  severity: 'Severe' | 'Moderate' | 'Mild' | 'Relieved';
-  trend: 'Improving' | 'Stable' | 'Aggravating';
-  duration?: string; // e.g. "4 yrs", "6 mos"
+	id: string;
+	name: string; // e.g. "Migraine", "Gastric Acidity", "Knee Pain"
+	severity: "Severe" | "Moderate" | "Mild" | "Relieved";
+	trend: "Declining" | "Stable" | "Improving";
+	duration?: string; // e.g. "4 yrs", "6 mos"
 }
 
 export interface Patient {

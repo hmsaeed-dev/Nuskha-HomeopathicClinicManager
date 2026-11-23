@@ -179,13 +179,12 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
 
         {/* Presets */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[11px] text-content-primary font-bold">Presets:</span>
           {dosageMacros.map((macro) => (
             <button
               key={macro}
               type="button"
               onClick={() => onUpdateField('dosage', macro)}
-              className="text-[11px] px-2.5 py-0.5 rounded-full bg-white hover:bg-brand-primary-container text-brand-primary-dark font-bold shadow-2xs transition-colors cursor-pointer"
+              className="text-[11px] px-2.5 py-0.5 rounded-full hover:bg-brand-primary-container text-brand-primary-dark font-bold transition-colors cursor-pointer"
             >
               {macro}
             </button>

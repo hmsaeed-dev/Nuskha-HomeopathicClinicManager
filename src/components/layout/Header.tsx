@@ -23,107 +23,100 @@ export const Header: React.FC<HeaderProps> = ({
   const isPatientsActive = pathname === '/patients';
 
   return (
-    <header className="sticky top-3 z-30 mx-4 sm:mx-5 lg:mx-6 mt-3 rounded-2xl bg-white shadow-xs px-6 py-3.5">
-      <div className="flex items-center justify-between gap-4">
-        {/* Logo & Clinic Title (SSOT Configured) */}
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-brand-primary-container text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <Stethoscope className="w-5 h-5 text-brand-primary" />
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-display text-xl font-bold text-content-primary leading-none tracking-tight">
-                  {clinicConfig.name}
-                </span>
-              </div>
-              <span className="text-xs text-content-secondary mt-0.5">
-                {clinicConfig.doctorName} · {clinicConfig.subtitle}
-              </span>
-            </div>
-          </Link>
+		<header className="sticky top-0 z-30 mx-4 sm:mx-5 lg:mx-6 mt-3 rounded-2xl bg-white shadow-xs px-6 py-3.5">
+			<div className="flex items-center justify-between gap-4">
+				{/* Logo & Clinic Title (SSOT Configured) */}
+				<div className="flex items-center gap-6">
+					<Link href="/" className="flex items-center gap-3 group">
+						<div className="w-10 h-10 rounded-xl bg-brand-primary-container text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+							<Stethoscope className="w-5 h-5 text-brand-primary" />
+						</div>
+						<div className="flex flex-col">
+							<div className="flex items-center gap-2">
+								<span className="font-display text-xl font-bold text-content-primary leading-none tracking-tight">
+									{clinicConfig.name}
+								</span>
+							</div>
+							<span className="text-xs text-content-secondary mt-0.5">
+								{clinicConfig.subtitle}
+							</span>
+						</div>
+					</Link>
 
-          {/* Page Navigation Links */}
-          <nav aria-label="Primary navigation" className="flex items-center gap-1.5 ml-2">
-            <Link
-              href="/"
-              title="OPD Workspace Page (F1)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
-                isOpdActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
-                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>OPD</span>
-            </Link>
+					{/* Page Navigation Links */}
+					<nav
+						aria-label="Primary navigation"
+						className="flex items-center gap-1.5 ml-2"
+					>
+						<Link
+							href="/"
+							title="OPD Workspace Page (F1)"
+							className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
+								isOpdActive
+									? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
+									: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
+							}`}
+						>
+							<LayoutDashboard className="w-4 h-4" />
+							<span>OPD</span>
+						</Link>
 
-            <Link
-              href="/register"
-              title="Daily Register Page (F3)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
-                isRegisterActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
-                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
-              }`}
-            >
-              <FileSpreadsheet className="w-4 h-4" />
-              <span>Daily Register</span>
-            </Link>
+						<Link
+							href="/register"
+							title="Daily Register Page (F3)"
+							className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
+								isRegisterActive
+									? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
+									: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
+							}`}
+						>
+							<FileSpreadsheet className="w-4 h-4" />
+							<span>Analytics</span>
+						</Link>
 
-            <Link
-              href="/patients"
-              title="Patients Archive Page (F4)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
-                isPatientsActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
-                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
-              }`}
-            >
-              <Users className="w-4 h-4" />
-              <span>Patients</span>
-            </Link>
-          </nav>
-        </div>
+						<Link
+							href="/patients"
+							title="Patients Archive Page (F4)"
+							className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
+								isPatientsActive
+									? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
+									: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
+							}`}
+						>
+							<Users className="w-4 h-4" />
+							<span>Patients</span>
+						</Link>
+					</nav>
+				</div>
 
-        {/* Live Session Counter & Walk-in Action */}
-        <div className="flex items-center gap-2.5">
-          {/* Shortcuts & Settings Trigger (?) */}
-          <button
-            type="button"
-            onClick={() => openSettings('shortcuts')}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-surface-subtle hover:bg-brand-surface text-content-primary text-xs font-bold transition-all shadow-2xs cursor-pointer"
-            title="Keyboard Shortcuts & Practice Settings (Press ?)"
-          >
-            <Keyboard className="w-4 h-4 text-brand-primary" />
-            <span className="hidden xl:inline">Shortcuts</span>
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-border-strong text-content-primary rounded font-bold shadow-2xs">
-              ?
-            </kbd>
-          </button>
+				{/* Live Session Counter & Walk-in Action */}
+				<div className="flex items-center gap-2.5">
+					{/* Shortcuts & Settings Trigger (?) */}
+					<button
+						type="button"
+						onClick={() => openSettings("shortcuts")}
+						className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-brand-surface text-content-primary text-xs font-bold transition-all shadow-2xs cursor-pointer"
+						title="Keyboard Shortcuts & Practice Settings (Press ?)"
+					>
+						<Keyboard className="w-4 h-4 text-brand-primary" />
+					</button>
 
-          {/* Real-time Session Chip */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-surface-subtle text-content-primary text-xs font-semibold">
-            <Clock className="w-3.5 h-3.5 text-content-secondary" />
-            <span>Today&#39;s OPD:</span>
-            <span className="font-mono font-bold text-brand-primary">{todayCount}</span>
-            <span className="text-content-secondary text-[11px] font-semibold">seen</span>
-          </div>
+					{/* Real-time Session Chip */}
+					<div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl text-content-primary text-xs font-semibold">
+						<Clock className="w-3.5 h-3.5 text-content-secondary" />
+						<span className="font-bold">{todayCount} Visitors</span>
+					</div>
 
-          {/* New Patient Registration Trigger (F2) */}
-          <button
-            onClick={onOpenNewPatient}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-semibold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all duration-150 cursor-pointer"
-            title="Register New Walk-in Patient (Press F2)"
-          >
-            <UserPlus className="w-4 h-4" />
-            <span className="hidden md:inline">New Patient</span>
-            <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-white/20 text-white rounded">
-              F2
-            </kbd>
-          </button>
-        </div>
-      </div>
-    </header>
+					{/* New Patient Registration Trigger (F2) */}
+					<button
+						onClick={onOpenNewPatient}
+						className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-semibold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all duration-150 cursor-pointer"
+						title="Register New Walk-in Patient (Press F2)"
+					>
+						<UserPlus className="w-4 h-4" />
+					</button>
+				</div>
+			</div>
+		</header>
   );
 };
