@@ -1,29 +1,33 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Stethoscope, UserPlus, FileSpreadsheet, LayoutDashboard, Clock, Users } from 'lucide-react';
 import { CLINIC_CONFIG } from '@/config/clinic.config';
 
 interface HeaderProps {
-  activeTab: 'opd' | 'analytics' | 'patients';
-  onTabChange: (tab: 'opd' | 'analytics' | 'patients') => void;
   onOpenNewPatient: () => void;
   todayCount: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  activeTab,
-  onTabChange,
   onOpenNewPatient,
   todayCount,
 }) => {
+  const pathname = usePathname();
+
+  const isOpdActive = pathname === '/';
+  const isRegisterActive = pathname === '/register';
+  const isPatientsActive = pathname === '/patients';
+
   return (
     <header className="sticky top-3 z-30 mx-4 sm:mx-5 lg:mx-6 mt-3 rounded-2xl bg-white shadow-xs px-6 py-3.5">
       <div className="flex items-center justify-between gap-4">
         {/* Logo & Clinic Title (SSOT Configured) */}
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-primary-container text-brand-primary flex items-center justify-center shrink-0">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-brand-primary-container text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
               <Stethoscope className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex flex-col">
@@ -36,46 +40,48 @@ export const Header: React.FC<HeaderProps> = ({
                 {CLINIC_CONFIG.doctorName} · {CLINIC_CONFIG.subtitle}
               </span>
             </div>
-          </div>
+          </Link>
 
-          {/* Navigation Tabs */}
+          {/* Page Navigation Links */}
           <nav aria-label="Primary navigation" className="flex items-center gap-1.5 ml-2">
-            <button
-              onClick={() => onTabChange('opd')}
-              title="OPD Workspace (F1)"
+            <Link
+              href="/"
+              title="OPD Workspace Page (F1)"
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
-                activeTab === 'opd'
-                  ? 'bg-brand-primary-container text-brand-primary-dark'
+                isOpdActive
+                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
                   : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
               <span>OPD</span>
-            </button>
-            <button
-              onClick={() => onTabChange('analytics')}
-              title="Daily Register (F3)"
+            </Link>
+
+            <Link
+              href="/register"
+              title="Daily Register Page (F3)"
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
-                activeTab === 'analytics'
-                  ? 'bg-brand-primary-container text-brand-primary-dark'
+                isRegisterActive
+                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
                   : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
               }`}
             >
               <FileSpreadsheet className="w-4 h-4" />
               <span>Daily Register</span>
-            </button>
-            <button
-              onClick={() => onTabChange('patients')}
-              title="Patients Archive (F4)"
+            </Link>
+
+            <Link
+              href="/patients"
+              title="Patients Archive Page (F4)"
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
-                activeTab === 'patients'
-                  ? 'bg-brand-primary-container text-brand-primary-dark'
+                isPatientsActive
+                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
                   : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
               }`}
             >
               <Users className="w-4 h-4" />
-              <span>Patients Archive</span>
-            </button>
+              <span>Patients</span>
+            </Link>
           </nav>
         </div>
 
@@ -92,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* New Patient Registration Trigger (F2) */}
           <button
             onClick={onOpenNewPatient}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-semibold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all duration-150"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-semibold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all duration-150 cursor-pointer"
             title="Register New Walk-in Patient (Press F2)"
           >
             <UserPlus className="w-4 h-4" />
