@@ -42,7 +42,8 @@ export const Header: React.FC<HeaderProps> = ({
           <nav aria-label="Primary navigation" className="flex items-center gap-1.5 ml-2">
             <button
               onClick={() => onTabChange('opd')}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
+              title="OPD Workspace (F1)"
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
                 activeTab === 'opd'
                   ? 'bg-brand-primary-container text-brand-primary-dark'
                   : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
@@ -53,7 +54,8 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => onTabChange('analytics')}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
+              title="Daily Register (F3)"
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
                 activeTab === 'analytics'
                   ? 'bg-brand-primary-container text-brand-primary-dark'
                   : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
@@ -64,7 +66,8 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => onTabChange('patients')}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
+              title="Patients Archive (F4)"
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
                 activeTab === 'patients'
                   ? 'bg-brand-primary-container text-brand-primary-dark'
                   : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'

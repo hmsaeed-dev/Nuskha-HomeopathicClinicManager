@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Droplet, Pill, Trash2 } from 'lucide-react';
 import { PrescriptionItem, DispensingVehicle } from '@/types';
 import {
@@ -27,9 +27,44 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
   onUpdateField,
   onRemove,
 }) => {
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+
   const filteredRemedies = COMMON_REMEDIES.filter((remedy) =>
     remedy.toLowerCase().includes(prescription.remedy.toLowerCase())
-  ).slice(0, 5);
+  ).slice(0, 6);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdateField('remedy', e.target.value);
+    setHighlightedIndex(0);
+    if (!isSearchActive) onOpenSearch();
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isSearchActive || filteredRemedies.length === 0) {
+      if (e.key === 'ArrowDown') {
+        onOpenSearch();
+      }
+      return;
+    }
+
+    // Keyboard navigation through remedy suggestions
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev + 1) % filteredRemedies.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev - 1 + filteredRemedies.length) % filteredRemedies.length);
+    } else if (e.key === 'Enter' || e.key === 'Tab') {
+      if (filteredRemedies[highlightedIndex]) {
+        e.preventDefault();
+        onUpdateField('remedy', filteredRemedies[highlightedIndex]);
+        onCloseSearch();
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      onCloseSearch();
+    }
+  };
 
   return (
     <div className="p-3.5 rounded-xl bg-brand-surface-subtle shadow-2xs flex flex-col gap-2.5">
@@ -47,28 +82,43 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
               type="text"
               value={prescription.remedy}
               onFocus={onOpenSearch}
-              onChange={(e) => onUpdateField('remedy', e.target.value)}
+              onKeyDown={handleInputKeyDown}
+              onChange={handleInputChange}
               className="w-full text-xs font-semibold text-content-primary bg-transparent border-0 p-0 focus:outline-none"
-              placeholder="Medicine Name"
+              placeholder="Medicine Name (↓ to browse)"
             />
           </div>
 
-          {/* Autocomplete Dropdown */}
+          {/* Autocomplete Dropdown with Keyboard Highlight */}
           {isSearchActive && filteredRemedies.length > 0 && (
-            <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-lg max-h-36 overflow-y-auto p-1 border border-border-subtle">
-              {filteredRemedies.map((remedyName) => (
-                <button
-                  key={remedyName}
-                  type="button"
-                  onMouseDown={() => {
-                    onUpdateField('remedy', remedyName);
-                    onCloseSearch();
-                  }}
-                  className="w-full text-left px-3 py-1.5 text-xs hover:bg-brand-primary-container hover:text-brand-primary font-medium rounded-md"
-                >
-                  {remedyName}
-                </button>
-              ))}
+            <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-lg max-h-44 overflow-y-auto p-1 border border-border-subtle">
+              {filteredRemedies.map((remedyName, index) => {
+                const isHighlighted = index === highlightedIndex;
+
+                return (
+                  <button
+                    key={remedyName}
+                    type="button"
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    onMouseDown={() => {
+                      onUpdateField('remedy', remedyName);
+                      onCloseSearch();
+                    }}
+                    className={`w-full text-left px-3 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer flex items-center justify-between ${
+                      isHighlighted
+                        ? 'bg-brand-primary-container text-brand-primary font-bold'
+                        : 'text-content-primary hover:bg-brand-surface-subtle'
+                    }`}
+                  >
+                    <span>{remedyName}</span>
+                    {isHighlighted && (
+                      <kbd className="text-[10px] font-mono px-1 rounded bg-brand-primary/10 text-brand-primary">
+                        ↵ select
+                      </kbd>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -78,7 +128,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           <select
             value={prescription.potency}
             onChange={(e) => onUpdateField('potency', e.target.value)}
-            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-xs font-mono font-bold text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-xs font-mono font-bold text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
           >
             {COMMON_POTENCIES.map((potency) => (
               <option key={potency} value={potency}>
@@ -93,7 +143,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           <select
             value={prescription.vehicle}
             onChange={(e) => onUpdateField('vehicle', e.target.value as DispensingVehicle)}
-            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-[11px] font-medium text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="w-full px-2 py-2 rounded-lg bg-white shadow-2xs text-[11px] font-medium text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
           >
             {DISPENSING_VEHICLES.map((vehicle) => (
               <option key={vehicle} value={vehicle}>
@@ -108,7 +158,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           <button
             type="button"
             onClick={onRemove}
-            className="p-1 rounded text-content-muted hover:text-reaction-aggravated hover:bg-white transition-colors"
+            className="p-1 rounded text-content-muted hover:text-reaction-aggravated hover:bg-white transition-colors cursor-pointer"
             title="Remove medicine"
           >
             <Trash2 className="w-4 h-4" />
@@ -134,7 +184,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
               key={macro}
               type="button"
               onClick={() => onUpdateField('dosage', macro)}
-              className="text-[10px] px-2 py-0.5 rounded-full bg-white hover:bg-brand-primary-container text-brand-primary shadow-2xs transition-colors"
+              className="text-[10px] px-2 py-0.5 rounded-full bg-white hover:bg-brand-primary-container text-brand-primary shadow-2xs transition-colors cursor-pointer"
             >
               {macro}
             </button>

@@ -33,7 +33,7 @@ export default function Home() {
     saveConsultation,
   } = usePatients();
 
-  // Separation of Concerns: Global keyboard shortcuts (F2, Alt+S, Escape)
+  // Separation of Concerns: Global keyboard shortcuts (F1-F4, Alt+S, Escape)
   useKeyboardShortcuts({
     onOpenNewPatient: () => setIsNewPatientOpen(true),
     onFocusSearch: () => {
@@ -41,6 +41,7 @@ export default function Home() {
       searchInputRef.current?.select();
     },
     onCloseModals: () => setIsNewPatientOpen(false),
+    onSelectTab: setActiveTab,
   });
 
   // Switch to OPD consultation when selecting a patient from archive

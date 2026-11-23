@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { RotateCcw, Plus, CheckCircle2 } from 'lucide-react';
 import { Patient, ReactionType, PrescriptionItem } from '@/types';
 import { getDemographicCohort } from '@/utils/demographics';
@@ -51,7 +51,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
     handleUpdateRemedy,
   } = useConsultationForm({ patient });
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     onSaveConsultation({
       reaction,
       symptoms,
@@ -61,7 +61,67 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       fee,
       feeStatus,
     });
-  };
+  }, [
+    onSaveConsultation,
+    reaction,
+    symptoms,
+    prescriptions,
+    doctorNotes,
+    durationDays,
+    fee,
+    feeStatus,
+  ]);
+
+  // Global & OPD Keyboard Shortcuts Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
+      const isInputFocused =
+        targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select';
+
+      // 1. Ctrl + Enter (or Cmd + Enter): Save & Next (Active everywhere, even inside inputs)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleSave();
+        return;
+      }
+
+      // 2. Alt + R: Repeat Previous Prescription
+      if (e.altKey && (e.key === 'r' || e.key === 'R')) {
+        e.preventDefault();
+        handleRepeatLastRx();
+        return;
+      }
+
+      // 3. Alt + A: Add Medicine Row
+      if (e.altKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        handleAddRemedy();
+        return;
+      }
+
+      // 4. Reactions: Keys [1] to [5]
+      // Plain 1-5 when not typing in an input/textarea, OR Alt + 1-5 anytime
+      const reactionKeys: Record<string, ReactionType> = {
+        '1': 'Improved',
+        '2': 'No Change',
+        '3': 'Aggravated',
+        '4': 'New',
+        '5': 'First Visit',
+      };
+
+      if (e.key in reactionKeys) {
+        if (!isInputFocused || e.altKey) {
+          e.preventDefault();
+          setReaction(reactionKeys[e.key]);
+          return;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSave, handleRepeatLastRx, handleAddRemedy, setReaction]);
 
   return (
     <section className="rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 sm:gap-6 h-full overflow-y-auto">
@@ -80,7 +140,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleRepeatLastRx}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} hover:opacity-90 text-xs font-semibold transition-all active:scale-98`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} hover:opacity-90 text-xs font-semibold transition-all active:scale-98 cursor-pointer`}
           title="Repeat Previous Prescription (Alt+R)"
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -107,7 +167,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           rows={3}
           value={symptoms}
           onChange={(e) => setSymptoms(e.target.value)}
-          placeholder="Type patient symptoms, complaints, modalities..."
+          placeholder="Type patient symptoms, complaints, modalities... (Ctrl+Enter to save)"
           className="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface-subtle text-sm text-content-primary placeholder:text-content-muted focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all shadow-2xs resize-none"
         />
       </div>
@@ -121,7 +181,8 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           <button
             type="button"
             onClick={handleAddRemedy}
-            className="inline-flex items-center gap-1 text-xs font-bold text-brand-primary hover:text-brand-primary-hover transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-bold text-brand-primary hover:text-brand-primary-hover transition-colors cursor-pointer"
+            title="Add Medicine Row (Alt+A)"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Medicine</span>
@@ -132,10 +193,10 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         </div>
 
         <div className="flex flex-col gap-3">
-          {prescriptions.map((rx, idx) => (
+          {prescriptions.map((prescriptionItem, idx) => (
             <PrescriptionRow
-              key={rx.id}
-              prescription={rx}
+              key={prescriptionItem.id}
+              prescription={prescriptionItem}
               isSearchActive={activeRemedySearchIndex === idx}
               onOpenSearch={() => setActiveRemedySearchIndex(idx)}
               onCloseSearch={() => setActiveRemedySearchIndex(null)}
@@ -163,7 +224,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
               key={days}
               type="button"
               onClick={() => setDurationDays(days)}
-              className={`py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 durationDays === days
                   ? `${demo.bannerTokenBg} text-white shadow-xs`
                   : 'bg-brand-surface-subtle text-content-secondary hover:bg-brand-surface'
@@ -215,7 +276,8 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className={`w-full py-3 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98`}
+          className={`w-full py-3 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98 cursor-pointer`}
+          title="Save & Proceed to Next Patient (Ctrl + Enter)"
         >
           <CheckCircle2 className="w-5 h-5 text-white" />
           <span>Save &amp; Next</span>

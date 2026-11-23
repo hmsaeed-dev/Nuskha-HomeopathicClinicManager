@@ -4,6 +4,7 @@ interface KeyboardShortcutsOptions {
   onOpenNewPatient?: () => void;
   onFocusSearch?: () => void;
   onCloseModals?: () => void;
+  onSelectTab?: (tab: 'opd' | 'analytics' | 'patients') => void;
   searchInputRef?: RefObject<HTMLInputElement | null>;
 }
 
@@ -15,6 +16,7 @@ export function useKeyboardShortcuts({
   onOpenNewPatient,
   onFocusSearch,
   onCloseModals,
+  onSelectTab,
   searchInputRef,
 }: KeyboardShortcutsOptions) {
   useEffect(() => {
@@ -23,10 +25,31 @@ export function useKeyboardShortcuts({
       const isInputFocused =
         targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select';
 
+      // F1: Switch to OPD Workspace
+      if (e.key === 'F1') {
+        e.preventDefault();
+        onSelectTab?.('opd');
+        return;
+      }
+
       // F2: Open New Patient Registration Walk-in Drawer
       if (e.key === 'F2') {
         e.preventDefault();
         onOpenNewPatient?.();
+        return;
+      }
+
+      // F3: Switch to Daily Register
+      if (e.key === 'F3') {
+        e.preventDefault();
+        onSelectTab?.('analytics');
+        return;
+      }
+
+      // F4: Switch to Patients Archive
+      if (e.key === 'F4') {
+        e.preventDefault();
+        onSelectTab?.('patients');
         return;
       }
 
@@ -54,5 +77,5 @@ export function useKeyboardShortcuts({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onOpenNewPatient, onFocusSearch, onCloseModals, searchInputRef]);
+  }, [onOpenNewPatient, onFocusSearch, onCloseModals, onSelectTab, searchInputRef]);
 }
