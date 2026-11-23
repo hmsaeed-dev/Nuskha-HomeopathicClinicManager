@@ -193,13 +193,13 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 
           {/* Today's Token & Initial OPD Fee */}
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="p-3 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col justify-between">
+            <div className="p-3 rounded-xl bg-brand-surface-subtle flex flex-col justify-between">
               <span className="text-[11px] font-bold text-content-secondary">Token Number</span>
               <span className="font-mono text-xl font-bold text-brand-primary">
                 #{nextDailyToken}
               </span>
             </div>
-            <div className="p-3 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col gap-1">
+            <div className="p-3 rounded-xl bg-brand-surface-subtle flex flex-col gap-1">
               <label className="text-[11px] font-bold text-content-secondary">
                 Fee ({clinicConfig.currency})
               </label>

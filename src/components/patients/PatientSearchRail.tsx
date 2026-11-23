@@ -24,7 +24,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
   searchInputRef,
 }) => {
   return (
-    <aside className="rounded-2xl bg-brand-surface-subtle p-4 flex flex-col gap-5 h-full border border-border-subtle">
+    <aside className="rounded-2xl bg-brand-surface-subtle p-4 flex flex-col gap-5 h-full">
       {/* Search Bar with Alt+S Badge */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
@@ -68,7 +68,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
 
         <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1">
           {filteredPatients.length === 0 ? (
-            <div className="text-center py-8 text-xs text-content-secondary font-medium bg-white rounded-xl p-5 border border-border-subtle">
+            <div className="text-center py-8 text-xs text-content-secondary font-medium bg-white rounded-xl p-5 shadow-2xs">
               No patients found.
               <div className="mt-1 text-xs text-brand-primary font-bold">
                 Press F2 for new patient
@@ -86,10 +86,10 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
                   role="button"
                   tabIndex={0}
                   onClick={() => onSelectPatient(patient)}
-                  className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 border ${
+                  className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 ${
                     isSelected
-                      ? `${demo.selectedCardBg} text-white shadow-md border-transparent`
-                      : 'bg-white text-content-primary hover:bg-white/95 shadow-2xs border-border-subtle'
+                      ? `${demo.selectedCardBg} text-white shadow-md`
+                      : 'bg-white text-content-primary hover:bg-white/95 shadow-2xs'
                   }`}
                 >
                   {/* Demographic Vertical Indicator Bar */}

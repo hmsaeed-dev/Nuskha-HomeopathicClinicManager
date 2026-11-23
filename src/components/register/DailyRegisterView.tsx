@@ -75,14 +75,14 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
       {/* 4-Column KPI Strip */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
         {/* KPI 1 */}
-        <article className="rounded-2xl bg-brand-dark text-white p-5 shadow-xs flex flex-col justify-between gap-3 border border-brand-dark">
+        <article className="rounded-2xl bg-brand-dark text-white p-5 shadow-xs flex flex-col justify-between gap-3">
           <span className="text-xs font-bold text-brand-dark-accent">Patients Seen</span>
           <span className="font-display text-3xl font-bold text-white">48</span>
           <p className="text-[11px] font-medium text-brand-dark-accent">Today&#39;s completed visits</p>
         </article>
 
         {/* KPI 2 */}
-        <article className="rounded-2xl bg-brand-primary-container text-brand-primary-dark p-5 shadow-xs flex flex-col justify-between gap-3 border border-border-subtle">
+        <article className="rounded-2xl bg-brand-primary-container text-brand-primary-dark p-5 shadow-xs flex flex-col justify-between gap-3">
           <span className="text-xs font-bold text-brand-primary-dark">Total Fees</span>
           <span className="font-display text-3xl font-bold text-brand-primary">
             {formatCurrency(22500)}
@@ -93,7 +93,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
         </article>
 
         {/* KPI 3 */}
-        <article className="rounded-2xl bg-demo-child-container text-demo-child-text p-5 shadow-xs flex flex-col justify-between gap-3 border border-border-subtle">
+        <article className="rounded-2xl bg-demo-child-container text-demo-child-text p-5 shadow-xs flex flex-col justify-between gap-3">
           <span className="text-xs font-bold text-demo-child-text">New vs. Return</span>
           <span className="font-display text-3xl font-bold text-demo-child-text">
             11 : 37
@@ -102,7 +102,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
         </article>
 
         {/* KPI 4 */}
-        <article className="rounded-2xl bg-demo-male-container text-demo-male-text p-5 shadow-xs flex flex-col justify-between gap-3 border border-border-subtle">
+        <article className="rounded-2xl bg-demo-male-container text-demo-male-text p-5 shadow-xs flex flex-col justify-between gap-3">
           <span className="text-xs font-bold text-demo-male-text">Avg. Time / Patient</span>
           <span className="font-display text-3xl font-bold text-demo-male-text">
             2m 18s
@@ -114,7 +114,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
       {/* Visual Throughput Chart + Outcome Breakdown */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* Hourly Patient Throughput */}
-        <article className="lg:col-span-8 rounded-2xl bg-white border border-border-subtle p-6 shadow-xs flex flex-col justify-between gap-4">
+        <article className="lg:col-span-8 rounded-2xl bg-white p-6 shadow-xs flex flex-col justify-between gap-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-display text-sm font-bold text-content-primary">
@@ -183,7 +183,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
         </article>
 
         {/* Case Mix & Outcomes */}
-        <article className="lg:col-span-4 rounded-2xl bg-white border border-border-subtle p-6 shadow-xs flex flex-col justify-between gap-4">
+        <article className="lg:col-span-4 rounded-2xl bg-white p-6 shadow-xs flex flex-col justify-between gap-4">
           <h3 className="font-display text-sm font-bold text-content-primary">
             Patient Progress
           </h3>
@@ -260,7 +260,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
       </section>
 
       {/* Consultation Log Table */}
-      <section className="rounded-2xl bg-white border border-border-subtle p-6 shadow-xs flex flex-col gap-4">
+      <section className="rounded-2xl bg-white p-6 shadow-xs flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="font-display text-base font-bold text-content-primary">
             Today&#39;s Log ({filteredVisits.length})
@@ -270,7 +270,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
           </span>
         </div>
 
-        <div className="w-full overflow-x-auto rounded-xl border border-border-subtle">
+        <div className="w-full overflow-x-auto rounded-xl">
           <table className="w-full text-left border-collapse text-xs">
             <thead className="bg-brand-surface-subtle text-content-primary border-b border-border-subtle">
               <tr>
@@ -330,13 +330,13 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                           {item.prescriptions.map((rx, rIdx) => (
                             <span
                               key={rIdx}
-                              className="px-2.5 py-0.5 rounded-full bg-brand-primary-container text-brand-primary-dark font-semibold text-[11px] border border-border-subtle"
+                              className="px-2.5 py-0.5 rounded-full bg-brand-primary-container text-brand-primary-dark font-semibold text-[11px]"
                             >
                               {rx.remedy} {rx.potency} ({rx.vehicle.split(' ')[0]})
                             </span>
                           ))}
                           {item.durationDays && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-surface-subtle text-content-primary font-mono font-bold border border-border-subtle">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-surface-subtle text-content-primary font-mono font-bold">
                               {item.durationDays}d
                             </span>
                           )}

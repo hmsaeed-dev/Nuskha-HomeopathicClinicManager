@@ -131,7 +131,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   }, [handleSave, handleRepeatLastRx, handleAddRemedy, setReaction, singleKeyShortcutsEnabled]);
 
   return (
-    <section className="rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 sm:gap-6 h-full overflow-y-auto border border-border-subtle">
+    <section className="rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 sm:gap-6 h-full overflow-y-auto">
       {/* Top Consultation Header */}
       <div className="flex items-center justify-between gap-2 pb-1">
         <div className="flex flex-col">
@@ -147,7 +147,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleRepeatLastRx}
-          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} border border-current/25 hover:shadow-xs text-xs font-bold transition-all active:scale-98 cursor-pointer`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} hover:shadow-xs text-xs font-bold transition-all active:scale-98 cursor-pointer`}
           title="Repeat Previous Prescription (Alt+R)"
         >
           <RotateCcw className="w-4 h-4" />
@@ -188,7 +188,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
           <button
             type="button"
             onClick={handleAddRemedy}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-brand-primary bg-brand-primary-container border border-brand-primary/20 hover:bg-brand-primary hover:text-white transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-brand-primary bg-brand-primary-container hover:bg-brand-primary hover:text-white transition-colors cursor-pointer"
             title="Add Medicine Row (Alt+A)"
           >
             <Plus className="w-4 h-4" />
@@ -231,10 +231,10 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
               key={days}
               type="button"
               onClick={() => setDurationDays(days)}
-              className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+              className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 durationDays === days
-                  ? `${demo.bannerTokenBg} text-white shadow-xs border-transparent`
-                  : 'bg-brand-surface-subtle text-content-primary border-border-subtle hover:bg-white hover:border-border-strong'
+                  ? `${demo.bannerTokenBg} text-white shadow-xs`
+                  : 'bg-brand-surface-subtle text-content-primary hover:bg-brand-surface'
               }`}
             >
               {days === 7 ? '1 Week (7d)' : days === 30 ? '1 Month (30d)' : `${days} Days`}
@@ -283,7 +283,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className={`w-full py-3.5 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98 cursor-pointer border border-white/20`}
+          className={`w-full py-3.5 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-sm font-bold transition-all active:scale-98 cursor-pointer`}
           title="Save & Proceed to Next Patient (Ctrl + Enter)"
         >
           <CheckCircle2 className="w-5 h-5 text-white" />

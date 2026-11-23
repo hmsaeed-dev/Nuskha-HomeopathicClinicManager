@@ -123,7 +123,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
       {/* ============================================================== */}
       {/* LEFT PANE (40% width / 5 cols): Master Patient Directory Roster */}
       {/* ============================================================== */}
-      <aside className="lg:col-span-5 rounded-2xl bg-brand-surface-subtle border border-border-subtle p-4 flex flex-col gap-4 h-full overflow-hidden">
+      <aside className="lg:col-span-5 rounded-2xl bg-brand-surface-subtle p-4 flex flex-col gap-4 h-full overflow-hidden">
         {/* Top Search & Filter Bar */}
         <div className="flex flex-col gap-2.5 shrink-0">
           <div className="flex items-center justify-between">
@@ -151,10 +151,10 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilter('all')}
-              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 ${
+              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 cursor-pointer ${
                 activeFilter === 'all'
                   ? 'bg-brand-primary text-white shadow-2xs'
-                  : 'bg-white text-content-secondary hover:bg-white/90 border border-border-subtle'
+                  : 'bg-white text-content-secondary hover:bg-white/90'
               }`}
             >
               All Cases ({patients.length})
@@ -162,10 +162,10 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilter('chronic')}
-              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 ${
+              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 cursor-pointer ${
                 activeFilter === 'chronic'
                   ? 'bg-brand-primary text-white shadow-2xs'
-                  : 'bg-white text-content-secondary hover:bg-white/90 border border-border-subtle'
+                  : 'bg-white text-content-secondary hover:bg-white/90'
               }`}
             >
               Chronic (3+ visits)
@@ -173,10 +173,10 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilter('recent')}
-              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 ${
+              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 cursor-pointer ${
                 activeFilter === 'recent'
                   ? 'bg-brand-primary text-white shadow-2xs'
-                  : 'bg-white text-content-secondary hover:bg-white/90 border border-border-subtle'
+                  : 'bg-white text-content-secondary hover:bg-white/90'
               }`}
             >
               Recent Visits
@@ -184,10 +184,10 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveFilter('dues')}
-              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 ${
+              className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 cursor-pointer ${
                 activeFilter === 'dues'
                   ? 'bg-reaction-aggravated text-white shadow-2xs'
-                  : 'bg-white text-content-secondary hover:bg-white/90 border border-border-subtle'
+                  : 'bg-white text-content-secondary hover:bg-white/90'
               }`}
             >
               With Dues
@@ -198,7 +198,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
         {/* Patients Roster List */}
         <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1">
           {filteredPatients.length === 0 ? (
-            <div className="text-center py-12 text-xs text-content-secondary font-medium bg-white border border-border-subtle rounded-xl p-5">
+            <div className="text-center py-12 text-xs text-content-secondary font-medium bg-white rounded-xl p-5 shadow-2xs">
               No patient records found matching your filter.
             </div>
           ) : (
@@ -215,8 +215,8 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                   onClick={() => setSelectedPatientId(patientItem.id)}
                   className={`p-3.5 rounded-xl flex items-center gap-3 cursor-pointer transition-all duration-150 relative ${
                     isSelected
-                      ? `${pDemo.selectedCardBg} text-white shadow-sm border border-transparent`
-                      : 'bg-white border border-border-subtle text-content-primary hover:bg-brand-surface shadow-2xs'
+                      ? `${pDemo.selectedCardBg} text-white shadow-sm`
+                      : 'bg-white text-content-primary hover:bg-brand-surface shadow-2xs'
                   }`}
                 >
                   {/* Left demographic accent bar */}
@@ -285,7 +285,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                           className={`text-[10px] px-2 py-0.5 rounded font-bold inline-block truncate max-w-full ${
                             isSelected
                               ? 'bg-white/20 text-white'
-                              : 'bg-brand-surface-subtle text-brand-primary-dark border border-border-subtle'
+                              : 'bg-brand-surface-subtle text-brand-primary-dark'
                           }`}
                         >
                           {patientItem.chiefComplaints[0].name} ({patientItem.chiefComplaints[0].trend})
@@ -303,7 +303,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
       {/* ============================================================== */}
       {/* RIGHT PANE (60% width / 7 cols): Patient Dossier & Case Archive */}
       {/* ============================================================== */}
-      <main className="lg:col-span-7 rounded-2xl bg-white border border-border-subtle p-5 sm:p-6 shadow-xs flex flex-col gap-5 h-full overflow-y-auto">
+      <main className="lg:col-span-7 rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 h-full overflow-y-auto">
         {selectedPatient ? (
           <>
             {/* 1. Header Card (Patient Identity in Demographic Theme) */}
@@ -344,7 +344,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                 <button
                   type="button"
                   onClick={() => onSelectPatientForOPD(selectedPatient)}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-content-primary hover:bg-brand-surface text-xs font-bold shadow-md transition-all active:scale-98 shrink-0 border border-border-subtle cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-content-primary hover:bg-brand-surface text-xs font-bold shadow-md transition-all active:scale-98 shrink-0 cursor-pointer"
                 >
                   <UserCheck className="w-4 h-4 text-brand-primary" />
                   <span>Start OPD Consultation</span>
@@ -361,7 +361,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                   {selectedPatient.chiefComplaints.map((cc) => (
                     <span
                       key={cc.id}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/15 border border-white/25 text-xs text-white"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/15 text-xs text-white"
                     >
                       <span className="font-bold">{cc.name}</span>
                       {cc.duration && (
@@ -388,7 +388,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 
             {/* 2. Lifetime Case Summary Ribbon */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 items-stretch">
-              <div className="p-3.5 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col justify-between gap-1 shadow-2xs">
+              <div className="p-3.5 rounded-xl bg-brand-surface-subtle flex flex-col justify-between gap-1 shadow-2xs">
                 <span className="text-[11px] font-bold text-content-secondary flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5 text-brand-primary" /> First Visit
                 </span>
@@ -399,7 +399,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col justify-between gap-1 shadow-2xs">
+              <div className="p-3.5 rounded-xl bg-brand-surface-subtle flex flex-col justify-between gap-1 shadow-2xs">
                 <span className="text-[11px] font-bold text-content-secondary flex items-center gap-1">
                   <Activity className="w-3.5 h-3.5 text-brand-primary" /> Total Consultations
                 </span>
@@ -408,7 +408,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col justify-between gap-1 shadow-2xs">
+              <div className="p-3.5 rounded-xl bg-brand-surface-subtle flex flex-col justify-between gap-1 shadow-2xs">
                 <span className="text-[11px] font-bold text-content-secondary flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-brand-primary" /> Last Visit
                 </span>
@@ -417,7 +417,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col justify-between gap-1 shadow-2xs">
+              <div className="p-3.5 rounded-xl bg-brand-surface-subtle flex flex-col justify-between gap-1 shadow-2xs">
                 <span className="text-[11px] font-bold text-content-secondary flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5 text-reaction-improved" /> Total Fees Paid
                 </span>
@@ -436,7 +436,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 
             {/* 3. Constitutional Remedies Favored */}
             {lifetimeRemedies.length > 0 && (
-              <div className="flex flex-col gap-2 p-4 rounded-xl bg-brand-surface-subtle border border-border-subtle">
+              <div className="flex flex-col gap-2 p-4 rounded-xl bg-brand-surface-subtle">
                 <span className="text-xs font-bold text-content-primary flex items-center gap-1.5">
                   <Pill className="w-3.5 h-3.5 text-brand-primary" />
                   Constitutional Remedies Prescribed ({lifetimeRemedies.length})
@@ -445,7 +445,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                   {lifetimeRemedies.map((rem, idx) => (
                     <span
                       key={idx}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-border-subtle text-brand-primary-dark font-bold text-xs shadow-2xs"
+                      className="px-2.5 py-1 rounded-lg bg-white text-brand-primary-dark font-bold text-xs shadow-2xs"
                     >
                       {rem}
                     </span>
@@ -464,7 +464,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
               </div>
 
               {selectedPatient.pastVisits.length === 0 ? (
-                <div className="text-center py-10 text-xs text-content-secondary font-medium bg-brand-surface-subtle border border-border-subtle rounded-xl p-6">
+                <div className="text-center py-10 text-xs text-content-secondary font-medium bg-brand-surface-subtle rounded-xl p-6">
                   No historical consultations recorded yet.
                 </div>
               ) : (
@@ -475,7 +475,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                     return (
                       <article
                         key={visit.id}
-                        className="rounded-xl bg-brand-surface-subtle border border-border-subtle p-4 shadow-2xs flex flex-col gap-2.5 hover:bg-brand-surface transition-colors"
+                        className="rounded-xl bg-brand-surface-subtle p-4 shadow-2xs flex flex-col gap-2.5 hover:bg-brand-surface transition-colors"
                       >
                         {/* Visit Header */}
                         <header className="flex items-center justify-between gap-2 flex-wrap">
@@ -495,7 +495,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                               {visit.date}
                             </span>
                             {visit.durationDays && (
-                              <span className="text-[10px] px-2 py-0.5 rounded bg-white border border-border-subtle text-content-primary font-mono font-bold">
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-white text-content-primary font-mono font-bold">
                                 {visit.durationDays}d course
                               </span>
                             )}
@@ -524,7 +524,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                           {visit.prescriptions.map((rx) => (
                             <div
                               key={rx.id}
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-border-subtle shadow-2xs text-xs text-brand-primary-dark"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white shadow-2xs text-xs text-brand-primary-dark"
                             >
                               <span className="font-bold">{rx.remedy}</span>
                               <span className="font-mono text-[11px] text-brand-primary font-bold">

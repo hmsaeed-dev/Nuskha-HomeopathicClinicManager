@@ -31,9 +31,9 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
   const demo = DEMOGRAPHIC_CONFIG[cohort];
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-xs flex flex-col gap-5 h-full overflow-hidden border border-border-subtle">
+    <section className="rounded-2xl bg-white p-5 shadow-xs flex flex-col gap-5 h-full overflow-hidden">
       {/* Patient Identity Anchor (Demographic Cohort Characteristic Card) */}
-      <div className={`rounded-2xl ${demo.bannerBg} text-white p-5 shadow-sm flex flex-col gap-4 shrink-0 transition-colors duration-200 border border-white/10`}>
+      <div className={`rounded-2xl ${demo.bannerBg} text-white p-5 shadow-sm flex flex-col gap-4 shrink-0 transition-colors duration-200`}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
             <h1 className="font-display text-2xl font-bold tracking-tight text-white">
@@ -55,7 +55,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
           </div>
 
           <div className="flex flex-col items-end gap-1 shrink-0">
-            <span className={`px-2.5 py-1 rounded-full ${demo.bannerTokenBg} text-white text-xs font-bold shadow-xs border border-white/20`}>
+            <span className={`px-2.5 py-1 rounded-full ${demo.bannerTokenBg} text-white text-xs font-bold shadow-xs`}>
               {patient.totalVisits > 0 ? `Visit #${patient.totalVisits}` : 'First Visit'}
             </span>
             <span className="text-xs text-white font-medium">
@@ -154,7 +154,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
 
         <div className="flex-1 overflow-y-auto pr-1">
           {patient.pastVisits.length === 0 ? (
-            <div className="text-center py-12 text-xs text-content-secondary bg-brand-surface-subtle rounded-2xl p-6 border border-border-subtle">
+            <div className="text-center py-12 text-xs text-content-secondary bg-brand-surface-subtle rounded-2xl p-6 shadow-2xs">
               No past visits.
               <div className="mt-1 text-xs text-brand-primary font-bold">
                 First visit today.
@@ -168,7 +168,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                 return (
                   <article
                     key={visit.id}
-                    className="rounded-xl bg-brand-surface-subtle p-4 shadow-2xs flex flex-col gap-2.5 hover:bg-brand-surface transition-colors border border-border-subtle"
+                    className="rounded-xl bg-brand-surface-subtle p-4 shadow-2xs flex flex-col gap-2.5 hover:bg-brand-surface transition-colors"
                   >
                     {/* Visit Header */}
                     <header className="flex items-center justify-between gap-2">
@@ -188,7 +188,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                           {visit.date}
                         </span>
                         {visit.durationDays && (
-                          <span className="text-[11px] px-2 py-0.5 rounded bg-brand-surface border border-border-subtle text-content-primary font-mono font-bold">
+                          <span className="text-[11px] px-2 py-0.5 rounded bg-brand-surface text-content-primary font-mono font-bold">
                             {visit.durationDays}d course
                           </span>
                         )}
@@ -227,7 +227,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                       {visit.prescriptions.map((rx, idx) => (
                         <div
                           key={idx}
-                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-primary-container text-brand-primary-dark text-xs font-semibold border border-brand-primary/20"
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-primary-container text-brand-primary-dark text-xs font-semibold"
                         >
                           {rx.vehicle.includes('Drops') ? (
                             <Droplet className="w-3.5 h-3.5 text-brand-primary" />

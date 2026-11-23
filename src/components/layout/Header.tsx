@@ -48,10 +48,10 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/"
               title="OPD Workspace Page (F1)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer border ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
                 isOpdActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark border-border-subtle shadow-2xs'
-                  : 'text-content-secondary border-transparent hover:bg-brand-surface-subtle hover:text-content-primary hover:border-border-subtle'
+                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
+                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -61,10 +61,10 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/register"
               title="Daily Register Page (F3)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer border ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
                 isRegisterActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark border-border-subtle shadow-2xs'
-                  : 'text-content-secondary border-transparent hover:bg-brand-surface-subtle hover:text-content-primary hover:border-border-subtle'
+                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
+                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
               }`}
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -74,10 +74,10 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/patients"
               title="Patients Archive Page (F4)"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer border ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
                 isPatientsActive
-                  ? 'bg-brand-primary-container text-brand-primary-dark border-border-subtle shadow-2xs'
-                  : 'text-content-secondary border-transparent hover:bg-brand-surface-subtle hover:text-content-primary hover:border-border-subtle'
+                  ? 'bg-brand-primary-container text-brand-primary-dark shadow-2xs'
+                  : 'text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => openSettings('shortcuts')}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle hover:bg-brand-surface text-content-primary text-xs font-bold transition-all shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-surface-subtle hover:bg-brand-surface text-content-primary text-xs font-bold transition-all shadow-2xs cursor-pointer"
             title="Keyboard Shortcuts & Practice Settings (Press ?)"
           >
             <Keyboard className="w-4 h-4 text-brand-primary" />
@@ -103,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {/* Real-time Session Chip */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-surface-subtle border border-border-subtle text-content-primary text-xs font-semibold">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-surface-subtle text-content-primary text-xs font-semibold">
             <Clock className="w-3.5 h-3.5 text-content-secondary" />
             <span>Today&#39;s OPD:</span>
             <span className="font-mono font-bold text-brand-primary">{todayCount}</span>

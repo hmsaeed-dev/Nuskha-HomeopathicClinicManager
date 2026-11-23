@@ -41,7 +41,7 @@ export const ReactionSelector: React.FC<ReactionSelectorProps> = ({
         </span>
       </div>
 
-      <div className="grid grid-cols-5 gap-1.5 bg-brand-surface-subtle p-1.5 rounded-xl border border-border-subtle">
+      <div className="grid grid-cols-5 gap-1.5 bg-brand-surface-subtle p-1.5 rounded-xl">
         {REACTION_TYPES.map((reaction) => {
           const config = REACTION_CONFIG[reaction];
           const isSelected = currentReaction === reaction;

@@ -461,7 +461,7 @@ export const SettingsModal: React.FC = () => {
                           {itemsInCat.map((item) => (
                             <div
                               key={item.id}
-                              className="p-3 rounded-xl bg-brand-surface-subtle border border-border-subtle flex items-center justify-between gap-3 hover:bg-brand-surface transition-colors"
+                              className="p-3 rounded-xl bg-brand-surface-subtle flex items-center justify-between gap-3 hover:bg-brand-surface transition-colors"
                             >
                               <div className="flex flex-col min-w-0">
                                 <span className="text-xs font-bold text-content-primary truncate">
@@ -699,7 +699,7 @@ export const SettingsModal: React.FC = () => {
                     {dosageMacros.map((macro, idx) => (
                       <div
                         key={idx}
-                        className="p-3 rounded-xl bg-brand-surface-subtle border border-border-subtle flex items-center justify-between gap-2"
+                        className="p-3 rounded-xl bg-brand-surface-subtle flex items-center justify-between gap-2"
                       >
                         <span className="text-xs font-bold text-content-primary truncate">
                           {macro}
@@ -734,7 +734,7 @@ export const SettingsModal: React.FC = () => {
                 </div>
 
                 {/* Audio Feedback Toggle */}
-                <div className="p-4 rounded-xl bg-brand-surface-subtle border border-border-subtle flex items-center justify-between gap-4">
+                <div className="p-4 rounded-xl bg-brand-surface-subtle flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-white border border-border-subtle flex items-center justify-center text-brand-primary">
                       <Volume2 className="w-4 h-4" />
@@ -767,7 +767,7 @@ export const SettingsModal: React.FC = () => {
                 </div>
 
                 {/* Single-Key Hotkeys Toggle */}
-                <div className="p-4 rounded-xl bg-brand-surface-subtle border border-border-subtle flex items-center justify-between gap-4">
+                <div className="p-4 rounded-xl bg-brand-surface-subtle flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-white border border-border-subtle flex items-center justify-center text-brand-primary">
                       <Keyboard className="w-4 h-4" />
@@ -791,7 +791,7 @@ export const SettingsModal: React.FC = () => {
                 </div>
 
                 {/* Data Export Strip */}
-                <div className="p-4 rounded-xl bg-brand-surface-subtle border border-border-subtle flex items-center justify-between gap-4">
+                <div className="p-4 rounded-xl bg-brand-surface-subtle flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-white border border-border-subtle flex items-center justify-center text-brand-primary">
                       <Download className="w-4 h-4" />

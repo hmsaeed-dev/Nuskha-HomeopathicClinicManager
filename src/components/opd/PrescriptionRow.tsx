@@ -68,7 +68,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
   };
 
   return (
-    <div className="p-3.5 rounded-xl bg-brand-surface-subtle shadow-2xs flex flex-col gap-2.5 border border-border-subtle">
+    <div className="p-3.5 rounded-xl bg-brand-surface-subtle shadow-2xs flex flex-col gap-2.5">
       {/* Row 1: Remedy + Potency + Vehicle + Delete */}
       <div className="grid grid-cols-12 gap-2 items-center">
         {/* Remedy Name Input with Autocomplete */}
@@ -185,7 +185,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
               key={macro}
               type="button"
               onClick={() => onUpdateField('dosage', macro)}
-              className="text-[11px] px-2.5 py-0.5 rounded-full bg-white hover:bg-brand-primary-container text-brand-primary-dark font-bold shadow-2xs transition-colors border border-border-subtle cursor-pointer"
+              className="text-[11px] px-2.5 py-0.5 rounded-full bg-white hover:bg-brand-primary-container text-brand-primary-dark font-bold shadow-2xs transition-colors cursor-pointer"
             >
               {macro}
             </button>
