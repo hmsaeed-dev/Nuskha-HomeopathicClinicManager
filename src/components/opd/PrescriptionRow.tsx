@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { Droplet, Pill, Trash2 } from 'lucide-react';
 import { PrescriptionItem, DispensingVehicle } from '@/types';
+import { useSettingsContext } from '@/context/SettingsContext';
 import {
   COMMON_REMEDIES,
   COMMON_POTENCIES,
   DISPENSING_VEHICLES,
-  DOSAGE_MACROS,
 } from '@/constants/clinical';
 
 interface PrescriptionRowProps {
@@ -27,6 +27,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
   onUpdateField,
   onRemove,
 }) => {
+  const { dosageMacros } = useSettingsContext();
   const [highlightedIndex, setHighlightedIndex] = useState(0);
 
   const filteredRemedies = COMMON_REMEDIES.filter((remedy) =>
@@ -179,7 +180,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
         {/* Presets */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[11px] text-content-primary font-bold">Presets:</span>
-          {DOSAGE_MACROS.map((macro) => (
+          {dosageMacros.map((macro) => (
             <button
               key={macro}
               type="button"

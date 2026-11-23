@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { X, UserPlus, Phone, MapPin } from 'lucide-react';
 import { Patient } from '@/types';
 import { LOCALITY_PRESETS } from '@/constants/clinical';
-import { CLINIC_CONFIG } from '@/config/clinic.config';
+import { useSettingsContext } from '@/context/SettingsContext';
 
 interface NewPatientDrawerProps {
   isOpen: boolean;
@@ -19,6 +19,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
   onRegisterPatient,
   nextDailyToken,
 }) => {
+  const { clinicConfig } = useSettingsContext();
   const [fullName, setFullName] = useState('');
   const [relationType, setRelationType] = useState<'s/o' | 'w/o' | 'd/o'>('s/o');
   const [relativeName, setRelativeName] = useState('');
@@ -26,7 +27,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
   const [gender, setGender] = useState<'Male' | 'Female' | 'Child'>('Male');
   const [phone, setPhone] = useState('0300-');
   const [locality, setLocality] = useState<string>(LOCALITY_PRESETS[0] || 'Taxila Cantt');
-  const [fee, setFee] = useState<number>(CLINIC_CONFIG.defaultConsultationFee);
+  const [fee, setFee] = useState<number>(clinicConfig.defaultConsultationFee);
 
   if (!isOpen) return null;
 
@@ -200,7 +201,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
             </div>
             <div className="p-3 rounded-xl bg-brand-surface-subtle border border-border-subtle flex flex-col gap-1">
               <label className="text-[11px] font-bold text-content-secondary">
-                Fee ({CLINIC_CONFIG.currency})
+                Fee ({clinicConfig.currency})
               </label>
               <input
                 type="number"

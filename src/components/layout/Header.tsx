@@ -3,8 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Stethoscope, UserPlus, FileSpreadsheet, LayoutDashboard, Clock, Users } from 'lucide-react';
-import { CLINIC_CONFIG } from '@/config/clinic.config';
+import { Stethoscope, UserPlus, FileSpreadsheet, LayoutDashboard, Clock, Users, Keyboard } from 'lucide-react';
+import { useSettingsContext } from '@/context/SettingsContext';
 
 interface HeaderProps {
   onOpenNewPatient: () => void;
@@ -16,6 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
   todayCount,
 }) => {
   const pathname = usePathname();
+  const { clinicConfig, openSettings } = useSettingsContext();
 
   const isOpdActive = pathname === '/';
   const isRegisterActive = pathname === '/register';
@@ -33,11 +34,11 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-display text-xl font-bold text-content-primary leading-none tracking-tight">
-                  {CLINIC_CONFIG.name}
+                  {clinicConfig.name}
                 </span>
               </div>
               <span className="text-xs text-content-secondary mt-0.5">
-                {CLINIC_CONFIG.doctorName} · {CLINIC_CONFIG.subtitle}
+                {clinicConfig.doctorName} · {clinicConfig.subtitle}
               </span>
             </div>
           </Link>
@@ -86,7 +87,21 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Live Session Counter & Walk-in Action */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          {/* Shortcuts & Settings Trigger (?) */}
+          <button
+            type="button"
+            onClick={() => openSettings('shortcuts')}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle hover:bg-brand-surface text-content-primary text-xs font-bold transition-all shadow-2xs cursor-pointer"
+            title="Keyboard Shortcuts & Practice Settings (Press ?)"
+          >
+            <Keyboard className="w-4 h-4 text-brand-primary" />
+            <span className="hidden xl:inline">Shortcuts</span>
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-border-strong text-content-primary rounded font-bold shadow-2xs">
+              ?
+            </kbd>
+          </button>
+
           {/* Real-time Session Chip */}
           <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-surface-subtle border border-border-subtle text-content-primary text-xs font-semibold">
             <Clock className="w-3.5 h-3.5 text-content-secondary" />

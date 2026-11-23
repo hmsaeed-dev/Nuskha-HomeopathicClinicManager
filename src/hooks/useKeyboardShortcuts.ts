@@ -4,6 +4,7 @@ interface KeyboardShortcutsOptions {
   onOpenNewPatient?: () => void;
   onFocusSearch?: () => void;
   onCloseModals?: () => void;
+  onOpenSettings?: () => void;
   onSelectTab?: (tab: 'opd' | 'analytics' | 'patients') => void;
   searchInputRef?: RefObject<HTMLInputElement | null>;
 }
@@ -16,6 +17,7 @@ export function useKeyboardShortcuts({
   onOpenNewPatient,
   onFocusSearch,
   onCloseModals,
+  onOpenSettings,
   onSelectTab,
   searchInputRef,
 }: KeyboardShortcutsOptions) {
@@ -24,6 +26,13 @@ export function useKeyboardShortcuts({
       const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
       const isInputFocused =
         targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select';
+
+      // ?: Open Keyboard Shortcuts Cheat Sheet & Settings
+      if ((e.key === '?' || (e.shiftKey && e.key === '/')) && !isInputFocused) {
+        e.preventDefault();
+        onOpenSettings?.();
+        return;
+      }
 
       // F1: Switch to OPD Workspace
       if (e.key === 'F1') {
@@ -77,5 +86,5 @@ export function useKeyboardShortcuts({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onOpenNewPatient, onFocusSearch, onCloseModals, onSelectTab, searchInputRef]);
+  }, [onOpenNewPatient, onFocusSearch, onCloseModals, onOpenSettings, onSelectTab, searchInputRef]);
 }

@@ -5,7 +5,8 @@ import { RotateCcw, Plus, CheckCircle2 } from 'lucide-react';
 import { Patient, ReactionType, PrescriptionItem } from '@/types';
 import { getDemographicCohort } from '@/utils/demographics';
 import { DEMOGRAPHIC_CONFIG } from '@/constants/demographics';
-import { CLINIC_CONFIG } from '@/config/clinic.config';
+import { useSettingsContext } from '@/context/SettingsContext';
+import { playSuccessChime } from '@/utils/sound';
 import { useConsultationForm } from '@/hooks/useConsultationForm';
 import { ReactionSelector } from './ReactionSelector';
 import { PrescriptionRow } from './PrescriptionRow';
@@ -29,6 +30,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
 }) => {
   const cohort = getDemographicCohort(patient.age, patient.gender);
   const demo = DEMOGRAPHIC_CONFIG[cohort];
+  const { clinicConfig, audioChimeEnabled, singleKeyShortcutsEnabled } = useSettingsContext();
 
   const {
     reaction,
@@ -52,6 +54,10 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   } = useConsultationForm({ patient });
 
   const handleSave = useCallback(() => {
+    if (audioChimeEnabled) {
+      playSuccessChime();
+    }
+
     onSaveConsultation({
       reaction,
       symptoms,
@@ -63,6 +69,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
     });
   }, [
     onSaveConsultation,
+    audioChimeEnabled,
     reaction,
     symptoms,
     prescriptions,
@@ -110,7 +117,8 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       };
 
       if (e.key in reactionKeys) {
-        if (!isInputFocused || e.altKey) {
+        const isAllowed = singleKeyShortcutsEnabled ? (!isInputFocused || e.altKey) : e.altKey;
+        if (isAllowed) {
           e.preventDefault();
           setReaction(reactionKeys[e.key]);
           return;
@@ -120,7 +128,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleRepeatLastRx, handleAddRemedy, setReaction]);
+  }, [handleSave, handleRepeatLastRx, handleAddRemedy, setReaction, singleKeyShortcutsEnabled]);
 
   return (
     <section className="rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 sm:gap-6 h-full overflow-y-auto border border-border-subtle">
@@ -218,7 +226,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         </div>
 
         <div className="grid grid-cols-4 gap-2">
-          {CLINIC_CONFIG.availableCourseDurations.map((days) => (
+          {clinicConfig.availableCourseDurations.map((days) => (
             <button
               key={days}
               type="button"
@@ -254,7 +262,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <div className="col-span-4 flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <label htmlFor="fee" className="text-xs font-bold text-content-primary">
-              Fee ({CLINIC_CONFIG.currency})
+              Fee ({clinicConfig.currency})
             </label>
             <span className="text-xs text-brand-primary font-bold">{feeStatus}</span>
           </div>

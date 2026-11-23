@@ -5,7 +5,7 @@ import { Search } from 'lucide-react';
 import { Patient } from '@/types';
 import { getDemographicCohort } from '@/utils/demographics';
 import { DEMOGRAPHIC_CONFIG } from '@/constants/demographics';
-import { CLINIC_CONFIG } from '@/config/clinic.config';
+import { useSettingsContext } from '@/context/SettingsContext';
 import { REACTION_CONFIG } from '@/constants/clinical';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 
@@ -14,6 +14,7 @@ interface DailyRegisterViewProps {
 }
 
 export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }) => {
+  const { clinicConfig } = useSettingsContext();
   const [filterText, setFilterText] = useState('');
 
   // Flatten consultations for today
@@ -53,7 +54,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
             </span>
           </div>
           <p className="text-xs text-content-secondary mt-1">
-            {formatDate(new Date())} · {CLINIC_CONFIG.sessionTimings} · {CLINIC_CONFIG.doctorName} Clinic
+            {formatDate(new Date())} · {clinicConfig.sessionTimings} · {clinicConfig.doctorName} Clinic
           </p>
         </div>
 

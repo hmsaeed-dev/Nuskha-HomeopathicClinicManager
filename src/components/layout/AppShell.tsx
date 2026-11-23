@@ -3,8 +3,10 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { PatientsProvider, usePatientsContext } from '@/context/PatientsContext';
+import { SettingsProvider, useSettingsContext } from '@/context/SettingsContext';
 import { Header } from '@/components/layout/Header';
 import { NewPatientDrawer } from '@/components/patients/NewPatientDrawer';
+import { SettingsModal } from '@/components/settings/SettingsModal';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 function AppShellInner({ children }: { children: React.ReactNode }) {
@@ -16,10 +18,16 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
     todayCount,
   } = usePatientsContext();
 
+  const { openSettings, closeSettings } = useSettingsContext();
+
   // Global Page & Modal Keyboard Navigation
   useKeyboardShortcuts({
     onOpenNewPatient: () => setIsNewPatientOpen(true),
-    onCloseModals: () => setIsNewPatientOpen(false),
+    onOpenSettings: () => openSettings('shortcuts'),
+    onCloseModals: () => {
+      setIsNewPatientOpen(false);
+      closeSettings();
+    },
     onSelectTab: (tab) => {
       if (tab === 'opd') {
         router.push('/');
@@ -49,14 +57,19 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         onRegisterPatient={registerPatient}
         nextDailyToken={todayCount + 1}
       />
+
+      {/* Shortcuts Guide & Clinic Settings Modal (Active on any page via ?) */}
+      <SettingsModal />
     </div>
   );
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <PatientsProvider>
-      <AppShellInner>{children}</AppShellInner>
-    </PatientsProvider>
+    <SettingsProvider>
+      <PatientsProvider>
+        <AppShellInner>{children}</AppShellInner>
+      </PatientsProvider>
+    </SettingsProvider>
   );
 }
