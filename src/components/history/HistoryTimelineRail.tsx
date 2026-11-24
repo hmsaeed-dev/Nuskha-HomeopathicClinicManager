@@ -7,8 +7,6 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { Patient, PastVisit } from '@/types';
-import { getDemographicCohort } from '@/utils/demographics';
-import { DEMOGRAPHIC_CONFIG } from '@/constants/demographics';
 import { formatCurrency } from '@/utils/formatters';
 import { playSuccessChime } from '@/utils/sound';
 import { usePatientsContext } from '@/context/PatientsContext';
@@ -25,8 +23,6 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
 }) => {
   const { settlePatientDues } = usePatientsContext();
   const [isSettledJustNow, setIsSettledJustNow] = useState(false);
-  const cohort = getDemographicCohort(patient.age, patient.gender);
-  const demo = DEMOGRAPHIC_CONFIG[cohort];
 
   // Calculate outstanding dues for this patient
   const totalDue = useMemo(() => {
@@ -46,9 +42,9 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
 
   return (
     <section className="rounded-2x p-5 shadow-xs flex flex-col gap-5 h-full overflow-hidden">
-      {/* Patient Identity Anchor (Demographic Cohort Characteristic Card) */}
+      {/* Patient Identity Banner (Unified Brand Hero Dark Green) */}
       <div
-        className={`rounded-2xl ${demo.bannerBg} text-white p-5 shadow-sm flex flex-col gap-4 shrink-0 transition-colors duration-200`}
+        className="rounded-2xl bg-brand-primary-dark text-white p-5 shadow-sm flex flex-col gap-4 shrink-0 transition-colors duration-200"
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
@@ -57,15 +53,14 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
             </h1>
 
             <div
-              className={`text-xs text-white flex items-center gap-2 flex-wrap mt-0.5`}
+              className="text-xs text-white/90 flex items-center gap-2 flex-wrap mt-0.5"
             >
               <span className="font-semibold text-white">
                 {patient.relationType} {patient.relativeName}
               </span>
               <span>·</span>
               <span
-                className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${demo.chipDarkBg} ${demo.chipDarkText}`}
-                title={demo.label}
+                className="px-2 py-0.5 rounded-md text-[11px] font-bold bg-white/20 border border-white/25 text-white"
               >
                 {patient.age} Y
               </span>
@@ -92,17 +87,13 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
         </div>
 
         {/* Secondary Contact Bar */}
-        <div className="flex items-center gap-4 text-xs text-white font-medium pt-1">
+        <div className="flex items-center gap-4 text-xs text-white/80 font-medium pt-1">
           <span className="flex items-center gap-1.5">
-            <MapPin
-              className={`w-3.5 h-3.5 ${demo.bannerAccentText}`}
-            />
+            <MapPin className="w-3.5 h-3.5 text-brand-primary-light" />
             {patient.locality}
           </span>
           <span className="flex items-center gap-1.5 font-mono">
-            <Phone
-              className={`w-3.5 h-3.5 ${demo.bannerAccentText}`}
-            />
+            <Phone className="w-3.5 h-3.5 text-brand-primary-light" />
             {patient.phone}
           </span>
         </div>

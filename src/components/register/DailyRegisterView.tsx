@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import { Patient, ReactionType } from '@/types';
 import { getDemographicCohort } from '@/utils/demographics';
-import { DEMOGRAPHIC_CONFIG } from '@/constants/demographics';
 import { useSettingsContext } from '@/context/SettingsContext';
 import { REACTION_CONFIG } from '@/constants/clinical';
 import { formatCurrency, formatDate } from '@/utils/formatters';
@@ -786,7 +785,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                             cy="50"
                             r={demoChart.radius}
                             fill="none"
-                            stroke="var(--color-demo-male)"
+                            stroke="#1b4332"
                             strokeWidth="11"
                             strokeDasharray={demoChart.male.dasharray}
                             strokeDashoffset={demoChart.male.offset}
@@ -799,7 +798,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                             cy="50"
                             r={demoChart.radius}
                             fill="none"
-                            stroke="var(--color-demo-female)"
+                            stroke="#2d6a4f"
                             strokeWidth="11"
                             strokeDasharray={demoChart.female.dasharray}
                             strokeDashoffset={demoChart.female.offset}
@@ -812,7 +811,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                             cy="50"
                             r={demoChart.radius}
                             fill="none"
-                            stroke="var(--color-demo-child)"
+                            stroke="#40916c"
                             strokeWidth="11"
                             strokeDasharray={demoChart.child.dasharray}
                             strokeDashoffset={demoChart.child.offset}
@@ -825,7 +824,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                             cy="50"
                             r={demoChart.radius}
                             fill="none"
-                            stroke="var(--color-demo-senior)"
+                            stroke="#74c69d"
                             strokeWidth="11"
                             strokeDasharray={demoChart.senior.dasharray}
                             strokeDashoffset={demoChart.senior.offset}
@@ -852,7 +851,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                   {/* Men */}
                   <div className="flex items-center justify-between gap-4 text-xs">
                     <span className="flex items-center gap-2 font-medium text-content-primary">
-                      <span className="w-2.5 h-2.5 rounded-full bg-demo-male shrink-0" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#1b4332] shrink-0" />
                       Men
                     </span>
                     <div className="flex items-center gap-1.5 font-mono">
@@ -864,7 +863,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                   {/* Women */}
                   <div className="flex items-center justify-between gap-4 text-xs">
                     <span className="flex items-center gap-2 font-medium text-content-primary">
-                      <span className="w-2.5 h-2.5 rounded-full bg-demo-female shrink-0" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#2d6a4f] shrink-0" />
                       Women
                     </span>
                     <div className="flex items-center gap-1.5 font-mono">
@@ -876,7 +875,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                   {/* Children */}
                   <div className="flex items-center justify-between gap-4 text-xs">
                     <span className="flex items-center gap-2 font-medium text-content-primary">
-                      <span className="w-2.5 h-2.5 rounded-full bg-demo-child shrink-0" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#40916c] shrink-0" />
                       Children
                     </span>
                     <div className="flex items-center gap-1.5 font-mono">
@@ -888,7 +887,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                   {/* Seniors */}
                   <div className="flex items-center justify-between gap-4 text-xs">
                     <span className="flex items-center gap-2 font-medium text-content-primary">
-                      <span className="w-2.5 h-2.5 rounded-full bg-demo-senior shrink-0" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#74c69d] shrink-0" />
                       Seniors
                     </span>
                     <div className="flex items-center gap-1.5 font-mono">
@@ -1025,19 +1024,16 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                 </tr>
               ) : (
                 filteredVisits.map((item) => {
-                  const cohort = getDemographicCohort(item.age, item.gender);
-                  const demo = DEMOGRAPHIC_CONFIG[cohort];
                   const reactionMeta =
                     REACTION_CONFIG[item.reaction] || REACTION_CONFIG['First Visit'];
 
                   return (
                     <tr key={item.id} className="hover:bg-brand-surface transition-colors">
-                      {/* Token # with Demographic Bar */}
+                      {/* Token # with Brand Bar */}
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <span
-                            className={`w-1.5 h-5 rounded-full shrink-0 ${demo.barColor}`}
-                            title={`${demo.label} (${item.age}y)`}
+                            className="w-1.5 h-5 rounded-full shrink-0 bg-brand-primary"
                           />
                           <span className="font-mono font-bold text-brand-primary">
                             #{item.tokenNo}
@@ -1050,7 +1046,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                         <div className="font-bold text-content-primary flex items-center gap-1.5">
                           <span>{item.patientName}</span>
                           <span
-                            className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${demo.chipBg} ${demo.chipText}`}
+                            className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-brand-primary-container text-brand-primary-dark"
                           >
                             {item.age}y
                           </span>

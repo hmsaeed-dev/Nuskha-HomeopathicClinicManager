@@ -20,8 +20,6 @@ import {
 import { Patient } from "@/types";
 import { usePatientsContext } from "@/context/PatientsContext";
 import { EditPatientModal } from "@/components/patients/EditPatientModal";
-import { getDemographicCohort } from "@/utils/demographics";
-import { DEMOGRAPHIC_CONFIG } from "@/constants/demographics";
 import { REACTION_CONFIG } from "@/constants/clinical";
 import { formatCurrency } from "@/utils/formatters";
 import { playSuccessChime } from "@/utils/sound";
@@ -97,12 +95,6 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 			patients[0]
 		);
 	}, [patients, selectedPatientId, filteredPatients]);
-
-	// Selected patient demographic configuration
-	const cohort = selectedPatient
-		? getDemographicCohort(selectedPatient.age, selectedPatient.gender)
-		: "Female";
-	const demo = DEMOGRAPHIC_CONFIG[cohort];
 
 	// Calculate lifetime financial ledger for selected patient
 	const totalPaid = useMemo(() => {
@@ -217,11 +209,6 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 						</div>
 					) : (
 						filteredPatients.map((patientItem) => {
-							const pCohort = getDemographicCohort(
-								patientItem.age,
-								patientItem.gender,
-							);
-							const pDemo = DEMOGRAPHIC_CONFIG[pCohort];
 							const isSelected =
 								patientItem.id === selectedPatient?.id;
 
@@ -233,27 +220,26 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 									onClick={() =>
 										setSelectedPatientId(patientItem.id)
 									}
-									className={`p-3.5 rounded-xl flex items-center gap-3 cursor-pointer transition-all duration-150 relative ${
+									className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 ${
 										isSelected
-											? `${pDemo.selectedCardBg} text-white shadow-sm`
-											: "bg-white text-content-primary hover:bg-brand-surface shadow-2xs"
+											? "bg-brand-primary text-white shadow-md"
+											: "bg-white text-content-primary hover:bg-white/95 shadow-2xs"
 									}`}
 								>
-									{/* Left demographic accent bar */}
+									{/* Vertical Brand Accent Indicator Bar */}
 									<div
 										className={`w-1.5 self-stretch rounded-full shrink-0 ${
 											isSelected
 												? "bg-white"
-												: pDemo.barColor
+												: "bg-brand-primary"
 										}`}
-										title={`${pDemo.label} (${patientItem.age}y)`}
 									/>
 
-									<div className="flex-1 min-w-0 flex flex-col gap-1">
-										{/* Line 1: Name + Age Chip */}
-										<div className="flex items-center justify-between gap-2">
+									<div className="flex-1 min-w-0 flex flex-col">
+										{/* Patient Name & Age Chip */}
+										<div className="flex items-center justify-between">
 											<span
-												className={`font-display text-sm font-bold truncate ${
+												className={`font-display text-lg font-bold truncate ${
 													isSelected
 														? "text-white"
 														: "text-content-primary"
@@ -262,83 +248,33 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 												{patientItem.fullName}
 											</span>
 											<span
-												className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0 ${
+												className={`text-[11px] font-bold px-2 py-0.5 rounded shrink-0 ${
 													isSelected
 														? "bg-white/25 text-white"
-														: `${pDemo.chipBg} ${pDemo.chipText}`
+														: "bg-brand-primary-container text-brand-primary-dark"
 												}`}
 											>
-												{patientItem.age}y
+												{patientItem.age} Y
 											</span>
 										</div>
 
-										{/* Line 2: Relation + Locality */}
-										<p
-											className={`text-xs truncate ${
+										{/* Relation & Locality */}
+										<div
+											className={`text-sm font-medium ${
 												isSelected
-													? "text-white font-medium"
-													: "text-content-secondary font-medium"
+													? "text-white"
+													: "text-content-secondary"
 											}`}
 										>
-											<span className="font-bold">
+											<p className="font-bold">
 												{patientItem.relationType}{" "}
 												{patientItem.relativeName}
-											</span>{" "}
-											· {patientItem.locality}
-										</p>
-
-										{/* Line 3: Snapshot Metrics */}
-										<div className="flex items-center justify-between text-[11px] pt-0.5">
-											<span
-												className={`font-mono font-semibold ${
-													isSelected
-														? "text-white"
-														: "text-content-secondary"
-												}`}
-											>
-												{patientItem.phone}
-											</span>
-											<span
-												className={`font-bold ${
-													isSelected
-														? "text-white"
-														: "text-brand-primary"
-												}`}
-											>
-												{patientItem.totalVisits}{" "}
-												{patientItem.totalVisits === 1
-													? "visit"
-													: "visits"}
-											</span>
+											</p>
+											<p className="pt-1.5 font-light text-xs flex items-center gap-1">
+												<MapPin className="w-4 h-4 shrink-0" />
+												<span>{patientItem.locality}</span>
+											</p>
 										</div>
-
-										{/* Chief Complaint Tag if present */}
-										{patientItem.chiefComplaints &&
-											patientItem.chiefComplaints.length >
-												0 && (
-												<div className="pt-0.5">
-													<span
-														className={`text-[10px] px-2 py-0.5 rounded font-bold inline-block truncate max-w-full ${
-															isSelected
-																? "bg-white/20 text-white"
-																: "bg-brand-surface-subtle text-brand-primary-dark"
-														}`}
-													>
-														{
-															patientItem
-																.chiefComplaints[0]
-																.name
-														}{" "}
-														(
-														{
-															patientItem
-																.chiefComplaints[0]
-																.trend
-														}
-														)
-													</span>
-												</div>
-											)}
 									</div>
 								</div>
 							);
@@ -353,9 +289,9 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 			<main className="lg:col-span-7 rounded-2xl bg-white p-5 sm:p-6 shadow-xs flex flex-col gap-5 h-full overflow-y-auto">
 				{selectedPatient ? (
 					<>
-						{/* 1. Header Card (Patient Identity in Demographic Theme) */}
+						{/* 1. Header Card (Patient Identity in Brand Hero Dark Green) */}
 						<div
-							className={`rounded-2xl ${demo.bannerBg} text-white p-5 shadow-sm flex flex-col gap-4 shrink-0 transition-colors duration-200`}
+							className="rounded-2xl bg-brand-primary-dark text-white p-5 shadow-sm flex flex-col gap-4 shrink-0 transition-colors duration-200"
 						>
 							<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 								<div className="flex flex-col gap-1">
@@ -364,14 +300,14 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 											{selectedPatient.fullName}
 										</h1>
 										<span
-											className={`px-2 py-0.5 rounded-md font-mono text-xs font-bold ${demo.chipDarkBg} ${demo.chipDarkText}`}
+											className="px-2 py-0.5 rounded-md font-mono text-xs font-bold bg-white/20 border border-white/25 text-white"
 										>
 											{selectedPatient.age} yrs
 										</span>
 									</div>
 
 									<p
-										className={`text-xs ${demo.bannerAccentText} flex items-center gap-2 flex-wrap font-medium`}
+										className="text-xs text-white/80 flex items-center gap-2 flex-wrap font-medium"
 									>
 										<span className="font-bold text-white">
 											{selectedPatient.relationType}{" "}
@@ -380,14 +316,14 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 										<span>·</span>
 										<span className="flex items-center gap-1 font-semibold">
 											<MapPin
-												className={`w-3.5 h-3.5 ${demo.bannerAccentText}`}
+												className="w-3.5 h-3.5 text-brand-primary-light"
 											/>
 											{selectedPatient.locality}
 										</span>
 										<span>·</span>
 										<span className="flex items-center gap-1 font-mono font-bold">
 											<Phone
-												className={`w-3.5 h-3.5 ${demo.bannerAccentText}`}
+												className="w-3.5 h-3.5 text-brand-primary-light"
 											/>
 											{selectedPatient.phone}
 										</span>
@@ -452,7 +388,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 								selectedPatient.chiefComplaints.length > 0 && (
 									<div className="flex items-center gap-2 flex-wrap pt-2">
 										<span
-											className={`text-[11px] font-bold ${demo.bannerAccentText}`}
+											className="text-[11px] font-bold text-brand-primary-light"
 										>
 											Active Complaints:
 										</span>
@@ -467,7 +403,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 													</span>
 													{cc.duration && (
 														<span
-															className={`text-[10px] font-medium ${demo.bannerAccentText}`}
+															className="text-[10px] font-medium text-brand-primary-light"
 														>
 															({cc.duration})
 														</span>

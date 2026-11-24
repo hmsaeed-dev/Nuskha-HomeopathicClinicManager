@@ -3,8 +3,6 @@
 import React from 'react';
 import { Search, Sparkles, MapPin } from 'lucide-react';
 import { Patient } from '@/types';
-import { getDemographicCohort } from '@/utils/demographics';
-import { DEMOGRAPHIC_CONFIG } from '@/constants/demographics';
 
 interface PatientSearchRailProps {
   searchQuery: string;
@@ -65,11 +63,6 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
 					) : (
 						filteredPatients.map((patient) => {
 							const isSelected = patient.id === selectedPatientId;
-							const cohort = getDemographicCohort(
-								patient.age,
-								patient.gender,
-							);
-							const demo = DEMOGRAPHIC_CONFIG[cohort];
 
 							return (
 								<div
@@ -79,22 +72,21 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
 									onClick={() => onSelectPatient(patient)}
 									className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 ${
 										isSelected
-											? `${demo.selectedCardBg} text-white shadow-md`
+											? "bg-brand-primary text-white shadow-md"
 											: "bg-white text-content-primary hover:bg-white/95 shadow-2xs"
 									}`}
 								>
-									{/* Demographic Vertical Indicator Bar */}
+									{/* Vertical Brand Accent Indicator Bar */}
 									<div
 										className={`w-1.5 self-stretch rounded-full shrink-0 ${
 											isSelected
 												? "bg-white"
-												: demo.barColor
+												: "bg-brand-primary"
 										}`}
-										title={`${demo.label} (${patient.age}y)`}
 									/>
 
 									<div className="flex-1 min-w-0 flex flex-col">
-										{/* Patient Name & Demographic Age Chip */}
+										{/* Patient Name & Age Chip */}
 										<div className="flex items-center justify-between">
 											<span
 												className={`font-display text-lg font-bold truncate ${
@@ -109,7 +101,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
 												className={`text-[11px] font-bold px-2 py-0.5 rounded shrink-0 ${
 													isSelected
 														? "bg-white/25 text-white"
-														: `${demo.chipBg} ${demo.chipText}`
+														: "bg-brand-primary-container text-brand-primary-dark"
 												}`}
 											>
 												{patient.age} Y
@@ -129,7 +121,7 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
 												{patient.relativeName}
 											</p>
 											<p className="pt-1.5 font-light text-xs flex items-center gap-1">
-												<MapPin className="w-4 h-4shrink-0" />
+												<MapPin className="w-4 h-4 shrink-0" />
 												<span>{patient.locality}</span>
 											</p>
 										</div>

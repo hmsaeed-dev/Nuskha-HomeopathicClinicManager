@@ -3,8 +3,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { RotateCcw, Plus, CheckCircle2 } from 'lucide-react';
 import { Patient, ReactionType, PrescriptionItem } from '@/types';
-import { getDemographicCohort } from '@/utils/demographics';
-import { DEMOGRAPHIC_CONFIG } from '@/constants/demographics';
 import { useSettingsContext } from '@/context/SettingsContext';
 import { playSuccessChime } from '@/utils/sound';
 import { useConsultationForm } from '@/hooks/useConsultationForm';
@@ -29,8 +27,6 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   patient,
   onSaveConsultation,
 }) => {
-  const cohort = getDemographicCohort(patient.age, patient.gender);
-  const demo = DEMOGRAPHIC_CONFIG[cohort];
   const { clinicConfig, audioChimeEnabled, singleKeyShortcutsEnabled } = useSettingsContext();
 
   const {
@@ -253,7 +249,7 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className={`w-full py-3.5 rounded-xl ${demo.actionButtonBg} text-white shadow-md flex items-center justify-center gap-2 text-md font-bold transition-all active:scale-98 cursor-pointer`}
+          className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primary-hover text-white shadow-md flex items-center justify-center gap-2 text-md font-bold transition-all active:scale-98 cursor-pointer"
           title="Save & Proceed to Next Patient (Ctrl + Enter)"
         >
           <span>Save</span>

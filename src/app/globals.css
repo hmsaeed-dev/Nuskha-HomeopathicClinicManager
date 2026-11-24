@@ -36,41 +36,38 @@
   --reaction-first: #075247;
   --reaction-first-container: #d2ebe4;
 
-  /* Demographic Cohorts: Adult Male (High Contrast) */
-  --demo-male: #1f5570;
-  --demo-male-container: #d4ecf7;
-  --demo-male-dark: #0a202c;
-  --demo-male-selected: #164257;
-  --demo-male-hover: #1f5570;
-  --demo-male-accent: #d8effa;
-  --demo-male-text: #082837;
+  /* Demographic Cohorts: Unified Brand Hero Green */
+  --demo-male: var(--brand-primary);
+  --demo-male-container: var(--brand-primary-container);
+  --demo-male-dark: var(--brand-primary-dark);
+  --demo-male-selected: var(--brand-primary);
+  --demo-male-hover: var(--brand-primary-hover);
+  --demo-male-accent: var(--brand-primary-light);
+  --demo-male-text: var(--brand-primary-dark);
 
-  /* Demographic Cohorts: Adult Female (High Contrast) */
-  --demo-female: #752e47;
-  --demo-female-container: #fae0ec;
-  --demo-female-dark: #270c18;
-  --demo-female-selected: #661f37;
-  --demo-female-hover: #752e47;
-  --demo-female-accent: #fbe3ee;
-  --demo-female-text: #3c0c1e;
+  --demo-female: var(--brand-primary);
+  --demo-female-container: var(--brand-primary-container);
+  --demo-female-dark: var(--brand-primary-dark);
+  --demo-female-selected: var(--brand-primary);
+  --demo-female-hover: var(--brand-primary-hover);
+  --demo-female-accent: var(--brand-primary-light);
+  --demo-female-text: var(--brand-primary-dark);
 
-  /* Demographic Cohorts: Child (High Contrast) */
-  --demo-child: #9e5800;
-  --demo-child-container: #feeacf;
-  --demo-child-dark: #291500;
-  --demo-child-selected: #7e4300;
-  --demo-child-hover: #9e5800;
-  --demo-child-accent: #fdedd2;
-  --demo-child-text: #452300;
+  --demo-child: var(--brand-primary);
+  --demo-child-container: var(--brand-primary-container);
+  --demo-child-dark: var(--brand-primary-dark);
+  --demo-child-selected: var(--brand-primary);
+  --demo-child-hover: var(--brand-primary-hover);
+  --demo-child-accent: var(--brand-primary-light);
+  --demo-child-text: var(--brand-primary-dark);
 
-  /* Demographic Cohorts: Senior (High Contrast) */
-  --demo-senior: #4d465f;
-  --demo-senior-container: #eae4f5;
-  --demo-senior-dark: #1b1724;
-  --demo-senior-selected: #3c364c;
-  --demo-senior-hover: #4d465f;
-  --demo-senior-accent: #ece7f7;
-  --demo-senior-text: #211c2c;
+  --demo-senior: var(--brand-primary);
+  --demo-senior-container: var(--brand-primary-container);
+  --demo-senior-dark: var(--brand-primary-dark);
+  --demo-senior-selected: var(--brand-primary);
+  --demo-senior-hover: var(--brand-primary-hover);
+  --demo-senior-accent: var(--brand-primary-light);
+  --demo-senior-text: var(--brand-primary-dark);
 }
 
 @theme {
