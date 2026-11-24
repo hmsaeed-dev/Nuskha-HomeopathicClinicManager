@@ -4,7 +4,7 @@ import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
 import { CLINIC_CONFIG } from '@/config/clinic.config';
 import { formatDate } from '@/utils/formatters';
 
-const STORAGE_KEY = 'nuskha_patients_data_v2';
+const STORAGE_KEY = 'nuskha_patients_data_v3';
 
 function getStoredPatients(fallback: Patient[]): Patient[] {
   if (typeof window === 'undefined') return fallback;
