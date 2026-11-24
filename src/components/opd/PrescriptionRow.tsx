@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Droplet, Pill, Trash2 } from 'lucide-react';
 import { PrescriptionItem, DispensingVehicle } from '@/types';
-import { useSettingsContext } from '@/context/SettingsContext';
 import {
   COMMON_REMEDIES,
   COMMON_POTENCIES,
@@ -27,7 +26,6 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
   onUpdateField,
   onRemove,
 }) => {
-  const { dosageMacros } = useSettingsContext();
   const [highlightedIndex, setHighlightedIndex] = useState(0);
 
   const filteredRemedies = COMMON_REMEDIES.filter((remedy) =>
@@ -68,7 +66,7 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
   };
 
   return (
-    <div className="p-3.5 rounded-xl bg-brand-surface-subtle shadow-2xs flex flex-col gap-2.5">
+    <div className="p-1 rounded-xl flex flex-col gap-1">
       {/* Row 1: Remedy + Potency + Vehicle + Delete */}
       <div className="grid grid-cols-12 gap-2 items-center">
         {/* Remedy Name Input with Autocomplete */}
@@ -112,11 +110,6 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
                     }`}
                   >
                     <span>{remedyName}</span>
-                    {isHighlighted && (
-                      <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-brand-primary text-white font-bold">
-                        ↵ select
-                      </kbd>
-                    )}
                   </button>
                 );
               })}
@@ -159,36 +152,11 @@ export const PrescriptionRow: React.FC<PrescriptionRowProps> = ({
           <button
             type="button"
             onClick={onRemove}
-            className="p-1 rounded text-content-secondary hover:text-reaction-aggravated hover:bg-white transition-colors cursor-pointer"
+            className="p-1 rounded text-content-secondary hover:bg-primary transition-colors cursor-pointer"
             title="Remove medicine"
           >
             <Trash2 className="w-4 h-4" />
           </button>
-        </div>
-      </div>
-
-      {/* Row 2: Dosage Input + Presets */}
-      <div className="flex flex-col gap-1.5">
-        <input
-          type="text"
-          value={prescription.dosage}
-          onChange={(e) => onUpdateField('dosage', e.target.value)}
-          placeholder="Dosage instructions (e.g. 3 drops BD in water)"
-          className="w-full px-3 py-1.5 rounded-lg bg-white shadow-2xs text-xs font-semibold text-content-primary placeholder:text-content-secondary placeholder:font-normal border border-border-subtle focus:outline-none focus:ring-2 focus:ring-brand-primary"
-        />
-
-        {/* Presets */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {dosageMacros.map((macro) => (
-            <button
-              key={macro}
-              type="button"
-              onClick={() => onUpdateField('dosage', macro)}
-              className="text-[11px] px-2.5 py-0.5 rounded-full hover:bg-brand-primary-container text-brand-primary-dark font-bold transition-colors cursor-pointer"
-            >
-              {macro}
-            </button>
-          ))}
         </div>
       </div>
     </div>

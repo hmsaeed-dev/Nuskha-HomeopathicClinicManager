@@ -1,4 +1,5 @@
 import { Patient } from "@/types";
+import { EXTENDED_PATIENTS } from "./mockPatients";
 
 export const INITIAL_PATIENTS: Patient[] = [
 	{
@@ -279,6 +280,7 @@ export const INITIAL_PATIENTS: Patient[] = [
 		],
 		pastVisits: [],
 	},
+	...EXTENDED_PATIENTS,
 ];
 
 export {

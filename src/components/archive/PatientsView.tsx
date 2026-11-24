@@ -13,8 +13,12 @@ import {
 	FileText,
 	UserCheck,
 	Phone,
+	Edit3,
+	Trash2,
 } from "lucide-react";
 import { Patient } from "@/types";
+import { usePatientsContext } from "@/context/PatientsContext";
+import { EditPatientModal } from "@/components/patients/EditPatientModal";
 import { getDemographicCohort } from "@/utils/demographics";
 import { DEMOGRAPHIC_CONFIG } from "@/constants/demographics";
 import { REACTION_CONFIG } from "@/constants/clinical";
@@ -31,11 +35,14 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 	patients,
 	onSelectPatientForOPD,
 }) => {
+	const { updatePatient, deletePatient } = usePatientsContext();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
 	const [selectedPatientId, setSelectedPatientId] = useState<string>(
 		patients[0]?.id || "",
 	);
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
 	// Compute stats and filtered patient list
 	const filteredPatients = useMemo(() => {
@@ -161,7 +168,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 									: "bg-white text-content-secondary hover:bg-white/90"
 							}`}
 						>
-							All Cases ({patients.length})
+							All ({patients.length})
 						</button>
 						<button
 							type="button"
@@ -384,18 +391,41 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 									</p>
 								</div>
 
-								{/* Direct Action: Start OPD Consultation */}
-								<button
-									type="button"
-									onClick={() =>
-										onSelectPatientForOPD(selectedPatient)
-									}
-									className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-content-primary hover:bg-brand-surface text-xs font-bold shadow-md transition-all active:scale-98 shrink-0 cursor-pointer"
-								>
-									<UserCheck className="w-4 h-4 text-brand-primary" />
-									<span>Consultation</span>
-									<ArrowRight className="w-3.5 h-3.5 text-brand-primary" />
-								</button>
+								<div className="flex items-center gap-2 shrink-0 flex-wrap">
+									{/* Edit Button */}
+									<button
+										type="button"
+										onClick={() => setIsEditModalOpen(true)}
+										className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition-all active:scale-98 cursor-pointer"
+										title="Edit Patient Information"
+									>
+										<Edit3 className="w-3.5 h-3.5" />
+										<span>Edit</span>
+									</button>
+
+									{/* Delete Button */}
+									<button
+										type="button"
+										onClick={() => setIsDeleteConfirmOpen(true)}
+										className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/20 hover:bg-rose-600 text-white text-xs font-bold transition-all active:scale-98 cursor-pointer"
+										title="Delete Patient Record"
+									>
+										<Trash2 className="w-3.5 h-3.5" />
+									</button>
+
+									{/* Direct Action: Start OPD Consultation */}
+									<button
+										type="button"
+										onClick={() =>
+											onSelectPatientForOPD(selectedPatient)
+										}
+										className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-content-primary hover:bg-brand-surface text-xs font-bold shadow-md transition-all active:scale-98 shrink-0 cursor-pointer"
+									>
+										<UserCheck className="w-4 h-4 text-brand-primary" />
+										<span>Consultation</span>
+										<ArrowRight className="w-3.5 h-3.5 text-brand-primary" />
+									</button>
+								</div>
 							</div>
 
 							{/* Active Chronic Complaints Badges */}
@@ -666,6 +696,57 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 					</div>
 				)}
 			</main>
+
+			{/* Edit Patient Modal */}
+			<EditPatientModal
+				patient={selectedPatient}
+				isOpen={isEditModalOpen}
+				onClose={() => setIsEditModalOpen(false)}
+				onSave={(updated) => updatePatient(updated)}
+			/>
+
+			{/* Delete Confirmation Dialog */}
+			{isDeleteConfirmOpen && selectedPatient && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+					<div className="w-full max-w-sm bg-white rounded-2xl p-5 shadow-2xl border border-border-subtle flex flex-col gap-4 animate-in zoom-in-95 duration-150">
+						<div className="flex items-center gap-3">
+							<div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 font-bold">
+								<Trash2 className="w-5 h-5" />
+							</div>
+							<div className="flex flex-col">
+								<h3 className="font-display text-sm font-bold text-content-primary">
+									Delete Patient Record?
+								</h3>
+								<p className="text-xs text-content-secondary font-medium">
+									{selectedPatient.fullName} ({selectedPatient.mrn})
+								</p>
+							</div>
+						</div>
+						<p className="text-xs text-content-secondary leading-relaxed">
+							Are you sure you want to remove this patient record? This will permanently delete the patient dossier and consultation history from the current session.
+						</p>
+						<div className="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
+							<button
+								type="button"
+								onClick={() => setIsDeleteConfirmOpen(false)}
+								className="px-3.5 py-2 rounded-xl bg-brand-surface hover:bg-brand-surface-subtle text-content-secondary hover:text-content-primary text-xs font-bold transition-all cursor-pointer"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								onClick={() => {
+									deletePatient(selectedPatient.id);
+									setIsDeleteConfirmOpen(false);
+								}}
+								className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-xs active:scale-98 transition-all cursor-pointer"
+							>
+								Confirm Delete
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

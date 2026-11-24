@@ -4,11 +4,41 @@ import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
 import { CLINIC_CONFIG } from '@/config/clinic.config';
 import { formatDate } from '@/utils/formatters';
 
+const STORAGE_KEY = 'nuskha_patients_data_v2';
+
+function getStoredPatients(fallback: Patient[]): Patient[] {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to load patient records from storage:', e);
+  }
+  return fallback;
+}
+
+function persistPatients(data: Patient[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.warn('Failed to persist patient records to storage:', e);
+  }
+}
+
 export function usePatients(initialData: Patient[] = INITIAL_PATIENTS) {
-  const [patients, setPatients] = useState<Patient[]>(initialData);
-  const [selectedPatientId, setSelectedPatientId] = useState<string>(
-    initialData[0]?.id || ''
+  const [patients, setPatients] = useState<Patient[]>(() =>
+    getStoredPatients(initialData)
   );
+  const [selectedPatientId, setSelectedPatientId] = useState<string>(() => {
+    const initial = getStoredPatients(initialData);
+    return initial[0]?.id || '';
+  });
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [todayCount, setTodayCount] = useState<number>(48);
 
@@ -48,7 +78,11 @@ export function usePatients(initialData: Patient[] = INITIAL_PATIENTS) {
       },
     };
 
-    setPatients((prev) => [newPatient, ...prev]);
+    setPatients((prev) => {
+      const next = [newPatient, ...prev];
+      persistPatients(next);
+      return next;
+    });
     setSelectedPatientId(newId);
     setTodayCount((prev) => prev + 1);
     return newPatient;
@@ -83,8 +117,8 @@ export function usePatients(initialData: Patient[] = INITIAL_PATIENTS) {
     };
 
     // Update patient's pastVisits
-    setPatients((prev) =>
-      prev.map((patient) => {
+    setPatients((prev) => {
+      const next = prev.map((patient) => {
         if (patient.id === selectedPatient.id) {
           return {
             ...patient,
@@ -94,10 +128,46 @@ export function usePatients(initialData: Patient[] = INITIAL_PATIENTS) {
           };
         }
         return patient;
-      })
-    );
+      });
+      persistPatients(next);
+      return next;
+    });
 
     setTodayCount((prev) => prev + 1);
+  };
+
+  // Update an existing patient's demographic information
+  const updatePatient = (updatedPatient: Patient) => {
+    setPatients((prev) => {
+      const next = prev.map((patient) =>
+        patient.id === updatedPatient.id ? updatedPatient : patient
+      );
+      persistPatients(next);
+      return next;
+    });
+  };
+
+  // Delete/Archive a patient record
+  const deletePatient = (patientId: string) => {
+    setPatients((prev) => {
+      const remaining = prev.filter((p) => p.id !== patientId);
+      persistPatients(remaining);
+      if (selectedPatientId === patientId) {
+        setSelectedPatientId(remaining[0]?.id || '');
+      }
+      return remaining;
+    });
+  };
+
+  // Reset demo data back to default static records
+  const resetToDefaultData = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+      console.warn('Failed to clear storage:', e);
+    }
+    setPatients(INITIAL_PATIENTS);
+    setSelectedPatientId(INITIAL_PATIENTS[0]?.id || '');
   };
 
   return {
@@ -111,5 +181,8 @@ export function usePatients(initialData: Patient[] = INITIAL_PATIENTS) {
     todayCount,
     registerPatient,
     saveConsultation,
+    updatePatient,
+    deletePatient,
+    resetToDefaultData,
   };
 }
