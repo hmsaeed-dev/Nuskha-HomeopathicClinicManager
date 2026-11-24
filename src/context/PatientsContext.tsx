@@ -26,6 +26,7 @@ interface PatientsContextValue {
     feeStatus: 'Paid' | 'Free' | 'Due';
   }) => void;
   updatePatient: (updatedPatient: Patient) => void;
+  settlePatientDues: (patientId: string) => void;
   deletePatient: (patientId: string) => void;
   resetToDefaultData: () => void;
   isNewPatientOpen: boolean;

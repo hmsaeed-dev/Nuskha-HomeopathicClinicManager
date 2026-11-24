@@ -147,6 +147,24 @@ export function usePatients(initialData: Patient[] = INITIAL_PATIENTS) {
     });
   };
 
+  // Settle all outstanding dues for a patient
+  const settlePatientDues = (patientId: string) => {
+    setPatients((prev) => {
+      const next = prev.map((patient) => {
+        if (patient.id !== patientId) return patient;
+        const updatedVisits = patient.pastVisits.map((v) =>
+          v.feeStatus === 'Due' ? { ...v, feeStatus: 'Paid' as const } : v
+        );
+        return {
+          ...patient,
+          pastVisits: updatedVisits,
+        };
+      });
+      persistPatients(next);
+      return next;
+    });
+  };
+
   // Delete/Archive a patient record
   const deletePatient = (patientId: string) => {
     setPatients((prev) => {
@@ -182,6 +200,7 @@ export function usePatients(initialData: Patient[] = INITIAL_PATIENTS) {
     registerPatient,
     saveConsultation,
     updatePatient,
+    settlePatientDues,
     deletePatient,
     resetToDefaultData,
   };

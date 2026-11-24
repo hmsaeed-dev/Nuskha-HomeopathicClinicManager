@@ -24,6 +24,7 @@ import { getDemographicCohort } from "@/utils/demographics";
 import { DEMOGRAPHIC_CONFIG } from "@/constants/demographics";
 import { REACTION_CONFIG } from "@/constants/clinical";
 import { formatCurrency } from "@/utils/formatters";
+import { playSuccessChime } from "@/utils/sound";
 import { HistoryVisitCard } from "@/components/ui/clinical";
 
 interface PatientsViewProps {
@@ -37,7 +38,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 	patients,
 	onSelectPatientForOPD,
 }) => {
-	const { updatePatient, deletePatient } = usePatientsContext();
+	const { updatePatient, deletePatient, settlePatientDues } = usePatientsContext();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
 	const [selectedPatientId, setSelectedPatientId] = useState<string>(
@@ -394,6 +395,22 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 								</div>
 
 								<div className="flex items-center gap-2 shrink-0 flex-wrap">
+									{/* 1-Click Settle Dues Action */}
+									{totalDue > 0 && (
+										<button
+											type="button"
+											onClick={() => {
+												settlePatientDues(selectedPatient.id);
+												playSuccessChime();
+											}}
+											className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white text-xs font-bold shadow-md transition-all active:scale-98 cursor-pointer animate-in fade-in"
+											title={`Click to settle outstanding dues of ${formatCurrency(totalDue)}`}
+										>
+											<CheckCircle2 className="w-3.5 h-3.5" />
+											<span>Settle Due: {formatCurrency(totalDue)}</span>
+										</button>
+									)}
+
 									{/* Edit Button */}
 									<button
 										type="button"
@@ -535,7 +552,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 							<div className="flex flex-col gap-2 p-4 rounded-xl bg-brand-surface-subtle">
 								<span className="text-xs font-bold text-content-primary flex items-center gap-1.5">
 									<Pill className="w-3.5 h-3.5 text-brand-primary" />
-									Constitutional Remedies Prescribed (
+									Remedies (
 									{lifetimeRemedies.length})
 								</span>
 								<div className="flex flex-wrap gap-1.5">
@@ -556,9 +573,8 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 							<div className="flex items-center justify-between pt-1">
 								<h3 className="font-display text-sm font-bold text-content-primary flex items-center gap-1.5">
 									<FileText className="w-4 h-4 text-brand-primary" />
-									Complete Case History (
-									{selectedPatient.pastVisits.length}{" "}
-									Consultations)
+									History (
+									{selectedPatient.pastVisits.length}{" "})
 								</h3>
 							</div>
 
