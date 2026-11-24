@@ -68,6 +68,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
   const [selectedDate, setSelectedDate] = useState<Date>(() => new Date());
   const [filterText, setFilterText] = useState('');
   const [outcomeFilter, setOutcomeFilter] = useState<OutcomeFilter>('all');
+  const [tokenSortAsc, setTokenSortAsc] = useState<boolean>(true);
 
   // Parse all visits across the database with dates and patient demographic info
   const allVisits: EnrichedVisit[] = useMemo(() => {
@@ -366,9 +367,9 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
     return max;
   }, [chartBars]);
 
-  // Filtered visits for the consultation ledger
+  // Filtered and sorted visits for the consultation ledger
   const filteredVisits = useMemo(() => {
-    return horizonVisits.filter((v) => {
+    const list = horizonVisits.filter((v) => {
       // Search text filter
       const matchesSearch =
         v.patientName.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -383,7 +384,16 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
       if (outcomeFilter === 'dues') return v.feeStatus === 'Due';
       return v.reaction === outcomeFilter;
     });
-  }, [horizonVisits, filterText, outcomeFilter]);
+
+    return [...list].sort((a, b) => {
+      if (timeHorizon === 'daily') {
+        return tokenSortAsc ? a.tokenNo - b.tokenNo : b.tokenNo - a.tokenNo;
+      }
+      const dateDiff = b.parsedDate.getTime() - a.parsedDate.getTime();
+      if (dateDiff !== 0) return dateDiff;
+      return tokenSortAsc ? a.tokenNo - b.tokenNo : b.tokenNo - a.tokenNo;
+    });
+  }, [horizonVisits, filterText, outcomeFilter, timeHorizon, tokenSortAsc]);
 
   // Export consultation log to CSV
   const handleExportCSV = () => {
@@ -987,7 +997,18 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
           <table className="w-full text-left border-collapse text-xs">
             <thead className="bg-brand-surface-subtle text-content-primary border-b border-border-subtle">
               <tr>
-                <th className="px-4 py-3 font-bold">#</th>
+                <th
+                  className="px-4 py-3 font-bold cursor-pointer select-none hover:text-brand-primary transition-colors"
+                  onClick={() => setTokenSortAsc((prev) => !prev)}
+                  title="Click to toggle token sorting (ascending / descending)"
+                >
+                  <div className="inline-flex items-center gap-1.5">
+                    <span>#</span>
+                    <span className="text-[10px] text-content-secondary font-mono">
+                      {tokenSortAsc ? '↑' : '↓'}
+                    </span>
+                  </div>
+                </th>
                 <th className="px-4 py-3 font-bold">Patient &amp; Guardian</th>
                 <th className="px-4 py-3 font-bold">Date</th>
                 <th className="px-4 py-3 font-bold">Result</th>

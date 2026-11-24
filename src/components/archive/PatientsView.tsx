@@ -24,6 +24,7 @@ import { getDemographicCohort } from "@/utils/demographics";
 import { DEMOGRAPHIC_CONFIG } from "@/constants/demographics";
 import { REACTION_CONFIG } from "@/constants/clinical";
 import { formatCurrency } from "@/utils/formatters";
+import { HistoryVisitCard } from "@/components/ui/clinical";
 
 interface PatientsViewProps {
 	patients: Patient[];
@@ -568,123 +569,17 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 							) : (
 								<div className="flex flex-col gap-3">
 									{selectedPatient.pastVisits.map(
-										(visit, index) => {
-											const reactionMeta =
-												REACTION_CONFIG[
-													visit.reaction
-												] ||
-												REACTION_CONFIG["First Visit"];
-
-											return (
-												<article
-													key={visit.id}
-													className="rounded-xl bg-brand-surface-subtle p-4 shadow-2xs flex flex-col gap-2.5 hover:bg-brand-surface transition-colors"
-												>
-													{/* Visit Header */}
-													<header className="flex items-center justify-between gap-2 flex-wrap">
-														<div className="flex items-center gap-2">
-															<span
-																className={`w-2.5 h-2.5 rounded-full shrink-0 ${
-																	visit.reaction ===
-																	"Improved"
-																		? "bg-reaction-improved"
-																		: visit.reaction ===
-																			  "Decline"
-																			? "bg-reaction-aggravated"
-																			: visit.reaction ===
-																				  "No Change"
-																				? "bg-reaction-stable"
-																				: "bg-reaction-new"
-																}`}
-															/>
-															<span className="font-mono text-xs font-bold text-content-primary">
-																{visit.date}
-															</span>
-															{visit.durationDays && (
-																<span className="text-[10px] px-2 py-0.5 rounded bg-white text-content-primary font-mono font-bold">
-																	{
-																		visit.durationDays
-																	}
-																	d course
-																</span>
-															)}
-															<span className="text-[11px] text-content-secondary font-semibold">
-																(Consultation #
-																{selectedPatient
-																	.pastVisits
-																	.length -
-																	index}
-																)
-															</span>
-														</div>
-
-														<div className="flex items-center gap-2">
-															<span
-																className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${reactionMeta.badgeClass}`}
-															>
-																{visit.reaction}
-															</span>
-															<span className="font-mono text-xs font-bold text-content-primary">
-																{formatCurrency(
-																	visit.fee,
-																)}
-															</span>
-														</div>
-													</header>
-
-													{/* Symptoms Recorded */}
-													<p className="text-xs text-content-primary font-medium leading-relaxed">
-														{visit.symptoms}
-													</p>
-
-													{/* Prescriptions Dispensed */}
-													<div className="flex flex-wrap gap-1.5 pt-1">
-														{visit.prescriptions.map(
-															(rx) => (
-																<div
-																	key={rx.id}
-																	className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white shadow-2xs text-xs text-brand-primary-dark"
-																>
-																	<span className="font-bold">
-																		{
-																			rx.remedy
-																		}
-																	</span>
-																	<span className="font-mono text-[11px] text-brand-primary font-bold">
-																		{
-																			rx.potency
-																		}
-																	</span>
-																	<span className="text-[10px] text-content-secondary font-semibold">
-																		(
-																		{
-																			rx.vehicle.split(
-																				" ",
-																			)[0]
-																		}
-																		)
-																	</span>
-																	<span className="text-[10px] text-content-primary font-medium">
-																		·{" "}
-																		{
-																			rx.dosage
-																		}
-																	</span>
-																</div>
-															),
-														)}
-													</div>
-
-													{/* Doctor Notes */}
-													{visit.doctorNotes && (
-														<div className="text-[11px] text-content-secondary font-medium italic pt-0.5">
-															Note:{" "}
-															{visit.doctorNotes}
-														</div>
-													)}
-												</article>
-											);
-										},
+										(visit, index) => (
+											<HistoryVisitCard
+												key={visit.id}
+												visit={visit}
+												consultationNumber={
+													selectedPatient.pastVisits
+														.length - index
+												}
+												isLatest={index === 0}
+											/>
+										),
 									)}
 								</div>
 							)}

@@ -10,6 +10,7 @@ import { playSuccessChime } from '@/utils/sound';
 import { useConsultationForm } from '@/hooks/useConsultationForm';
 import { ReactionSelector } from './ReactionSelector';
 import { PrescriptionRow } from './PrescriptionRow';
+import { CourseDurationSelector } from './CourseDurationSelector';
 
 interface ConsultationComposerProps {
   patient: Patient;
@@ -206,31 +207,12 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         </div>
       </div>
 
-      {/* 4. Course Duration */}
-      <div className="flex flex-col gap-1.5 pt-1">
-        <div className="flex items-center justify-between">
-          <label className="text-md font-bold text-content-primary">
-            Course Duration
-          </label>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2">
-          {clinicConfig.availableCourseDurations.map((days) => (
-            <button
-              key={days}
-              type="button"
-              onClick={() => setDurationDays(days)}
-              className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                durationDays === days
-                  ? `${demo.bannerTokenBg} text-white shadow-xs`
-                  : 'bg-brand-surface-subtle text-content-primary hover:bg-brand-surface'
-              }`}
-            >
-              {days === 7 ? '1 Week (7d)' : days === 30 ? '1 Month (30d)' : `${days} Days`}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* 4. Course Duration Stepper */}
+      <CourseDurationSelector
+        durationDays={durationDays}
+        availableDurations={clinicConfig.availableCourseDurations}
+        onChangeDuration={setDurationDays}
+      />
 
       {/* 5. Doctor's Notes & Consultation Fee */}
       <div className="grid grid-cols-12 gap-3 pt-1">
