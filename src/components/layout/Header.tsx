@@ -27,7 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
 		<header className="sticky top-0 z-30 mx-4 sm:mx-5 lg:mx-6 mt-3 rounded-2xl bg-white shadow-xs px-6 py-3.5">
 			<div className="flex items-center justify-between gap-4">
 				{/* Logo & Clinic Title (SSOT Configured) */}
-				<div className="flex items-center gap-6">
+				<div className="flex items-center flex-1 justify-start min-w-0">
 					<Link href="/" className="flex items-center gap-3 group">
 						<div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
 							<Image
@@ -50,55 +50,55 @@ export const Header: React.FC<HeaderProps> = ({
 							</span>
 						</div>
 					</Link>
-
-					{/* Page Navigation Links */}
-					<nav
-						aria-label="Primary navigation"
-						className="flex items-center gap-1.5 ml-2"
-					>
-						<Link
-							href="/"
-							title="OPD Workspace Page (F1)"
-							className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
-								isOpdActive
-									? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
-									: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
-							}`}
-						>
-							<LayoutDashboard className="w-4 h-4" />
-							<span>OPD</span>
-						</Link>
-
-						<Link
-							href="/register"
-							title="Daily Register Page (F3)"
-							className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
-								isRegisterActive
-									? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
-									: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
-							}`}
-						>
-							<FileSpreadsheet className="w-4 h-4" />
-							<span>Analytics</span>
-						</Link>
-
-						<Link
-							href="/patients"
-							title="Patients Archive Page (F4)"
-							className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
-								isPatientsActive
-									? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
-									: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
-							}`}
-						>
-							<Users className="w-4 h-4" />
-							<span>Patients</span>
-						</Link>
-					</nav>
 				</div>
 
+				{/* Page Navigation Links */}
+				<nav
+					aria-label="Primary navigation"
+					className="flex items-center justify-center shrink-0 gap-1.5"
+				>
+					<Link
+						href="/"
+						title="OPD Workspace Page (F1)"
+						className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
+							isOpdActive
+								? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
+								: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
+						}`}
+					>
+						<LayoutDashboard className="w-4 h-4" />
+						<span>OPD</span>
+					</Link>
+
+					<Link
+						href="/register"
+						title="Daily Register Page (F3)"
+						className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
+							isRegisterActive
+								? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
+								: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
+						}`}
+					>
+						<FileSpreadsheet className="w-4 h-4" />
+						<span>Analytics</span>
+					</Link>
+
+					<Link
+						href="/patients"
+						title="Patients Archive Page (F4)"
+						className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer ${
+							isPatientsActive
+								? "bg-brand-primary-container text-brand-primary-dark shadow-2xs"
+								: "text-content-secondary hover:bg-brand-surface-subtle hover:text-content-primary"
+						}`}
+					>
+						<Users className="w-4 h-4" />
+						<span>Patients</span>
+					</Link>
+				</nav>
+
 				{/* Live Session Counter & Walk-in Action */}
-				<div className="flex items-center gap-2.5">
+				<div className="flex items-center flex-1 justify-end gap-2.5">
 					{/* Shortcuts & Settings Trigger (?) */}
 					<button
 						type="button"
