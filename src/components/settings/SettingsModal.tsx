@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import {
   X,
   Keyboard,
@@ -470,8 +471,25 @@ export const SettingsModal: React.FC = () => {
             {/* ========================================================= */}
             {activeTab === 'clinic' && (
               <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-brand-surface-subtle border border-border-subtle">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-white border border-border-subtle flex items-center justify-center p-1.5 shadow-2xs shrink-0">
+                      <Image
+                        src="/logos/nuskha-logomark-full-color.svg"
+                        alt={clinicConfig.name}
+                        width={36}
+                        height={36}
+                        className="w-9 h-9 object-contain"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-display text-sm font-bold text-content-primary">
+                        {clinicConfig.name}
+                      </span>
+                      <span className="text-xs text-content-secondary">
+                        {clinicConfig.doctorName} · {clinicConfig.subtitle}
+                      </span>
+                    </div>
                   </div>
                   {showSavedFeedback && (
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-reaction-improved bg-reaction-improved-container px-2 py-0.5 rounded">

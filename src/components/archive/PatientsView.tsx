@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Image from "next/image";
 import {
 	Search,
 	MapPin,
@@ -690,9 +691,15 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 						</div>
 					</>
 				) : (
-					<div className="text-center py-20 text-xs text-content-secondary font-medium">
-						Select a patient from the left roster to view their
-						complete dossier.
+					<div className="flex flex-col items-center justify-center py-24 text-xs text-content-secondary font-medium gap-3">
+						<Image
+							src="/logos/nuskha-logomark-full-color.svg"
+							alt="Nuskha"
+							width={48}
+							height={48}
+							className="w-12 h-12 object-contain opacity-35"
+						/>
+						<p>Select a patient from the left roster to view their complete dossier.</p>
 					</div>
 				)}
 			</main>

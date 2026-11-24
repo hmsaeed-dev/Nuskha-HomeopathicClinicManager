@@ -1,0 +1,36 @@
+{
+  "name": "Nuskha — Dr. Aslam Homoeopathic Clinic",
+  "short_name": "Nuskha",
+  "description": "High-throughput clinical consultation & patient record management system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FCF8ED",
+  "theme_color": "#1A4D3C",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/nuskha-logomark-full-color@2x.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/nuskha-logomark-full-color-2048px.png",
+      "sizes": "2048x2048",
+      "type": "image/png"
+    }
+  ]
+}
