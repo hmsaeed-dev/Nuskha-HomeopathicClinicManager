@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Stethoscope, UserPlus, FileSpreadsheet, LayoutDashboard, Clock, Users, Keyboard } from 'lucide-react';
+import { UserPlus, FileSpreadsheet, LayoutDashboard, Clock, Users, Keyboard } from 'lucide-react';
 import { useSettingsContext } from '@/context/SettingsContext';
 
 interface HeaderProps {
@@ -28,8 +29,15 @@ export const Header: React.FC<HeaderProps> = ({
 				{/* Logo & Clinic Title (SSOT Configured) */}
 				<div className="flex items-center gap-6">
 					<Link href="/" className="flex items-center gap-3 group">
-						<div className="w-10 h-10 rounded-xl bg-brand-primary-container text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-							<Stethoscope className="w-5 h-5 text-brand-primary" />
+						<div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+							<Image
+								src="/logos/nuskha-logomark-full-color.svg"
+								alt={clinicConfig.name}
+								width={40}
+								height={40}
+								className="w-10 h-10 object-contain"
+								priority
+							/>
 						</div>
 						<div className="flex flex-col">
 							<div className="flex items-center gap-2">
