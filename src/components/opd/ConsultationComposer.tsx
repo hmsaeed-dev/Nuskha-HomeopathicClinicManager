@@ -108,11 +108,11 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         return;
       }
 
-      // 4. Reactions: Keys [1] to [5]
+      // 4. Reactions: Keys [1] to [4] strictly matching the visible UI order
       const reactionKeys: Record<string, ReactionType> = {
-        '1': 'Improved',
+        '1': 'Decline',
         '2': 'No Change',
-        '3': 'Decline',
+        '3': 'Improved',
         '4': 'First Visit',
       };
 
@@ -147,11 +147,10 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
         <button
           type="button"
           onClick={handleRepeatLastRx}
-          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${demo.chipBg} ${demo.chipText} hover:shadow-xs text-xs font-bold transition-all active:scale-98 cursor-pointer`}
+          className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full hover:shadow-xs text-xs font-bold transition-all active:scale-98 cursor-pointer`}
           title="Repeat Previous Prescription (Alt+R)"
         >
           <RotateCcw className="w-4 h-4" />
-          <span>Previous</span>
         </button>
       </div>
 
