@@ -1,0 +1,50 @@
+appId: com.nuskha.clinic
+productName: Nuskha
+copyright: Copyright © 2026 Nuskha Homoeopathic Clinic
+electronDist: node_modules/electron/dist
+directories:
+  output: dist-desktop
+asar: true
+files:
+  - desktop/dist/**/*
+  - desktop/setup.html
+  - desktop/icon.ico
+  - package.json
+  - "!src/**"
+  - "!.next/**"
+  - "!public/**"
+  - "!brand-kit/**"
+  - "!backups/**"
+extraResources:
+  - from: .next/standalone
+    to: standalone
+    filter:
+      - "**/*"
+      - "!**/.DS_Store"
+  - from: .next/standalone/node_modules
+    to: standalone/node_modules
+    filter:
+      - "**/*"
+  - from: src/db/migrations
+    to: migrations
+  - from: public/logos/nuskha-logomark-full-color-2048px.png
+    to: icon.png
+win:
+  icon: desktop/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Nuskha
+  artifactName: ${productName}-Setup-${version}.${ext}
+portable:
+  artifactName: ${productName}-Portable-${version}.${ext}

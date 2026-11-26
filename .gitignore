@@ -20,6 +20,10 @@
 /.next/
 /out/
 
+# desktop builds
+/desktop/dist/
+/dist-desktop/
+
 # production
 /build
 

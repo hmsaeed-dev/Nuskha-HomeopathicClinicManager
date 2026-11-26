@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuskha — Local Database Setup</title>
+    <style>
+      :root {
+        --bg: #f6f8f5;
+        --card: #ffffff;
+        --border: #dfe5dc;
+        --text: #1c241b;
+        --muted: #5c685a;
+        --brand: #2b5e43;
+        --brand-hover: #214a34;
+        --danger-bg: #fff1f2;
+        --danger-border: #fecdd3;
+        --danger-text: #be123c;
+        --ok-bg: #ecfdf5;
+        --ok-border: #a7f3d0;
+        --ok-text: #047857;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 24px;
+      }
+      .card {
+        width: 100%;
+        max-width: 540px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 12px 32px rgba(28, 36, 27, 0.08);
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .subtitle {
+        margin: 0 0 20px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 12px;
+      }
+      .field.full { grid-column: 1 / -1; }
+      label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      input[type="text"], input[type="password"] {
+        padding: 9px 11px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        background: #fbfcfa;
+        color: var(--text);
+      }
+      input:focus {
+        outline: 2px solid var(--brand);
+        border-color: transparent;
+        background: #fff;
+      }
+      .checks {
+        display: flex;
+        gap: 18px;
+        margin: 6px 0 16px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .checks label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      .banner {
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        display: none;
+        line-height: 1.4;
+      }
+      .banner.error {
+        display: block;
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-border);
+        color: var(--danger-text);
+      }
+      .banner.ok {
+        display: block;
+        background: var(--ok-bg);
+        border: 1px solid var(--ok-border);
+        color: var(--ok-text);
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 8px;
+      }
+      button {
+        padding: 9px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text);
+      }
+      button:hover:not(:disabled) { background: #f1f4ef; }
+      button.primary {
+        background: var(--brand);
+        border-color: var(--brand);
+        color: #fff;
+      }
+      button.primary:hover:not(:disabled) { background: var(--brand-hover); }
+      button:disabled { opacity: 0.6; cursor: not-allowed; }
+      .meta {
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 11px;
+        color: var(--muted);
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Nuskha — Local SQL Server Setup</h1>
+      <p class="subtitle">
+        Connect the desktop app to your local MS SQL Server instance (<code>NuskhaDB</code>).
+      </p>
+
+      <div id="banner" class="banner"></div>
+
+      <form id="setup-form">
+        <div class="grid">
+          <div class="field">
+            <label for="DB_HOST">SQL Server Host</label>
+            <input id="DB_HOST" type="text" required />
+          </div>
+          <div class="field">
+            <label for="DB_PORT">Port</label>
+            <input id="DB_PORT" type="text" required />
+          </div>
+          <div class="field">
+            <label for="DB_NAME">Database Name</label>
+            <input id="DB_NAME" type="text" required />
+          </div>
+          <div class="field">
+            <label for="DB_USER">SQL Username</label>
+            <input id="DB_USER" type="text" required />
+          </div>
+          <div class="field full">
+            <label for="DB_PASSWORD">SQL Password</label>
+            <input id="DB_PASSWORD" type="password" required />
+          </div>
+        </div>
+
+        <div class="checks">
+          <label><input id="DB_ENCRYPT" type="checkbox" checked /> Encrypt connection</label>
+          <label><input id="DB_TRUST_CERT" type="checkbox" checked /> Trust local certificate</label>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="btn-test">Test Connection</button>
+          <button type="button" id="btn-migrate">Run Schema Migrations</button>
+          <button type="submit" id="btn-launch" class="primary">Save &amp; Launch Nuskha</button>
+        </div>
+      </form>
+
+      <div id="meta" class="meta"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById('setup-form');
+      const banner = document.getElementById('banner');
+      const meta = document.getElementById('meta');
+      const btnTest = document.getElementById('btn-test');
+      const btnMigrate = document.getElementById('btn-migrate');
+      const btnLaunch = document.getElementById('btn-launch');
+
+      function showBanner(type, text) {
+        banner.className = 'banner ' + type;
+        banner.textContent = text;
+      }
+
+      function setBusy(busy) {
+        btnTest.disabled = busy;
+        btnMigrate.disabled = busy;
+        btnLaunch.disabled = busy;
+      }
+
+      function readConfig() {
+        return {
+          DB_HOST: document.getElementById('DB_HOST').value.trim(),
+          DB_PORT: document.getElementById('DB_PORT').value.trim(),
+          DB_NAME: document.getElementById('DB_NAME').value.trim(),
+          DB_USER: document.getElementById('DB_USER').value.trim(),
+          DB_PASSWORD: document.getElementById('DB_PASSWORD').value,
+          DB_ENCRYPT: document.getElementById('DB_ENCRYPT').checked ? 'true' : 'false',
+          DB_TRUST_CERT: document.getElementById('DB_TRUST_CERT').checked ? 'true' : 'false',
+        };
+      }
+
+      window.nuskhaDesktop.getSetupState().then((state) => {
+        const c = state.config;
+        document.getElementById('DB_HOST').value = c.DB_HOST;
+        document.getElementById('DB_PORT').value = c.DB_PORT;
+        document.getElementById('DB_NAME').value = c.DB_NAME;
+        document.getElementById('DB_USER').value = c.DB_USER;
+        document.getElementById('DB_PASSWORD').value = c.DB_PASSWORD;
+        document.getElementById('DB_ENCRYPT').checked = c.DB_ENCRYPT !== 'false';
+        document.getElementById('DB_TRUST_CERT').checked = c.DB_TRUST_CERT === 'true';
+        meta.textContent = 'Config file: ' + state.configPath + '  |  Backups: ' + state.backupDir;
+        if (state.errorMessage) {
+          showBanner('error', state.errorMessage);
+        }
+      });
+
+      btnTest.addEventListener('click', async () => {
+        setBusy(true);
+        try {
+          const res = await window.nuskhaDesktop.testConnection(readConfig());
+          if (res.ok) {
+            showBanner('ok', 'Connected to ' + res.database + ' on ' + res.server + '.');
+          } else {
+            showBanner('error', 'Connection failed: ' + res.error);
+          }
+        } finally {
+          setBusy(false);
+        }
+      });
+
+      btnMigrate.addEventListener('click', async () => {
+        setBusy(true);
+        try {
+          const res = await window.nuskhaDesktop.runMigrations(readConfig());
+          if (res.ok) {
+            showBanner('ok', 'Migrations complete (' + (res.appliedCount ?? 0) + ' applied).');
+          } else {
+            showBanner('error', 'Migration failed: ' + res.error);
+          }
+        } finally {
+          setBusy(false);
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        showBanner('ok', 'Testing database connection and starting Nuskha...');
+        try {
+          const res = await window.nuskhaDesktop.saveAndLaunch(readConfig());
+          if (!res.ok) {
+            showBanner('error', res.error || 'Failed to launch Nuskha.');
+          }
+        } finally {
+          setBusy(false);
+        }
+      });
+    </script>
+  </body>
+</html>

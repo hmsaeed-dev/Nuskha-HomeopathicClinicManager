@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nuskha — Homoeopathic Clinic Workspace
 
-## Getting Started
+Nuskha is a local-first Next.js clinic workspace backed by MS SQL Server (`NuskhaDB`). It can be
+run in a browser during development or packaged as a self-contained Windows Electron desktop app.
 
-First, run the development server:
+## Local development
+
+1. Copy `.env.example` to `.env.local` and set the SQL Server credentials.
+2. Install dependencies: `npm install`
+3. Apply the schema: `npm run db:migrate`
+4. Start the app: `npm run dev`
+
+Open `http://localhost:3000`.
+
+Useful database scripts:
+
+- `npm run db:migrate` — apply `src/db/migrations/*.sql`
+- `npm run db:seed` — seed local reference data
+- `npm run db:backup` — create a `.bak` file in the configured backup directory
+
+## Windows desktop app
+
+The desktop wrapper runs the Next.js standalone server inside Electron on `127.0.0.1` and talks
+directly to the local SQL Server — no cloud service is required.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run desktop:dev    # build, then launch Electron in local mode
+npm run desktop:build  # build Next.js standalone + Electron main process
+npm run desktop:dist   # build and produce Windows installer + portable exe
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Installers are written to `dist-desktop/`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `Nuskha-Setup-<version>.exe` — NSIS installer (Desktop and Start Menu shortcuts)
+- `Nuskha-Portable-<version>.exe` — portable executable
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Runtime data
 
-## Learn More
+The installed app stores writable state under `%APPDATA%\nuskha`:
 
-To learn more about Next.js, take a look at the following resources:
+- `config.json` — SQL Server connection settings entered in the first-run setup screen
+- `backups/` — clinic-visible `.bak` files
+- `server.log` — standalone Next.js server output
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Because the SQL Server service cannot write into a user profile, backups are first written to
+`%PUBLIC%\Documents\NuskhaBackupStaging`, then copied into `backups/` by the desktop app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Clinic shortcuts and menu
 
-## Deploy on Vercel
+- `Ctrl+Enter` — save consultation and refocus patient search
+- `Alt+R` — repeat previous prescription
+- `Alt+A` — add medicine row
+- `?` — shortcut sheet / settings
+- `Esc` — dismiss drawers and modals
+- `Ctrl+Shift+B` — back up the database from anywhere in the app
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The **Clinic** menu and system tray also provide *Backup Database Now*, *Open Backups Folder*,
+and *Database Connection Settings*.

@@ -1,4 +1,5 @@
 import sql from 'mssql';
+import { loadLocalEnv } from './loadEnv';
 
 interface GlobalWithSqlPool {
   __nuskhaSqlPoolPromise?: Promise<sql.ConnectionPool>;
@@ -7,6 +8,10 @@ interface GlobalWithSqlPool {
 const globalForSql = globalThis as unknown as GlobalWithSqlPool;
 
 function buildSqlConfig(): sql.config {
+  if (!process.env.DB_USER || !process.env.DB_PASSWORD) {
+    loadLocalEnv();
+  }
+
   const host = process.env.DB_HOST || '127.0.0.1';
   const port = Number(process.env.DB_PORT || 1433);
   const database = process.env.DB_NAME || 'NuskhaDB';
@@ -15,7 +20,7 @@ function buildSqlConfig(): sql.config {
 
   if (!user || !password) {
     throw new Error(
-      'Missing database credentials: DB_USER and DB_PASSWORD must be set in .env.local.'
+      'Missing database credentials: DB_USER and DB_PASSWORD must be configured.'
     );
   }
 
@@ -25,6 +30,8 @@ function buildSqlConfig(): sql.config {
     database,
     user,
     password,
+    connectionTimeout: 20000,
+    requestTimeout: 30000,
     pool: {
       max: 10,
       min: 0,

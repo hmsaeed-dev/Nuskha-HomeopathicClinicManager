@@ -28,7 +28,9 @@ async function runMigrations(): Promise<void> {
   const pool = await getPool();
   await ensureMigrationsTable(pool);
 
-  const migrationsDir = path.join(process.cwd(), 'src', 'db', 'migrations');
+  const migrationsDir =
+    process.env.NUSKHA_MIGRATIONS_DIR ||
+    path.join(process.cwd(), 'src', 'db', 'migrations');
   const files = fs
     .readdirSync(migrationsDir)
     .filter((f) => f.endsWith('.sql'))

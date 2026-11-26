@@ -2,6 +2,9 @@
   "name": "nuskha",
   "version": "0.1.0",
   "private": true,
+  "description": "Nuskha Homoeopathic Clinic Desktop Workspace",
+  "author": "Nuskha Clinic",
+  "main": "desktop/dist/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +12,12 @@
     "lint": "eslint",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx src/db/seed.ts",
-    "db:backup": "tsx src/db/backup.ts"
+    "db:backup": "tsx src/db/backup.ts",
+    "desktop:tsc": "tsc -p desktop/tsconfig.json",
+    "desktop:prepare": "node desktop/prepare-standalone.mjs",
+    "desktop:build": "npm run build && npm run desktop:prepare && npm run desktop:tsc",
+    "desktop:dev": "npm run desktop:build && electron .",
+    "desktop:dist": "npm run desktop:build && electron-builder --win"
   },
   "dependencies": {
     "lucide-react": "^1.77.0",
@@ -25,6 +33,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "electron": "^45.5.0",
+    "electron-builder": "^26.18.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "tailwindcss": "4.3.3",
