@@ -16,6 +16,7 @@ import {
   RotateCcw,
   Download,
   CheckCircle2,
+  AlertCircle,
 } from 'lucide-react';
 import { useSettingsContext } from '@/context/SettingsContext';
 import { usePatientsContext } from '@/context/PatientsContext';
@@ -174,6 +175,10 @@ export const SettingsModal: React.FC = () => {
     singleKeyShortcutsEnabled,
     setSingleKeyShortcutsEnabled,
     resetToDefaults,
+    settingsError,
+    clearSettingsError,
+    isSavingSettings,
+    showSavedFeedback,
   } = useSettingsContext();
 
   const { patients } = usePatientsContext();
@@ -181,7 +186,6 @@ export const SettingsModal: React.FC = () => {
   const [shortcutSearch, setShortcutSearch] = useState('');
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
   const [newMacroText, setNewMacroText] = useState('');
-  const [showSavedFeedback, setShowSavedFeedback] = useState(false);
 
   // Live shortcut key detection to test keys interactively
   useEffect(() => {
@@ -380,8 +384,6 @@ export const SettingsModal: React.FC = () => {
                 onClick={() => {
                   if (confirm('Reset clinic settings, dosage macros, and audio to defaults?')) {
                     resetToDefaults();
-                    setShowSavedFeedback(true);
-                    setTimeout(() => setShowSavedFeedback(false), 2000);
                   }
                 }}
                 className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold text-content-secondary hover:text-reaction-aggravated hover:bg-white transition-colors cursor-pointer"
@@ -394,6 +396,22 @@ export const SettingsModal: React.FC = () => {
 
           {/* Right Main Content Panel */}
           <main className="md:col-span-8 p-5 sm:p-6 overflow-y-auto flex flex-col gap-5">
+            {settingsError && (
+              <div className="flex items-start justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{settingsError}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={clearSettingsError}
+                  className="text-rose-500 hover:text-rose-800 cursor-pointer shrink-0"
+                  title="Dismiss error"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
             {/* ========================================================= */}
             {/* TAB 1: KEYBOARD SHORTCUTS GUIDE */}
             {/* ========================================================= */}
@@ -484,11 +502,15 @@ export const SettingsModal: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  {showSavedFeedback && (
+                  {isSavingSettings ? (
+                    <span className="text-xs font-semibold text-content-secondary px-2 py-0.5">
+                      Saving...
+                    </span>
+                  ) : showSavedFeedback && !settingsError ? (
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-reaction-improved bg-reaction-improved-container px-2 py-0.5 rounded">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Saved
                     </span>
-                  )}
+                  ) : null}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -499,8 +521,6 @@ export const SettingsModal: React.FC = () => {
                       value={clinicConfig.name}
                       onChange={(e) => {
                         updateClinicConfig({ name: e.target.value });
-                        setShowSavedFeedback(true);
-                        setTimeout(() => setShowSavedFeedback(false), 1500);
                       }}
                       className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-semibold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
@@ -513,8 +533,6 @@ export const SettingsModal: React.FC = () => {
                       value={clinicConfig.doctorName}
                       onChange={(e) => {
                         updateClinicConfig({ doctorName: e.target.value });
-                        setShowSavedFeedback(true);
-                        setTimeout(() => setShowSavedFeedback(false), 1500);
                       }}
                       className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-semibold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
@@ -527,8 +545,6 @@ export const SettingsModal: React.FC = () => {
                       value={clinicConfig.subtitle}
                       onChange={(e) => {
                         updateClinicConfig({ subtitle: e.target.value });
-                        setShowSavedFeedback(true);
-                        setTimeout(() => setShowSavedFeedback(false), 1500);
                       }}
                       className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-semibold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
@@ -541,8 +557,6 @@ export const SettingsModal: React.FC = () => {
                       value={clinicConfig.licenseNumber || ''}
                       onChange={(e) => {
                         updateClinicConfig({ licenseNumber: e.target.value });
-                        setShowSavedFeedback(true);
-                        setTimeout(() => setShowSavedFeedback(false), 1500);
                       }}
                       className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-semibold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
@@ -555,8 +569,6 @@ export const SettingsModal: React.FC = () => {
                       value={clinicConfig.phone || ''}
                       onChange={(e) => {
                         updateClinicConfig({ phone: e.target.value });
-                        setShowSavedFeedback(true);
-                        setTimeout(() => setShowSavedFeedback(false), 1500);
                       }}
                       className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-mono font-semibold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
@@ -569,8 +581,6 @@ export const SettingsModal: React.FC = () => {
                       value={clinicConfig.address || ''}
                       onChange={(e) => {
                         updateClinicConfig({ address: e.target.value });
-                        setShowSavedFeedback(true);
-                        setTimeout(() => setShowSavedFeedback(false), 1500);
                       }}
                       className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-semibold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
@@ -588,8 +598,6 @@ export const SettingsModal: React.FC = () => {
                         value={clinicConfig.defaultConsultationFee}
                         onChange={(e) => {
                           updateClinicConfig({ defaultConsultationFee: Number(e.target.value) });
-                          setShowSavedFeedback(true);
-                          setTimeout(() => setShowSavedFeedback(false), 1500);
                         }}
                         className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-mono font-bold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                       />
@@ -602,8 +610,6 @@ export const SettingsModal: React.FC = () => {
                         value={clinicConfig.currency}
                         onChange={(e) => {
                           updateClinicConfig({ currency: e.target.value });
-                          setShowSavedFeedback(true);
-                          setTimeout(() => setShowSavedFeedback(false), 1500);
                         }}
                         className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-bold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                       />
@@ -618,8 +624,6 @@ export const SettingsModal: React.FC = () => {
                         value={clinicConfig.defaultCourseDays}
                         onChange={(e) => {
                           updateClinicConfig({ defaultCourseDays: Number(e.target.value) });
-                          setShowSavedFeedback(true);
-                          setTimeout(() => setShowSavedFeedback(false), 1500);
                         }}
                         className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-mono font-bold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                       />

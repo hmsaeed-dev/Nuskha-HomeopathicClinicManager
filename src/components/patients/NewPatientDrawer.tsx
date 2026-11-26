@@ -9,7 +9,9 @@ import { useSettingsContext } from '@/context/SettingsContext';
 interface NewPatientDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegisterPatient: (newPatient: Omit<Patient, 'id' | 'pastVisits'> & { initialFee: number }) => void;
+  onRegisterPatient: (
+    newPatient: Omit<Patient, 'id' | 'pastVisits'> & { initialFee: number }
+  ) => Promise<Patient> | Patient;
   nextDailyToken: number;
 }
 
@@ -27,32 +29,49 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
   const [gender, setGender] = useState<'Male' | 'Female' | 'Child'>('Male');
   const [phone, setPhone] = useState('0300-');
   const [locality, setLocality] = useState<string>(LOCALITY_PRESETS[0] || 'Taxila Cantt');
-  const [fee, setFee] = useState<number>(clinicConfig.defaultConsultationFee);
+  const [feeOverride, setFeeOverride] = useState<number | null>(null);
+  const fee = feeOverride ?? clinicConfig.defaultConsultationFee;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!fullName.trim() || !relativeName.trim()) {
-      alert('Please fill in Patient Name and Relative Name.');
+      setSubmitError('Please fill in Patient Name and Relative Name.');
       return;
     }
 
-    onRegisterPatient({
-      mrn: `NK-${Math.floor(1000 + Math.random() * 9000)}`,
-      fullName,
-      relationType,
-      relativeName,
-      age,
-      gender,
-      phone,
-      locality,
-      totalVisits: 0,
-      lastVisitDate: 'Today',
-      initialFee: fee,
-    });
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await onRegisterPatient({
+        mrn: '',
+        fullName: fullName.trim(),
+        relationType,
+        relativeName: relativeName.trim(),
+        age,
+        gender,
+        phone,
+        locality,
+        totalVisits: 0,
+        lastVisitDate: 'Today',
+        initialFee: fee,
+      });
 
-    onClose();
+      setFullName('');
+      setRelativeName('');
+      setFeeOverride(null);
+      onClose();
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : 'Failed to register patient.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -250,26 +269,33 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                 id="opd-initial-fee"
                 type="number"
                 value={fee}
-                onChange={(e) => setFee(Number(e.target.value))}
+                onChange={(e) => setFeeOverride(Number(e.target.value))}
                 className="w-28 px-3 py-1.5 bg-white border border-border-subtle rounded-lg text-sm font-mono font-bold text-content-primary text-right focus:outline-none focus:ring-2 focus:ring-brand-primary"
               />
             </div>
           </div>
 
           {/* Modal Actions */}
+          {submitError && (
+            <div className="px-3.5 py-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+              {submitError}
+            </div>
+          )}
           <div className="pt-3 flex items-center justify-end gap-3 border-t border-border-subtle mt-2">
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-border-strong text-xs font-bold text-content-primary hover:bg-brand-surface-subtle transition-colors cursor-pointer"
+              className="px-5 py-2.5 rounded-xl border border-border-strong text-xs font-bold text-content-primary hover:bg-brand-surface-subtle transition-colors cursor-pointer disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-bold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all cursor-pointer"
+              disabled={isSubmitting}
+              className="px-6 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-bold shadow-sm hover:bg-brand-primary-hover active:scale-[0.98] transition-all cursor-pointer disabled:opacity-60"
             >
-              Register &amp; Open OPD
+              {isSubmitting ? 'Registering...' : 'Register & Open OPD'}
             </button>
           </div>
         </form>

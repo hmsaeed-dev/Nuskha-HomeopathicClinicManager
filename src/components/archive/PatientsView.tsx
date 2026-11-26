@@ -335,9 +335,13 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 									{totalDue > 0 && (
 										<button
 											type="button"
-											onClick={() => {
-												settlePatientDues(selectedPatient.id);
-												playSuccessChime();
+											onClick={async () => {
+												try {
+													await settlePatientDues(selectedPatient.id);
+													playSuccessChime();
+												} catch (err) {
+													console.error("Failed to settle patient dues:", err);
+												}
 											}}
 											className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white text-xs font-bold shadow-md transition-all active:scale-98 cursor-pointer animate-in fade-in"
 											title={`Click to settle outstanding dues of ${formatCurrency(totalDue)}`}
@@ -589,9 +593,13 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 							</button>
 							<button
 								type="button"
-								onClick={() => {
-									deletePatient(selectedPatient.id);
-									setIsDeleteConfirmOpen(false);
+								onClick={async () => {
+									try {
+										await deletePatient(selectedPatient.id);
+										setIsDeleteConfirmOpen(false);
+									} catch (err) {
+										console.error("Failed to archive patient:", err);
+									}
 								}}
 								className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-xs active:scale-98 transition-all cursor-pointer"
 							>

@@ -9,7 +9,7 @@ interface EditPatientModalProps {
 	patient: Patient | null;
 	isOpen: boolean;
 	onClose: () => void;
-	onSave: (updatedPatient: Patient) => void;
+	onSave: (updatedPatient: Patient) => Promise<unknown> | unknown;
 }
 
 export const EditPatientModal: React.FC<EditPatientModalProps> = ({
@@ -33,7 +33,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
 interface EditPatientFormProps {
 	patient: Patient;
 	onClose: () => void;
-	onSave: (updatedPatient: Patient) => void;
+	onSave: (updatedPatient: Patient) => Promise<unknown> | unknown;
 }
 
 const EditPatientForm: React.FC<EditPatientFormProps> = ({
@@ -52,10 +52,12 @@ const EditPatientForm: React.FC<EditPatientFormProps> = ({
 	);
 	const [phone, setPhone] = useState(patient.phone);
 	const [locality, setLocality] = useState(patient.locality);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [saveError, setSaveError] = useState<string | null>(null);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!fullName.trim()) return;
+		if (isSubmitting || !fullName.trim()) return;
 
 		const updated: Patient = {
 			...patient,
@@ -68,8 +70,18 @@ const EditPatientForm: React.FC<EditPatientFormProps> = ({
 			locality: locality.trim() || patient.locality,
 		};
 
-		onSave(updated);
-		onClose();
+		setIsSubmitting(true);
+		setSaveError(null);
+		try {
+			await onSave(updated);
+			onClose();
+		} catch (err) {
+			setSaveError(
+				err instanceof Error ? err.message : "Failed to save patient updates.",
+			);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -264,19 +276,26 @@ const EditPatientForm: React.FC<EditPatientFormProps> = ({
 					</div>
 
 					{/* Modal Footer Actions */}
+					{saveError && (
+						<div className="px-3 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+							{saveError}
+						</div>
+					)}
 					<div className="flex items-center justify-end gap-2.5 pt-4 border-t border-border-subtle">
 						<button
 							type="button"
+							disabled={isSubmitting}
 							onClick={onClose}
-							className="px-4 py-2 rounded-xl bg-brand-surface hover:bg-brand-surface-subtle text-content-secondary hover:text-content-primary text-xs font-bold transition-all cursor-pointer"
+							className="px-4 py-2 rounded-xl bg-brand-surface hover:bg-brand-surface-subtle text-content-secondary hover:text-content-primary text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
 						>
 							Cancel
 						</button>
 						<button
 							type="submit"
-							className="px-5 py-2 rounded-xl bg-brand-primary hover:bg-brand-primary-dark text-white text-xs font-bold shadow-xs active:scale-98 transition-all cursor-pointer"
+							disabled={isSubmitting}
+							className="px-5 py-2 rounded-xl bg-brand-primary hover:bg-brand-primary-dark text-white text-xs font-bold shadow-xs active:scale-98 transition-all cursor-pointer disabled:opacity-60"
 						>
-							Save Changes
+							{isSubmitting ? "Saving..." : "Save Changes"}
 						</button>
 					</div>
 				</form>

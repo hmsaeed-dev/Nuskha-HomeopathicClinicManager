@@ -1,25 +1,30 @@
 import { useState, useCallback } from 'react';
 import { Patient, ReactionType, PrescriptionItem, DispensingVehicle } from '@/types';
-import { CLINIC_CONFIG } from '@/config/clinic.config';
 import { DEFAULT_INITIAL_PRESCRIPTIONS } from '@/constants/clinical';
+import { useSettingsContext } from '@/context/SettingsContext';
 
 interface UseConsultationFormProps {
   patient: Patient;
 }
 
 export function useConsultationForm({ patient }: UseConsultationFormProps) {
+  const { clinicConfig } = useSettingsContext();
   const [reaction, setReaction] = useState<ReactionType>('Improved');
   const [symptoms, setSymptoms] = useState<string>(
     'Migraine 70% better; occasional morning gastric acidity persists after heavy meals.'
   );
-  const [durationDays, setDurationDays] = useState<number>(CLINIC_CONFIG.defaultCourseDays);
+  const [durationOverride, setDurationOverride] = useState<number | null>(null);
   const [prescriptions, setPrescriptions] = useState<PrescriptionItem[]>(
     DEFAULT_INITIAL_PRESCRIPTIONS
   );
   const [doctorNotes, setDoctorNotes] = useState<string>(
     'Continue Bryonia 200C for 2 weeks; review if acidity persists.'
   );
-  const [fee, setFee] = useState<number>(CLINIC_CONFIG.defaultConsultationFee);
+  const [feeOverride, setFeeOverride] = useState<number | null>(null);
+  const durationDays = durationOverride ?? clinicConfig.defaultCourseDays;
+  const fee = feeOverride ?? clinicConfig.defaultConsultationFee;
+  const setDurationDays = useCallback((days: number) => setDurationOverride(days), []);
+  const setFee = useCallback((nextFee: number) => setFeeOverride(nextFee), []);
   const [feeStatus, setFeeStatus] = useState<'Paid' | 'Free' | 'Due'>('Paid');
   const [activeRemedySearchIndex, setActiveRemedySearchIndex] = useState<number | null>(null);
 

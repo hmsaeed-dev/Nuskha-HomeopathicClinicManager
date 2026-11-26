@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { RotateCcw, Plus, CheckCircle2 } from 'lucide-react';
 import { Patient, ReactionType, PrescriptionItem } from '@/types';
 import { useSettingsContext } from '@/context/SettingsContext';
@@ -20,7 +20,8 @@ interface ConsultationComposerProps {
     durationDays: number;
     fee: number;
     feeStatus: 'Paid' | 'Free' | 'Due';
-  }) => void;
+    idempotencyKey?: string;
+  }) => Promise<unknown> | unknown;
 }
 
 export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
@@ -28,6 +29,10 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
   onSaveConsultation,
 }) => {
   const { clinicConfig, audioChimeEnabled, singleKeyShortcutsEnabled } = useSettingsContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const inFlightRef = useRef(false);
+  const pendingIdemKeyRef = useRef<string | null>(null);
 
   const {
     reaction,
@@ -50,20 +55,43 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
     handleUpdateRemedy,
   } = useConsultationForm({ patient });
 
-  const handleSave = useCallback(() => {
-    if (audioChimeEnabled) {
-      playSuccessChime();
+  const handleSave = useCallback(async () => {
+    if (inFlightRef.current) return;
+    inFlightRef.current = true;
+    setIsSubmitting(true);
+    setSaveError(null);
+
+    if (!pendingIdemKeyRef.current) {
+      pendingIdemKeyRef.current =
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `idem-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     }
 
-    onSaveConsultation({
-      reaction,
-      symptoms,
-      prescriptions,
-      doctorNotes,
-      durationDays,
-      fee,
-      feeStatus,
-    });
+    try {
+      await onSaveConsultation({
+        reaction,
+        symptoms,
+        prescriptions,
+        doctorNotes,
+        durationDays,
+        fee,
+        feeStatus,
+        idempotencyKey: pendingIdemKeyRef.current,
+      });
+
+      pendingIdemKeyRef.current = null;
+      if (audioChimeEnabled) {
+        playSuccessChime();
+      }
+    } catch (err) {
+      setSaveError(
+        err instanceof Error ? err.message : 'Failed to save consultation.'
+      );
+    } finally {
+      inFlightRef.current = false;
+      setIsSubmitting(false);
+    }
   }, [
     onSaveConsultation,
     audioChimeEnabled,
@@ -245,14 +273,20 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       </div>
 
       {/* 6. Primary Action Button */}
-      <div className="pt-2">
+      <div className="pt-2 flex flex-col gap-2">
+        {saveError && (
+          <div className="px-3 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+            {saveError}
+          </div>
+        )}
         <button
           type="button"
-          onClick={handleSave}
-          className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primary-hover text-white shadow-md flex items-center justify-center gap-2 text-md font-bold transition-all active:scale-98 cursor-pointer"
+          disabled={isSubmitting}
+          onClick={() => void handleSave()}
+          className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-60 disabled:cursor-not-allowed text-white shadow-md flex items-center justify-center gap-2 text-md font-bold transition-all active:scale-98 cursor-pointer"
           title="Save & Proceed to Next Patient (Ctrl + Enter)"
         >
-          <span>Save</span>
+          <span>{isSubmitting ? 'Saving...' : 'Save'}</span>
           <CheckCircle2 className="w-5 h-5 text-white" />
         </button>
       </div>

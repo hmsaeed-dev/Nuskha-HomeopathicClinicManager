@@ -32,12 +32,16 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
   }, [patient.pastVisits]);
 
   // 1-Click Settle Dues handler
-  const handleSettleDues = () => {
+  const handleSettleDues = async () => {
     if (totalDue <= 0) return;
-    settlePatientDues(patient.id);
-    playSuccessChime();
-    setIsSettledJustNow(true);
-    setTimeout(() => setIsSettledJustNow(false), 2500);
+    try {
+      await settlePatientDues(patient.id);
+      playSuccessChime();
+      setIsSettledJustNow(true);
+      setTimeout(() => setIsSettledJustNow(false), 2500);
+    } catch (err) {
+      console.error('Failed to settle dues:', err);
+    }
   };
 
   return (
@@ -71,7 +75,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
           {totalDue > 0 ? (
             <button
               type="button"
-              onClick={handleSettleDues}
+              onClick={() => void handleSettleDues()}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer shrink-0 animate-in fade-in"
               title={`Click to settle outstanding dues of ${formatCurrency(totalDue)}`}
             >

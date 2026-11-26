@@ -2,20 +2,24 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { usePatients } from '@/hooks/usePatients';
-import { Patient, ReactionType, PrescriptionItem } from '@/types';
+import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
 
 interface PatientsContextValue {
   patients: Patient[];
-  selectedPatient: Patient;
+  selectedPatient: Patient | null;
   selectedPatientId: string;
   setSelectedPatientId: (id: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filteredPatients: Patient[];
   todayCount: number;
+  isLoading: boolean;
+  isSaving: boolean;
+  error: string | null;
+  refreshPatients: () => Promise<void>;
   registerPatient: (
     newPatientData: Omit<Patient, 'id' | 'pastVisits'> & { initialFee: number }
-  ) => Patient;
+  ) => Promise<Patient>;
   saveConsultation: (data: {
     reaction: ReactionType;
     symptoms: string;
@@ -24,11 +28,11 @@ interface PatientsContextValue {
     durationDays?: number;
     fee: number;
     feeStatus: 'Paid' | 'Free' | 'Due';
-  }) => void;
-  updatePatient: (updatedPatient: Patient) => void;
-  settlePatientDues: (patientId: string) => void;
-  deletePatient: (patientId: string) => void;
-  resetToDefaultData: () => void;
+    idempotencyKey?: string;
+  }) => Promise<PastVisit | undefined>;
+  updatePatient: (updatedPatient: Patient) => Promise<Patient>;
+  settlePatientDues: (patientId: string) => Promise<void>;
+  deletePatient: (patientId: string) => Promise<void>;
   isNewPatientOpen: boolean;
   setIsNewPatientOpen: (open: boolean) => void;
 }
