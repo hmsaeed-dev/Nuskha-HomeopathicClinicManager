@@ -31,6 +31,12 @@ let activeConfig: DbConfig | null = null;
 let isQuitting = false;
 let lastSetupError: string | null = null;
 
+const MIN_SPLASH_VISIBLE_MS = 1200;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function getRepoRoot(): string {
   // desktop/dist/main.js -> repo root is two levels up
   return path.resolve(__dirname, '..', '..');
@@ -355,8 +361,13 @@ function loadSplashHtml(message?: string): string {
 
 async function openDatabaseSetup(errorMessage: string | null = null): Promise<void> {
   lastSetupError = errorMessage;
-  if (!mainWindow) return;
-  await mainWindow.loadFile(getSetupHtmlPath());
+  const win = mainWindow;
+  if (!win) return;
+  await win.loadFile(getSetupHtmlPath());
+  if (!isQuitting) {
+    win.show();
+    win.focus();
+  }
 }
 
 async function openDevWorkspace(url: string): Promise<void> {
@@ -395,6 +406,10 @@ async function openDevWorkspace(url: string): Promise<void> {
   // did-fail-load shows the retry/failure splash; swallow the rejected promise
   // so startup does not surface an unhandled rejection.
   await win.loadURL(url).catch(() => undefined);
+  if (!isQuitting) {
+    win.show();
+    win.focus();
+  }
 }
 
 async function launchAppWithConfig(config: DbConfig): Promise<void> {
@@ -404,11 +419,26 @@ async function launchAppWithConfig(config: DbConfig): Promise<void> {
     return;
   }
 
-  if (!mainWindow) return;
-  await mainWindow.loadURL(loadSplashHtml());
+  const win = mainWindow;
+  if (!win) return;
+
+  const splashStartedAt = Date.now();
+  await win.loadURL(loadSplashHtml());
+  if (!isQuitting) {
+    win.show();
+    win.focus();
+  }
 
   const port = await startNextServer(config);
   const health = await waitForServerHealth(port);
+
+  // Let the branded splash finish its reveal/progress animation even when the
+  // standalone server becomes healthy almost immediately.
+  const elapsed = Date.now() - splashStartedAt;
+  if (elapsed < MIN_SPLASH_VISIBLE_MS) {
+    await sleep(MIN_SPLASH_VISIBLE_MS - elapsed);
+  }
+
   if (!health.ok) {
     await stopNextServer();
     await openDatabaseSetup(
@@ -418,7 +448,7 @@ async function launchAppWithConfig(config: DbConfig): Promise<void> {
   }
 
   lastSetupError = null;
-  await mainWindow.loadURL(`http://127.0.0.1:${port}`);
+  await win.loadURL(`http://127.0.0.1:${port}`);
 }
 
 async function handleBackupAction(): Promise<void> {
@@ -631,6 +661,7 @@ async function createMainWindow(): Promise<void> {
     height: 860,
     minWidth: 1024,
     minHeight: 700,
+    show: false,
     title: 'Nuskha — Homoeopathic Clinic',
     icon: fs.existsSync(iconPath) ? iconPath : undefined,
     webPreferences: {
@@ -676,6 +707,7 @@ if (!gotLock) {
   app.on('second-instance', () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
       mainWindow.focus();
     }
   });
