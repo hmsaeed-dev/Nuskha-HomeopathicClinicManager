@@ -5,6 +5,7 @@ import { X, UserPlus, Phone, MapPin } from 'lucide-react';
 import { Patient } from '@/types';
 import { LOCALITY_PRESETS } from '@/constants/clinical';
 import { useSettingsContext } from '@/context/SettingsContext';
+import { playUiCue } from '@/utils/sound';
 
 interface NewPatientDrawerProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
   onRegisterPatient,
   nextDailyToken,
 }) => {
-  const { clinicConfig } = useSettingsContext();
+  const { clinicConfig, audioChimeEnabled } = useSettingsContext();
   const [fullName, setFullName] = useState('');
   const [relationType, setRelationType] = useState<'s/o' | 'w/o' | 'd/o'>('s/o');
   const [relativeName, setRelativeName] = useState('');
@@ -65,10 +66,12 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
       setRelativeName('');
       setFeeOverride(null);
       onClose();
+      playUiCue('register', audioChimeEnabled);
     } catch (err) {
       setSubmitError(
         err instanceof Error ? err.message : 'Failed to register patient.'
       );
+      playUiCue('error', audioChimeEnabled);
     } finally {
       setIsSubmitting(false);
     }

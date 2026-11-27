@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { PatientsView } from '@/components/archive/PatientsView';
 import { usePatientsContext } from '@/context/PatientsContext';
+import { BrandedLoader } from '@/components/ui/BrandedLoader';
 import { Patient } from '@/types';
 
 export default function PatientsPage() {
@@ -29,11 +30,7 @@ export default function PatientsPage() {
   };
 
   if (isLoading) {
-    return (
-      <main className="flex-1 p-4 sm:p-5 lg:p-6 max-w-7xl w-full mx-auto">
-        <div className="h-96 rounded-2xl bg-white/70 animate-pulse" />
-      </main>
-    );
+    return <BrandedLoader compact label="Loading patient records…" />;
   }
 
   if (error) {

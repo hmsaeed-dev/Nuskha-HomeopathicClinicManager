@@ -6,6 +6,7 @@ import { PatientSearchRail } from '@/components/patients/PatientSearchRail';
 import { HistoryTimelineRail } from '@/components/history/HistoryTimelineRail';
 import { ConsultationComposer } from '@/components/opd/ConsultationComposer';
 import { usePatientsContext } from '@/context/PatientsContext';
+import { BrandedLoader } from '@/components/ui/BrandedLoader';
 
 export default function OpdPage() {
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -58,13 +59,7 @@ export default function OpdPage() {
   };
 
   if (isLoading) {
-    return (
-      <main className="flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
-        <div className="lg:col-span-3 rounded-2xl bg-white/70 animate-pulse min-h-96" />
-        <div className="lg:col-span-4 rounded-2xl bg-white/70 animate-pulse min-h-96" />
-        <div className="lg:col-span-5 rounded-2xl bg-white/70 animate-pulse min-h-96" />
-      </main>
-    );
+    return <BrandedLoader label="Opening today’s OPD workspace…" />;
   }
 
   if (error) {

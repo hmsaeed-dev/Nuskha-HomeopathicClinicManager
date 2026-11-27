@@ -8,8 +8,9 @@ import {
 } from 'lucide-react';
 import { Patient, PastVisit } from '@/types';
 import { formatCurrency } from '@/utils/formatters';
-import { playSuccessChime } from '@/utils/sound';
+import { playUiCue } from '@/utils/sound';
 import { usePatientsContext } from '@/context/PatientsContext';
+import { useSettingsContext } from '@/context/SettingsContext';
 import { HistoryVisitCard } from '@/components/ui/clinical';
 
 interface HistoryTimelineRailProps {
@@ -22,6 +23,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
   onEditVisit,
 }) => {
   const { settlePatientDues, focusedVisitId, setFocusedVisitId } = usePatientsContext();
+  const { audioChimeEnabled } = useSettingsContext();
   const [isSettledJustNow, setIsSettledJustNow] = useState(false);
   const historyScrollRef = useRef<HTMLDivElement>(null);
 
@@ -48,11 +50,12 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
     if (totalDue <= 0) return;
     try {
       await settlePatientDues(patient.id);
-      playSuccessChime();
+      playUiCue('settle', audioChimeEnabled);
       setIsSettledJustNow(true);
       setTimeout(() => setIsSettledJustNow(false), 2500);
     } catch (err) {
       console.error('Failed to settle dues:', err);
+      playUiCue('error', audioChimeEnabled);
     }
   };
 

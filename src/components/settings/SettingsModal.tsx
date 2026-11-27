@@ -709,10 +709,10 @@ export const SettingsModal: React.FC = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-xs font-bold text-content-primary">
-                        Auditory Confirmation Chime
+                        Auditory Confirmation Cues
                       </span>
                       <span className="text-[11px] text-content-secondary font-medium">
-                        Play subtle tone when pressing <kbd className="font-mono font-bold bg-white px-1 border rounded">Ctrl+Enter</kbd> to save
+                        Subtle tones on save, registration, dues settlement and errors
                       </span>
                     </div>
                   </div>

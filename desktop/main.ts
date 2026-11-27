@@ -242,8 +242,40 @@ async function startNextServer(config: DbConfig): Promise<number> {
   return port;
 }
 
+let splashLogoDataUri: string | null | undefined;
+
+function getSplashLogoDataUri(): string | null {
+  if (splashLogoDataUri !== undefined) return splashLogoDataUri;
+  try {
+    const iconPath = getIconPath();
+    const ext = path.extname(iconPath).toLowerCase();
+    const mime = ext === '.png' ? 'image/png' : ext === '.svg' ? 'image/svg+xml' : null;
+    if (!mime || !fs.existsSync(iconPath)) {
+      splashLogoDataUri = null;
+    } else {
+      splashLogoDataUri = `data:${mime};base64,${fs.readFileSync(iconPath).toString('base64')}`;
+    }
+  } catch {
+    splashLogoDataUri = null;
+  }
+  return splashLogoDataUri;
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(
+    /[&<>"']/g,
+    (ch) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[
+        ch
+      ] ?? ch)
+  );
+}
+
 function loadSplashHtml(message?: string): string {
   const subtitle = message ?? 'Starting Nuskha clinic workspace...';
+  const logo = getSplashLogoDataUri();
+  const logoMarkup = logo ? `<img class="logo" src="${logo}" alt="Nuskha" />` : '';
+
   return `data:text/html;charset=utf-8,${encodeURIComponent(`
     <!DOCTYPE html>
     <html>
@@ -251,19 +283,71 @@ function loadSplashHtml(message?: string): string {
         <meta charset="UTF-8" />
         <title>Nuskha</title>
         <style>
+          * { box-sizing: border-box; }
           body {
             margin: 0; height: 100vh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 10px;
-            background: #f6f8f5; color: #1c241b;
+            align-items: center; justify-content: center; overflow: hidden;
+            background: radial-gradient(circle at 50% 35%, #0d3c34 0%, #052620 55%, #041a16 100%);
+            color: #eef3f1;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           }
-          h1 { margin: 0; font-size: 22px; color: #2b5e43; }
-          p { margin: 0; font-size: 13px; color: #5c685a; }
+          .halo {
+            position: absolute; width: 420px; height: 420px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 224, 209, 0.16), transparent 65%);
+          }
+          .content { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+          .logo {
+            width: 104px; height: 104px; object-fit: contain;
+            filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.35));
+            animation: reveal 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+          }
+          h1 {
+            margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.02em;
+            color: #ffffff; animation: rise 500ms 120ms both;
+          }
+          .brandline {
+            margin: 0; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+            color: #8fe0d1; animation: rise 500ms 200ms both;
+          }
+          .track {
+            width: 240px; height: 4px; border-radius: 9999px; overflow: hidden;
+            background: rgba(210, 235, 228, 0.18); animation: rise 500ms 320ms both;
+          }
+          .track::after {
+            content: ''; display: block; width: 40%; height: 100%; border-radius: 9999px;
+            background: #8fe0d1; animation: sweep 1.4s ease-in-out infinite;
+          }
+          .message {
+            margin: 10px 0 0; font-size: 12px; color: #d2ebe4;
+            animation: rise 500ms 260ms both;
+          }
+          @keyframes reveal {
+            from { opacity: 0; transform: scale(0.86); }
+            60% { opacity: 1; transform: scale(1.03); }
+            to { opacity: 1; transform: scale(1); }
+          }
+          @keyframes rise {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes sweep {
+            from { transform: translateX(-110%); }
+            to { transform: translateX(260%); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .logo, h1, .brandline, .track, .track::after, .message { animation: none !important; }
+          }
         </style>
       </head>
       <body>
-        <h1>Nuskha</h1>
-        <p>${subtitle}</p>
+        <div class="halo"></div>
+        <div class="content">
+          ${logoMarkup}
+          <h1>Nuskha</h1>
+          <p class="brandline">Dr. Aslam Homoeopathic Clinic</p>
+          <div class="track"></div>
+          <p class="message">${escapeHtml(subtitle)}</p>
+        </div>
       </body>
     </html>
   `)}`;
@@ -308,7 +392,9 @@ async function openDevWorkspace(url: string): Promise<void> {
     }
   );
 
-  await win.loadURL(url);
+  // did-fail-load shows the retry/failure splash; swallow the rejected promise
+  // so startup does not surface an unhandled rejection.
+  await win.loadURL(url).catch(() => undefined);
 }
 
 async function launchAppWithConfig(config: DbConfig): Promise<void> {
@@ -599,6 +685,8 @@ if (!gotLock) {
     buildAppMenu();
     createTray();
     await createMainWindow();
+  }).catch((error) => {
+    console.error('Failed to start Nuskha:', error);
   });
 
   app.on('window-all-closed', () => {

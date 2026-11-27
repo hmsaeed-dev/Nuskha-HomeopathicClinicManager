@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { PatientsProvider, usePatientsContext } from '@/context/PatientsContext';
 import { SettingsProvider, useSettingsContext } from '@/context/SettingsContext';
 import { Header } from '@/components/layout/Header';
@@ -11,6 +11,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 function AppShellInner({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const {
     isNewPatientOpen,
     setIsNewPatientOpen,
@@ -47,8 +48,12 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         todayCount={todayCount}
       />
 
-      {/* Main Page Content */}
-      <div className="flex-1 flex flex-col">{children}</div>
+      {/* Main Page Content — keyed by route for a soft enter transition */}
+      <div className="flex-1 flex flex-col">
+        <div key={pathname} className="page-enter flex flex-1 flex-col">
+          {children}
+        </div>
+      </div>
 
       {/* Slide-over Walk-In Registration Drawer (Active on any page via F2) */}
       <NewPatientDrawer

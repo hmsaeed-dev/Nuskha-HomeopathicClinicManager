@@ -232,3 +232,63 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--content-muted);
 }
+
+/* ==========================================================================
+   MOTION: short, purposeful transitions (existing animate-in utilities)
+   ========================================================================== */
+@keyframes nuskha-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes nuskha-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes nuskha-zoom-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes nuskha-logo-reveal {
+  0% { opacity: 0; transform: scale(0.86); }
+  60% { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes nuskha-sheen {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
+
+.animate-in {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+.fade-in { animation-name: nuskha-fade-in; }
+.zoom-in-95 { animation-name: nuskha-zoom-in; }
+
+.page-enter {
+  animation: nuskha-fade-up 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.logo-reveal {
+  animation: nuskha-logo-reveal 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.loader-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.loader-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: nuskha-sheen 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .page-enter,
+  .logo-reveal,
+  .loader-sheen::after {
+    animation: none !important;
+  }
+}

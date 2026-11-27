@@ -20,10 +20,11 @@ import {
 } from "lucide-react";
 import { Patient } from "@/types";
 import { usePatientsContext } from "@/context/PatientsContext";
+import { useSettingsContext } from "@/context/SettingsContext";
 import { EditPatientModal } from "@/components/patients/EditPatientModal";
 import { REACTION_CONFIG } from "@/constants/clinical";
 import { formatCurrency } from "@/utils/formatters";
-import { playSuccessChime } from "@/utils/sound";
+import { playUiCue } from "@/utils/sound";
 import { HistoryVisitCard } from "@/components/ui/clinical";
 
 interface PatientsViewProps {
@@ -40,6 +41,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 	onOpenVisit,
 }) => {
 	const { updatePatient, deletePatient, settlePatientDues } = usePatientsContext();
+	const { audioChimeEnabled } = useSettingsContext();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
 	const [selectedPatientId, setSelectedPatientId] = useState<string>(
@@ -364,9 +366,10 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 											onClick={async () => {
 												try {
 													await settlePatientDues(selectedPatient.id);
-													playSuccessChime();
+													playUiCue("settle", audioChimeEnabled);
 												} catch (err) {
 													console.error("Failed to settle patient dues:", err);
+												playUiCue("error", audioChimeEnabled);
 												}
 											}}
 											className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white text-xs font-bold shadow-md transition-all active:scale-98 cursor-pointer animate-in fade-in"

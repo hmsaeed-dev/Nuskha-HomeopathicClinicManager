@@ -4,7 +4,7 @@ import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { RotateCcw, Plus, CheckCircle2 } from 'lucide-react';
 import { Patient, ReactionType, PrescriptionItem } from '@/types';
 import { useSettingsContext } from '@/context/SettingsContext';
-import { playSuccessChime } from '@/utils/sound';
+import { playUiCue } from '@/utils/sound';
 import { useConsultationForm } from '@/hooks/useConsultationForm';
 import { ReactionSelector } from './ReactionSelector';
 import { PrescriptionRow } from './PrescriptionRow';
@@ -81,13 +81,12 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       });
 
       pendingIdemKeyRef.current = null;
-      if (audioChimeEnabled) {
-        playSuccessChime();
-      }
+      playUiCue('save', audioChimeEnabled);
     } catch (err) {
       setSaveError(
         err instanceof Error ? err.message : 'Failed to save consultation.'
       );
+      playUiCue('error', audioChimeEnabled);
     } finally {
       inFlightRef.current = false;
       setIsSubmitting(false);

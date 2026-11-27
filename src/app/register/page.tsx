@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { DailyRegisterView } from '@/components/register/DailyRegisterView';
+import { BrandedLoader } from '@/components/ui/BrandedLoader';
 import { usePatientsContext } from '@/context/PatientsContext';
 
 function RegisterContent() {
@@ -24,7 +25,7 @@ function RegisterContent() {
   };
 
   if (isLoading) {
-    return <div className="h-96 rounded-2xl bg-white/70 animate-pulse" />;
+    return <BrandedLoader compact label="Preparing practice analytics…" />;
   }
 
   if (error) {
