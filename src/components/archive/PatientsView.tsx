@@ -7,6 +7,7 @@ import {
 	MapPin,
 	Calendar,
 	ArrowRight,
+	ArrowUpRight,
 	Clock,
 	Activity,
 	CheckCircle2,
@@ -28,6 +29,7 @@ import { HistoryVisitCard } from "@/components/ui/clinical";
 interface PatientsViewProps {
 	patients: Patient[];
 	onSelectPatientForOPD: (patient: Patient) => void;
+	onOpenVisit?: (patientId: string, visitId: string) => void;
 }
 
 type FilterTab = "all" | "chronic" | "recent" | "dues";
@@ -35,6 +37,7 @@ type FilterTab = "all" | "chronic" | "recent" | "dues";
 export const PatientsView: React.FC<PatientsViewProps> = ({
 	patients,
 	onSelectPatientForOPD,
+	onOpenVisit,
 }) => {
 	const { updatePatient, deletePatient, settlePatientDues } = usePatientsContext();
 	const [searchQuery, setSearchQuery] = useState("");
@@ -220,7 +223,13 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 									onClick={() =>
 										setSelectedPatientId(patientItem.id)
 									}
-									className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 ${
+									onKeyDown={(event) => {
+										if (event.key === "Enter" || event.key === " ") {
+											event.preventDefault();
+											setSelectedPatientId(patientItem.id);
+										}
+									}}
+									className={`group p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
 										isSelected
 											? "bg-brand-primary text-white shadow-md"
 											: "bg-white text-content-primary hover:bg-white/95 shadow-2xs"
@@ -234,6 +243,23 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 												: "bg-brand-primary"
 										}`}
 									/>
+
+									<button
+										type="button"
+										onClick={(event) => {
+											event.stopPropagation();
+											onSelectPatientForOPD(patientItem);
+										}}
+										title="Open in OPD"
+										aria-label={`Open ${patientItem.fullName} in OPD`}
+										className={`shrink-0 p-1 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity ${
+											isSelected
+												? "text-white hover:bg-white/20"
+												: "text-brand-primary hover:bg-brand-primary-container"
+										}`}
+									>
+										<ArrowUpRight className="w-4 h-4" />
+									</button>
 
 									<div className="flex-1 min-w-0 flex flex-col">
 										{/* Patient Name & Age Chip */}
@@ -534,6 +560,15 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 														.length - index
 												}
 												isLatest={index === 0}
+												onOpen={
+													onOpenVisit
+														? (visit) =>
+																onOpenVisit(
+																	selectedPatient.id,
+																	visit.id
+																)
+														: undefined
+												}
 											/>
 										),
 									)}

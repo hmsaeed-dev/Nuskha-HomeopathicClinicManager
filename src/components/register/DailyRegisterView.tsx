@@ -17,6 +17,7 @@ import {
   Award,
   CircleDollarSign,
   Users,
+  ArrowUpRight,
 } from 'lucide-react';
 import { Patient, ReactionType } from '@/types';
 import { getDemographicCohort } from '@/utils/demographics';
@@ -29,6 +30,7 @@ type OutcomeFilter = 'all' | 'Improved' | 'No Change' | 'Decline' | 'First Visit
 
 interface DailyRegisterViewProps {
   patients: Patient[];
+  onOpenVisit?: (patientId: string, visitId: string) => void;
 }
 
 interface EnrichedVisit {
@@ -59,7 +61,10 @@ interface EnrichedVisit {
   doctorNotes?: string;
 }
 
-export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }) => {
+export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
+  patients,
+  onOpenVisit,
+}) => {
   const { clinicConfig } = useSettingsContext();
 
   // Active Horizon: Daily, Weekly, Monthly, Yearly
@@ -1028,7 +1033,25 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                     REACTION_CONFIG[item.reaction] || REACTION_CONFIG['First Visit'];
 
                   return (
-                    <tr key={item.id} className="hover:bg-brand-surface transition-colors">
+                    <tr
+                      key={item.id}
+                      onClick={() => onOpenVisit?.(item.patientId, item.id)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          onOpenVisit?.(item.patientId, item.id);
+                        }
+                      }}
+                      tabIndex={onOpenVisit ? 0 : undefined}
+                      aria-label={
+                        onOpenVisit
+                          ? `Open ${item.patientName}'s ${item.date} consultation in OPD`
+                          : undefined
+                      }
+                      className={`hover:bg-brand-surface transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+                        onOpenVisit ? 'cursor-pointer group' : ''
+                      }`}
+                    >
                       {/* Token # with Brand Bar */}
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -1050,6 +1073,9 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({ patients }
                           >
                             {item.age}y
                           </span>
+                          {onOpenVisit && (
+                            <ArrowUpRight className="w-3.5 h-3.5 text-brand-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                          )}
                         </div>
                         <div className="text-[11px] text-content-secondary font-medium">
                           {item.relation} · {item.locality}

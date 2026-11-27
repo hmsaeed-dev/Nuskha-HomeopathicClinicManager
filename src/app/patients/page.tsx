@@ -9,12 +9,23 @@ import { Patient } from '@/types';
 
 export default function PatientsPage() {
   const router = useRouter();
-  const { patients, setSelectedPatientId, isLoading, error, refreshPatients } =
-    usePatientsContext();
+  const {
+    patients,
+    setSelectedPatientId,
+    setFocusedVisitId,
+    isLoading,
+    error,
+    refreshPatients,
+  } = usePatientsContext();
+
+  const openInOpd = (patientId: string, visitId?: string) => {
+    setSelectedPatientId(patientId);
+    setFocusedVisitId(visitId ?? null);
+    router.push('/');
+  };
 
   const handleSelectPatientForOPD = (patient: Patient) => {
-    setSelectedPatientId(patient.id);
-    router.push('/');
+    openInOpd(patient.id);
   };
 
   if (isLoading) {
@@ -52,6 +63,7 @@ export default function PatientsPage() {
       <PatientsView
         patients={patients}
         onSelectPatientForOPD={handleSelectPatientForOPD}
+        onOpenVisit={(patientId, visitId) => openInOpd(patientId, visitId)}
       />
     </main>
   );

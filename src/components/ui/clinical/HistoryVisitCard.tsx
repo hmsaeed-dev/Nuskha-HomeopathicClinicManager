@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Calendar, Clock, Edit2 } from "lucide-react";
+import { ArrowUpRight, Calendar, Clock, Edit2 } from "lucide-react";
 import { PastVisit } from "@/types";
 import { formatCurrency } from "@/utils/formatters";
 import { ReactionBadge } from "./ReactionBadge";
@@ -11,7 +11,9 @@ export interface HistoryVisitCardProps {
   visit: PastVisit;
   consultationNumber?: number;
   onEdit?: (visit: PastVisit) => void;
+  onOpen?: (visit: PastVisit) => void;
   isLatest?: boolean;
+  isFocused?: boolean;
   className?: string;
 }
 
@@ -19,7 +21,9 @@ export const HistoryVisitCard: React.FC<HistoryVisitCardProps> = ({
   visit,
   consultationNumber,
   onEdit,
+  onOpen,
   isLatest = false,
+  isFocused = false,
   className = "",
 }) => {
   // Fee status styling
@@ -32,11 +36,27 @@ export const HistoryVisitCard: React.FC<HistoryVisitCardProps> = ({
 
   return (
     <article
-      className={`rounded-2xl bg-white border p-4 sm:p-5 shadow-2xs hover:shadow-xs transition-all flex flex-col gap-3.5 group ${
-        isLatest
+      data-visit-id={visit.id}
+      role={onOpen ? "button" : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      onClick={onOpen ? () => onOpen(visit) : undefined}
+      onKeyDown={
+        onOpen
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onOpen(visit);
+              }
+            }
+          : undefined
+      }
+      className={`rounded-2xl bg-white border p-4 sm:p-5 shadow-2xs hover:shadow-xs transition-all flex flex-col gap-3.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+        isFocused
+          ? "border-brand-primary ring-2 ring-brand-primary/25 bg-brand-primary-container/30"
+          : isLatest
           ? "border-brand-primary/40 ring-1 ring-brand-primary/10"
           : "border-border-subtle hover:border-brand-primary/30"
-      } ${className}`}
+      } ${onOpen ? "cursor-pointer" : ""} ${className}`}
     >
       {/* 1. Header: Reaction Badge (Left) vs Duration, Date & Edit (Right) */}
       <header className="flex items-center justify-between gap-3 flex-wrap">
@@ -53,6 +73,11 @@ export const HistoryVisitCard: React.FC<HistoryVisitCardProps> = ({
 
         {/* Right: Duration chip, Date & Actions */}
         <div className="flex items-center gap-2.5 ml-auto">
+          {onOpen && (
+            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-brand-primary opacity-0 group-hover:opacity-100 transition-opacity">
+              Open in OPD <ArrowUpRight className="w-3 h-3" />
+            </span>
+          )}
           {visit.durationDays && (
             <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-brand-surface text-content-primary border border-border-subtle/60">
               <Calendar className="w-3 h-3 text-brand-primary shrink-0" />
@@ -67,7 +92,10 @@ export const HistoryVisitCard: React.FC<HistoryVisitCardProps> = ({
           {onEdit && (
             <button
               type="button"
-              onClick={() => onEdit(visit)}
+              onClick={(event) => {
+                event.stopPropagation();
+                onEdit(visit);
+              }}
               className="p-1 rounded-md text-content-secondary hover:text-brand-primary hover:bg-brand-surface transition-colors cursor-pointer"
               title="Edit consultation"
             >

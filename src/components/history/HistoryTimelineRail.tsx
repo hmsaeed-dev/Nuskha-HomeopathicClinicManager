@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Phone,
   MapPin,
@@ -21,8 +21,20 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
   patient,
   onEditVisit,
 }) => {
-  const { settlePatientDues } = usePatientsContext();
+  const { settlePatientDues, focusedVisitId, setFocusedVisitId } = usePatientsContext();
   const [isSettledJustNow, setIsSettledJustNow] = useState(false);
+  const historyScrollRef = useRef<HTMLDivElement>(null);
+
+  // Bring a visit opened from Analytics or the Patient Archive into view.
+  useEffect(() => {
+    if (!focusedVisitId || !historyScrollRef.current) return;
+    const card = Array.from(
+      historyScrollRef.current.querySelectorAll<HTMLElement>('[data-visit-id]')
+    ).find((el) => el.dataset.visitId === focusedVisitId);
+    card?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    const timeout = setTimeout(() => setFocusedVisitId(null), 4000);
+    return () => clearTimeout(timeout);
+  }, [focusedVisitId, patient.id, setFocusedVisitId]);
 
   // Calculate outstanding dues for this patient
   const totalDue = useMemo(() => {
@@ -114,7 +126,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
           </span>
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-1">
+        <div ref={historyScrollRef} className="flex-1 overflow-y-auto pr-1">
           {patient.pastVisits.length === 0 ? (
             <div className="text-center py-12 text-xs text-content-secondary bg-brand-surface-subtle rounded-2xl p-6 shadow-2xs">
               No past visits.
@@ -129,6 +141,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                   key={visit.id}
                   visit={visit}
                   isLatest={index === 0}
+                  isFocused={visit.id === focusedVisitId}
                   onEdit={onEditVisit}
                 />
               ))}

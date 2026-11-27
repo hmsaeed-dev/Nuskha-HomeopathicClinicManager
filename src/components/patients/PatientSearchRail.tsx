@@ -70,7 +70,13 @@ export const PatientSearchRail: React.FC<PatientSearchRailProps> = ({
 									role="button"
 									tabIndex={0}
 									onClick={() => onSelectPatient(patient)}
-									className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 ${
+									onKeyDown={(event) => {
+										if (event.key === 'Enter' || event.key === ' ') {
+											event.preventDefault();
+											onSelectPatient(patient);
+										}
+									}}
+									className={`p-3 rounded-xl flex items-center gap-2.5 cursor-pointer transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
 										isSelected
 											? "bg-brand-primary text-white shadow-md"
 											: "bg-white text-content-primary hover:bg-white/95 shadow-2xs"

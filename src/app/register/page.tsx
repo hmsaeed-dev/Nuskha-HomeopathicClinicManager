@@ -1,12 +1,27 @@
 'use client';
 
 import React, { Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { DailyRegisterView } from '@/components/register/DailyRegisterView';
 import { usePatientsContext } from '@/context/PatientsContext';
 
 function RegisterContent() {
-  const { patients, isLoading, error, refreshPatients } = usePatientsContext();
+  const router = useRouter();
+  const {
+    patients,
+    setSelectedPatientId,
+    setFocusedVisitId,
+    isLoading,
+    error,
+    refreshPatients,
+  } = usePatientsContext();
+
+  const handleOpenVisit = (patientId: string, visitId: string) => {
+    setSelectedPatientId(patientId);
+    setFocusedVisitId(visitId);
+    router.push('/');
+  };
 
   if (isLoading) {
     return <div className="h-96 rounded-2xl bg-white/70 animate-pulse" />;
@@ -32,7 +47,7 @@ function RegisterContent() {
     );
   }
 
-  return <DailyRegisterView patients={patients} />;
+  return <DailyRegisterView patients={patients} onOpenVisit={handleOpenVisit} />;
 }
 
 export default function RegisterPage() {

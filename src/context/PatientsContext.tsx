@@ -9,6 +9,8 @@ interface PatientsContextValue {
   selectedPatient: Patient | null;
   selectedPatientId: string;
   setSelectedPatientId: (id: string) => void;
+  focusedVisitId: string | null;
+  setFocusedVisitId: (id: string | null) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filteredPatients: Patient[];
@@ -42,11 +44,14 @@ const PatientsContext = createContext<PatientsContextValue | null>(null);
 export const PatientsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const patientState = usePatients();
   const [isNewPatientOpen, setIsNewPatientOpen] = useState(false);
+  const [focusedVisitId, setFocusedVisitId] = useState<string | null>(null);
 
   return (
     <PatientsContext.Provider
       value={{
         ...patientState,
+        focusedVisitId,
+        setFocusedVisitId,
         isNewPatientOpen,
         setIsNewPatientOpen,
       }}
