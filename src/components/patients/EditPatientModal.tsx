@@ -2,8 +2,12 @@
 
 import React, { useState } from "react";
 import { X, UserCheck, MapPin, Phone, User, Calendar } from "lucide-react";
-import { Patient } from "@/types";
-import { LOCALITY_PRESETS } from "@/constants/clinical";
+import { Gender, Patient, RelationType } from "@/types";
+import {
+  GenderOptions,
+  LocalityOptions,
+  RelationOptions,
+} from "./PatientFormOptions";
 
 interface EditPatientModalProps {
 	patient: Patient | null;
@@ -42,14 +46,12 @@ const EditPatientForm: React.FC<EditPatientFormProps> = ({
 	onSave,
 }) => {
 	const [fullName, setFullName] = useState(patient.fullName);
-	const [relationType, setRelationType] = useState<"s/o" | "w/o" | "d/o">(
+	const [relationType, setRelationType] = useState<RelationType>(
 		patient.relationType,
 	);
 	const [relativeName, setRelativeName] = useState(patient.relativeName);
 	const [age, setAge] = useState<number>(patient.age);
-	const [gender, setGender] = useState<"Male" | "Female" | "Child">(
-		patient.gender,
-	);
+	const [gender, setGender] = useState<Gender>(patient.gender);
 	const [phone, setPhone] = useState(patient.phone);
 	const [locality, setLocality] = useState(patient.locality);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -153,15 +155,11 @@ const EditPatientForm: React.FC<EditPatientFormProps> = ({
 								id="edit-relation"
 								value={relationType}
 								onChange={(e) =>
-									setRelationType(
-										e.target.value as "s/o" | "w/o" | "d/o",
-									)
+									setRelationType(e.target.value as RelationType)
 								}
 								className="w-full px-3 py-2 text-xs rounded-xl border border-border-subtle bg-white text-content-primary focus:border-brand-primary focus:outline-none transition-colors"
 							>
-								<option value="s/o">s/o (Son of)</option>
-								<option value="w/o">w/o (Wife of)</option>
-								<option value="d/o">d/o (Daughter of)</option>
+								<RelationOptions />
 							</select>
 						</div>
 
@@ -217,15 +215,11 @@ const EditPatientForm: React.FC<EditPatientFormProps> = ({
 								id="edit-gender"
 								value={gender}
 								onChange={(e) =>
-									setGender(
-										e.target.value as "Male" | "Female" | "Child",
-									)
+									setGender(e.target.value as Gender)
 								}
 								className="w-full px-3 py-2 text-xs rounded-xl border border-border-subtle bg-white text-content-primary focus:border-brand-primary focus:outline-none transition-colors"
 							>
-								<option value="Male">Male</option>
-								<option value="Female">Female</option>
-								<option value="Child">Child</option>
+								<GenderOptions />
 							</select>
 						</div>
 					</div>
@@ -267,11 +261,7 @@ const EditPatientForm: React.FC<EditPatientFormProps> = ({
 								className="w-full px-3 py-2 text-xs rounded-xl border border-border-subtle bg-white text-content-primary focus:border-brand-primary focus:outline-none transition-colors"
 								placeholder="e.g. Taxila Cantt"
 							/>
-							<datalist id="edit-locality-presets">
-								{LOCALITY_PRESETS.map((loc) => (
-									<option key={loc} value={loc} />
-								))}
-							</datalist>
+							<LocalityOptions listId="edit-locality-presets" />
 						</div>
 					</div>
 

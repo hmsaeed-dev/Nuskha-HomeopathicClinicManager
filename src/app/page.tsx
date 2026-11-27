@@ -110,7 +110,7 @@ export default function OpdPage() {
   }
 
   return (
-    <main className="flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
+    <main className="content-reveal flex-1 p-4 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
       {/* Pane 1 (Left 3 cols): Find Patient */}
       <div className="lg:col-span-3 h-full">
         <PatientSearchRail

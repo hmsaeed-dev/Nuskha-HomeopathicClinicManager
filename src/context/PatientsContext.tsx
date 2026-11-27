@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { usePatients } from '@/hooks/usePatients';
-import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
+import { FeeStatus, Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
 
 interface PatientsContextValue {
   patients: Patient[];
@@ -18,7 +18,7 @@ interface PatientsContextValue {
   isLoading: boolean;
   isSaving: boolean;
   error: string | null;
-  refreshPatients: () => Promise<void>;
+  refreshPatients: (silent?: boolean) => Promise<void>;
   registerPatient: (
     newPatientData: Omit<Patient, 'id' | 'pastVisits'> & { initialFee: number }
   ) => Promise<Patient>;
@@ -29,7 +29,7 @@ interface PatientsContextValue {
     doctorNotes: string;
     durationDays?: number;
     fee: number;
-    feeStatus: 'Paid' | 'Free' | 'Due';
+    feeStatus: FeeStatus;
     idempotencyKey?: string;
   }) => Promise<PastVisit | undefined>;
   updatePatient: (updatedPatient: Patient) => Promise<Patient>;

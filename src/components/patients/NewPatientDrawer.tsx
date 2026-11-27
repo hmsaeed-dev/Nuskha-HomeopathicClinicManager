@@ -2,10 +2,17 @@
 
 import React, { useState } from 'react';
 import { X, UserPlus, Phone, MapPin } from 'lucide-react';
-import { Patient } from '@/types';
+import { Gender, Patient, RelationType } from '@/types';
 import { LOCALITY_PRESETS } from '@/constants/clinical';
+import {
+  GenderOptions,
+  LocalityOptions,
+  RelationOptions,
+} from './PatientFormOptions';
 import { useSettingsContext } from '@/context/SettingsContext';
 import { playUiCue } from '@/utils/sound';
+import { formatLastVisitLabel, getClinicDateString } from '@/lib/clinicDate';
+import { usePresence } from '@/hooks/usePresence';
 
 interface NewPatientDrawerProps {
   isOpen: boolean;
@@ -24,18 +31,19 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 }) => {
   const { clinicConfig, audioChimeEnabled } = useSettingsContext();
   const [fullName, setFullName] = useState('');
-  const [relationType, setRelationType] = useState<'s/o' | 'w/o' | 'd/o'>('s/o');
+  const [relationType, setRelationType] = useState<RelationType>('s/o');
   const [relativeName, setRelativeName] = useState('');
   const [age, setAge] = useState<number>(35);
-  const [gender, setGender] = useState<'Male' | 'Female' | 'Child'>('Male');
+  const [gender, setGender] = useState<Gender>('Male');
   const [phone, setPhone] = useState('0300-');
   const [locality, setLocality] = useState<string>(LOCALITY_PRESETS[0] || 'Taxila Cantt');
   const [feeOverride, setFeeOverride] = useState<number | null>(null);
   const fee = feeOverride ?? clinicConfig.defaultConsultationFee;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const { isMounted, isVisible } = usePresence(isOpen);
 
-  if (!isOpen) return null;
+  if (!isMounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +55,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
 
     setIsSubmitting(true);
     setSubmitError(null);
+    const registrationDate = getClinicDateString();
     try {
       await onRegisterPatient({
         mrn: '',
@@ -58,7 +67,8 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
         phone,
         locality,
         totalVisits: 0,
-        lastVisitDate: 'Today',
+        lastVisitClinicDate: registrationDate,
+        lastVisitDate: formatLastVisitLabel(registrationDate),
         initialFee: fee,
       });
 
@@ -82,9 +92,15 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 sm:p-6 transition-opacity duration-150"
+      className={`modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 sm:p-6 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
     >
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-border-subtle flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div
+        className={`modal-surface w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-border-subtle flex flex-col max-h-[90vh] overflow-hidden ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
+      >
         {/* Modal Header */}
         <header className="px-6 sm:px-7 py-4.5 bg-brand-surface-subtle border-b border-border-subtle flex items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
@@ -142,12 +158,10 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               </label>
               <select
                 value={relationType}
-                onChange={(e) => setRelationType(e.target.value as 's/o' | 'w/o' | 'd/o')}
+                onChange={(e) => setRelationType(e.target.value as RelationType)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all cursor-pointer"
               >
-                <option value="s/o">s/o (Son of)</option>
-                <option value="w/o">w/o (Wife of)</option>
-                <option value="d/o">d/o (Daughter of)</option>
+                <RelationOptions />
               </select>
             </div>
 
@@ -188,12 +202,10 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
               </label>
               <select
                 value={gender}
-                onChange={(e) => setGender(e.target.value as 'Male' | 'Female' | 'Child')}
+                onChange={(e) => setGender(e.target.value as Gender)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all cursor-pointer"
               >
-                <option value="Male">Male (Adult)</option>
-                <option value="Female">Female (Adult)</option>
-                <option value="Child">Child (Pediatric)</option>
+                <GenderOptions />
               </select>
             </div>
 
@@ -229,11 +241,7 @@ export const NewPatientDrawer: React.FC<NewPatientDrawerProps> = ({
                   placeholder="Select or enter area..."
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-brand-surface-subtle border border-border-subtle shadow-2xs text-sm text-content-primary placeholder:text-content-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all"
                 />
-                <datalist id="localities-list">
-                  {LOCALITY_PRESETS.map((loc) => (
-                    <option key={loc} value={loc} />
-                  ))}
-                </datalist>
+                <LocalityOptions listId="localities-list" />
               </div>
             </div>
           </div>

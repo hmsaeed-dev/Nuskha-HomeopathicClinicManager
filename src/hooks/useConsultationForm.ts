@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Patient, ReactionType, PrescriptionItem, DispensingVehicle } from '@/types';
+import { FeeStatus, Patient, ReactionType, PrescriptionItem, DispensingVehicle } from '@/types';
 import { DEFAULT_INITIAL_PRESCRIPTIONS } from '@/constants/clinical';
 import { useSettingsContext } from '@/context/SettingsContext';
 
@@ -25,7 +25,7 @@ export function useConsultationForm({ patient }: UseConsultationFormProps) {
   const fee = feeOverride ?? clinicConfig.defaultConsultationFee;
   const setDurationDays = useCallback((days: number) => setDurationOverride(days), []);
   const setFee = useCallback((nextFee: number) => setFeeOverride(nextFee), []);
-  const [feeStatus, setFeeStatus] = useState<'Paid' | 'Free' | 'Due'>('Paid');
+  const [feeStatus, setFeeStatus] = useState<FeeStatus>('Paid');
   const [activeRemedySearchIndex, setActiveRemedySearchIndex] = useState<number | null>(null);
 
   // Repeat Previous Prescription handler

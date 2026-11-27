@@ -14,7 +14,7 @@ export const BrandedLoader: React.FC<BrandedLoaderProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-1 items-center justify-center bg-brand-surface px-6 ${
+      className={`content-reveal flex flex-1 items-center justify-center bg-brand-surface px-6 ${
         compact ? 'min-h-64' : 'min-h-[60vh]'
       }`}
     >

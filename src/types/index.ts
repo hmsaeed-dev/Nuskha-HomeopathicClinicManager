@@ -1,10 +1,25 @@
-export type ReactionType = "Decline" | "No Change" | "Improved" | "First Visit";
+// Persisted values and their display metadata are defined once in the
+// vocabulary registry; these unions are derived from it.
+export type {
+  ReactionType,
+  DispensingVehicle,
+  FeeStatus,
+  RelationType,
+  Gender,
+  Severity,
+  Trend,
+  DemographicCohort,
+} from '@/constants/vocab';
 
-export type DispensingVehicle =
-  | 'Pills (Globules)'
-  | 'Drops (Water)'
-  | 'Powder (Packets)'
-  | 'Mother Tincture';
+import type {
+  DispensingVehicle,
+  FeeStatus,
+  Gender,
+  ReactionType,
+  RelationType,
+  Severity,
+  Trend,
+} from '@/constants/vocab';
 
 export interface PrescriptionItem {
   id: string;
@@ -18,6 +33,9 @@ export interface PrescriptionItem {
 export interface PastVisit {
   id: string;
   patientId: string;
+  /** Clinic-local ISO date (YYYY-MM-DD). The canonical value for filtering. */
+  clinicDate?: string;
+  /** Pre-formatted display date, derived from clinicDate at the API boundary. */
   date: string;
   tokenNo: number;
   reaction: ReactionType;
@@ -26,15 +44,15 @@ export interface PastVisit {
   doctorNotes?: string;
   durationDays?: number; // Course duration in days: e.g. 3, 7, 15, 30
   fee: number;
-  feeStatus: 'Paid' | 'Free' | 'Due';
+  feeStatus: FeeStatus;
   editedAt?: string;
 }
 
 export interface ChiefComplaint {
 	id: string;
 	name: string; // e.g. "Migraine", "Gastric Acidity", "Knee Pain"
-	severity: "Severe" | "Moderate" | "Mild" | "Relieved";
-	trend: "Declining" | "Stable" | "Improving";
+	severity: Severity;
+	trend: Trend;
 	duration?: string; // e.g. "4 yrs", "6 mos"
 }
 
@@ -42,13 +60,15 @@ export interface Patient {
   id: string;
   mrn: string; // Lifetime Medical Record Number (e.g. NK-1492)
   fullName: string;
-  relationType: 's/o' | 'w/o' | 'd/o';
+  relationType: RelationType;
   relativeName: string;
   age: number;
-  gender: 'Male' | 'Female' | 'Child';
+  gender: Gender;
   phone: string;
   locality: string;
   totalVisits: number;
+  /** Canonical clinic-local ISO date of the most recent visit. */
+  lastVisitClinicDate?: string;
   lastVisitDate: string;
   chiefComplaints?: ChiefComplaint[];
   pastVisits: PastVisit[];
@@ -58,8 +78,6 @@ export interface Patient {
     history: Array<{ label: string; date: string; score: number }>;
   };
 }
-
-export type DemographicCohort = 'Male' | 'Female' | 'Child' | 'Senior';
 
 export interface DemographicStyle {
   label: string;

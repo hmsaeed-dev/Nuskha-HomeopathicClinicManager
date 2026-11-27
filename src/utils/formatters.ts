@@ -1,9 +1,9 @@
-import { CLINIC_CONFIG } from '@/config/clinic.config';
-
 /**
- * Currency formatter using the single source of truth clinic currency symbol.
+ * Currency formatter. The currency must be supplied by the caller from the
+ * live clinic settings — `CLINIC_CONFIG` is only the seed for a new database,
+ * not the runtime source of truth.
  */
-export function formatCurrency(amount: number, currency: string = CLINIC_CONFIG.currency): string {
+export function formatCurrency(amount: number, currency: string): string {
   return `${currency} ${amount.toLocaleString()}`;
 }
 

@@ -9,7 +9,6 @@ import {
   Pill,
   Sliders,
   Search,
-  Printer,
   Volume2,
   Plus,
   Trash2,
@@ -21,6 +20,8 @@ import {
 import { useSettingsContext } from '@/context/SettingsContext';
 import { usePatientsContext } from '@/context/PatientsContext';
 import { playSuccessChime } from '@/utils/sound';
+import { REACTIONS } from '@/constants/vocab';
+import { usePresence } from '@/hooks/usePresence';
 
 interface ShortcutItem {
   id: string;
@@ -113,34 +114,13 @@ const SHORTCUT_LIST: ShortcutItem[] = [
     description: 'Add new medicine row to prescription table',
     context: 'OPD Workspace',
   },
-  {
-    id: 'rx-1',
-    category: 'Consultation',
-    keys: ['1'],
-    description: 'Mark Remedy Reaction: "Decline"',
+  ...REACTIONS.map((reaction) => ({
+    id: `rx-${reaction.shortcut}`,
+    category: 'Consultation' as const,
+    keys: [reaction.shortcut],
+    description: `Mark Remedy Reaction: "${reaction.label}"`,
     context: 'OPD Workspace',
-  },
-  {
-    id: 'rx-2',
-    category: 'Consultation',
-    keys: ['2'],
-    description: 'Mark Remedy Reaction: "No Change / Stable"',
-    context: 'OPD Workspace',
-  },
-  {
-    id: 'rx-3',
-    category: 'Consultation',
-    keys: ['3'],
-    description: 'Mark Remedy Reaction: "Improved"',
-    context: 'OPD Workspace',
-  },
-  {
-    id: 'rx-4',
-    category: 'Consultation',
-    keys: ['4'],
-    description: 'Mark Remedy Reaction: "First Visit"',
-    context: 'OPD Workspace',
-  },
+  })),
 
   // Autocomplete
   {
@@ -184,30 +164,50 @@ export const SettingsModal: React.FC = () => {
   const { patients } = usePatientsContext();
 
   const [shortcutSearch, setShortcutSearch] = useState('');
-  const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
   const [newMacroText, setNewMacroText] = useState('');
+  const durationOptionsKey = clinicConfig.availableCourseDurations.join(', ');
+  const [syncedDurationKey, setSyncedDurationKey] = useState(durationOptionsKey);
+  const [durationOptionsInput, setDurationOptionsInput] = useState(durationOptionsKey);
+  const { isMounted, isVisible } = usePresence(isSettingsOpen);
 
-  // Live shortcut key detection to test keys interactively
+  // Render-time state adjustment keeps the draft in step with settings loaded
+  // from the database without an extra cascading effect render.
+  if (durationOptionsKey !== syncedDurationKey) {
+    setSyncedDurationKey(durationOptionsKey);
+    setDurationOptionsInput(durationOptionsKey);
+  }
+
+  const commitDurationOptions = () => {
+    const parsed = durationOptionsInput
+      .split(',')
+      .map((value) => Number(value.trim()))
+      .filter((value) => Number.isInteger(value) && value >= 1 && value <= 365);
+
+    if (parsed.length === 0) {
+      setDurationOptionsInput(clinicConfig.availableCourseDurations.join(', '));
+      return;
+    }
+
+    const durations = Array.from(new Set(parsed)).sort((a, b) => a - b);
+    setDurationOptionsInput(durations.join(', '));
+    updateClinicConfig({ availableCourseDurations: durations });
+  };
+
+  // Escape closes the modal; other keys are handled by the global shortcut hook.
   useEffect(() => {
     if (!isSettingsOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      let keyName = e.key;
       if (e.key === 'Escape') {
         closeSettings();
-        return;
       }
-      if (e.key === 'Enter') keyName = '↵';
-      if (e.ctrlKey) keyName = `Ctrl+${keyName}`;
-      if (e.altKey) keyName = `Alt+${keyName}`;
-      setLastPressedKey(keyName);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isSettingsOpen, closeSettings]);
 
-  if (!isSettingsOpen) return null;
+  if (!isMounted) return null;
 
   // Filter shortcuts
   const filteredShortcuts = SHORTCUT_LIST.filter(
@@ -216,10 +216,6 @@ export const SettingsModal: React.FC = () => {
       item.keys.some((k) => k.toLowerCase().includes(shortcutSearch.toLowerCase())) ||
       item.category.toLowerCase().includes(shortcutSearch.toLowerCase())
   );
-
-  const handlePrintDeskCard = () => {
-    window.print();
-  };
 
   const handleTestAudio = () => {
     playSuccessChime();
@@ -266,8 +262,16 @@ export const SettingsModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-3 sm:p-5 transition-opacity duration-150">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-border-subtle flex flex-col h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <div
+      className={`modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-3 sm:p-5 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className={`modal-surface w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-border-subtle flex flex-col h-[90vh] overflow-hidden ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
+      >
         {/* Modal Top Header */}
         <header className="px-6 py-4 bg-brand-surface-subtle flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -450,7 +454,7 @@ export const SettingsModal: React.FC = () => {
                                 <span className="text-xs font-bold text-content-primary truncate">
                                   {item.description}
                                 </span>
-                                <span className="text-[10px] text-content-secondary font-medium">
+                                <span className="label-micro">
                                   Scope: {item.context}
                                 </span>
                               </div>
@@ -627,6 +631,30 @@ export const SettingsModal: React.FC = () => {
                         }}
                         className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-mono font-bold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
                       />
+                    </div>
+
+                    <div className="flex flex-col gap-1 sm:col-span-3">
+                      <label className="label-caption" htmlFor="course-duration-options">
+                        Course Duration Options (comma-separated days)
+                      </label>
+                      <input
+                        id="course-duration-options"
+                        type="text"
+                        value={durationOptionsInput}
+                        onChange={(e) => setDurationOptionsInput(e.target.value)}
+                        onBlur={commitDurationOptions}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            commitDurationOptions();
+                          }
+                        }}
+                        placeholder="3, 7, 15, 21, 30"
+                        className="px-3 py-2 rounded-xl bg-brand-surface-subtle border border-border-subtle text-xs font-mono font-bold text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      />
+                      <span className="label-micro">
+                        Changes appear in the consultation course selector immediately.
+                      </span>
                     </div>
                   </div>
                 </div>

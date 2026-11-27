@@ -3,14 +3,10 @@
 import React, { useState, useMemo } from 'react';
 import {
   Search,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Download,
   TrendingUp,
-  TrendingDown,
-  Minus,
-  Sparkles,
   Droplet,
   Pill,
   Clock,
@@ -19,14 +15,15 @@ import {
   Users,
   ArrowUpRight,
 } from 'lucide-react';
-import { Patient, ReactionType } from '@/types';
+import { FeeStatus, Gender, Patient, ReactionType } from '@/types';
 import { getDemographicCohort } from '@/utils/demographics';
+import { parseDisplayDateToClinicDate } from '@/lib/clinicDate';
 import { useSettingsContext } from '@/context/SettingsContext';
-import { REACTION_CONFIG } from '@/constants/clinical';
+import { getFeeStatusMeta, getReactionMeta, REACTIONS } from '@/constants/vocab';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 
 type TimeHorizon = 'daily' | 'weekly' | 'monthly' | 'yearly';
-type OutcomeFilter = 'all' | 'Improved' | 'No Change' | 'Decline' | 'First Visit' | 'dues';
+type OutcomeFilter = 'all' | 'dues' | ReactionType;
 
 interface DailyRegisterViewProps {
   patients: Patient[];
@@ -41,7 +38,7 @@ interface EnrichedVisit {
   locality: string;
   phone: string;
   age: number;
-  gender: 'Male' | 'Female' | 'Child';
+  gender: Gender;
   date: string;
   parsedDate: Date;
   tokenNo: number;
@@ -57,7 +54,7 @@ interface EnrichedVisit {
   }>;
   durationDays?: number;
   fee: number;
-  feeStatus: 'Paid' | 'Free' | 'Due';
+  feeStatus: FeeStatus;
   doctorNotes?: string;
 }
 
@@ -78,10 +75,11 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
   const allVisits: EnrichedVisit[] = useMemo(() => {
     return patients.flatMap((p) =>
       p.pastVisits.map((v) => {
-        let parsed = new Date(v.date);
-        if (isNaN(parsed.getTime())) {
-          parsed = new Date();
-        }
+        // Canonical clinic date first; display strings like "Today" are only
+        // a fallback for legacy data that predates clinicDate.
+        const isoDate = v.clinicDate ?? parseDisplayDateToClinicDate(v.date);
+        const [year, month, day] = isoDate.split('-').map(Number);
+        const parsed = new Date(year, month - 1, day, 12);
         return {
           ...v,
           patientName: p.fullName,
@@ -208,6 +206,13 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
     const stableCount = horizonVisits.filter((v) => v.reaction === 'No Change').length;
     const declineCount = horizonVisits.filter((v) => v.reaction === 'Decline').length;
     const firstVisitCount = horizonVisits.filter((v) => v.reaction === 'First Visit').length;
+    // Every reaction count comes from the same registry that renders the labels.
+    const reactionCounts = Object.fromEntries(
+      REACTIONS.map((reaction) => [
+        reaction.value,
+        horizonVisits.filter((v) => v.reaction === reaction.value).length,
+      ])
+    ) as Record<ReactionType, number>;
 
     const followUps = improvedCount + stableCount + declineCount;
     const improvementRate = followUps > 0 ? Math.round((improvedCount / followUps) * 100) : 0;
@@ -255,6 +260,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
       stableCount,
       declineCount,
       firstVisitCount,
+      reactionCounts,
       improvementRate,
       demographics: {
         male: maleCount,
@@ -549,10 +555,10 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
             <CircleDollarSign className="w-4 h-4 text-brand-primary" />
           </div>
           <span className="font-display text-3xl font-bold text-brand-primary">
-            {formatCurrency(metrics.totalFees)}
+            {formatCurrency(metrics.totalFees, clinicConfig.currency)}
           </span>
-          <p className="text-[11px] font-semibold text-brand-primary-dark">
-            Paid: {formatCurrency(metrics.totalPaid)} · Dues: {formatCurrency(metrics.totalDue)}
+          <p className="label-caption !text-brand-primary-dark">
+            {getFeeStatusMeta('Paid').label}: {formatCurrency(metrics.totalPaid, clinicConfig.currency)} · {getFeeStatusMeta('Due').label}: {formatCurrency(metrics.totalDue, clinicConfig.currency)}
           </p>
         </article>
 
@@ -565,8 +571,8 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
           <span className="font-display text-3xl font-bold text-reaction-improved">
             {metrics.improvementRate}%
           </span>
-          <p className="text-[11px] font-semibold text-reaction-improved">
-            {metrics.improvedCount} improved · {metrics.declineCount} aggravated
+          <p className="label-caption !text-reaction-improved">
+            {metrics.improvedCount} {getReactionMeta('Improved').label.toLowerCase()} · {metrics.declineCount} {getReactionMeta('Decline').label.toLowerCase()}
           </p>
         </article>
 
@@ -700,61 +706,36 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs font-semibold">
                 <span className="text-content-secondary">Outcome Breakdown</span>
-                <span className="font-mono text-reaction-improved font-bold">
-                  {metrics.improvementRate}% Improved
+                <span className="label-chip !text-reaction-improved">
+                  {metrics.improvementRate}% {getReactionMeta('Improved').label}
                 </span>
               </div>
 
               {/* Stacked Outcome Bar */}
               <div className="w-full h-3 rounded-full overflow-hidden flex bg-border-subtle">
-                <div
-                  className="h-full bg-reaction-improved"
-                  style={{
-                    width: `${metrics.totalPatients > 0 ? (metrics.improvedCount / metrics.totalPatients) * 100 : 0}%`,
-                  }}
-                  title={`Improved (${metrics.improvedCount})`}
-                />
-                <div
-                  className="h-full bg-reaction-stable"
-                  style={{
-                    width: `${metrics.totalPatients > 0 ? (metrics.stableCount / metrics.totalPatients) * 100 : 0}%`,
-                  }}
-                  title={`No Change (${metrics.stableCount})`}
-                />
-                <div
-                  className="h-full bg-brand-primary"
-                  style={{
-                    width: `${metrics.totalPatients > 0 ? (metrics.firstVisitCount / metrics.totalPatients) * 100 : 0}%`,
-                  }}
-                  title={`First Visit (${metrics.firstVisitCount})`}
-                />
-                <div
-                  className="h-full bg-reaction-aggravated"
-                  style={{
-                    width: `${metrics.totalPatients > 0 ? (metrics.declineCount / metrics.totalPatients) * 100 : 0}%`,
-                  }}
-                  title={`Decline (${metrics.declineCount})`}
-                />
+                {REACTIONS.map((reaction) => (
+                  <div
+                    key={reaction.value}
+                    className={`h-full ${reaction.trackClass}`}
+                    style={{
+                      width: `${metrics.totalPatients > 0 ? (metrics.reactionCounts[reaction.value] / metrics.totalPatients) * 100 : 0}%`,
+                    }}
+                    title={`${reaction.label} (${metrics.reactionCounts[reaction.value]})`}
+                  />
+                ))}
               </div>
 
               {/* Legend */}
-              <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
-                <span className="flex items-center gap-1.5 text-reaction-improved font-bold">
-                  <span className="w-2.5 h-2.5 rounded-full bg-reaction-improved" />
-                  Improved ({metrics.improvedCount})
-                </span>
-                <span className="flex items-center gap-1.5 text-reaction-stable font-bold">
-                  <span className="w-2.5 h-2.5 rounded-full bg-reaction-stable" />
-                  No Change ({metrics.stableCount})
-                </span>
-                <span className="flex items-center gap-1.5 text-brand-primary font-bold">
-                  <span className="w-2.5 h-2.5 rounded-full bg-brand-primary" />
-                  First Visit ({metrics.firstVisitCount})
-                </span>
-                <span className="flex items-center gap-1.5 text-reaction-aggravated font-bold">
-                  <span className="w-2.5 h-2.5 rounded-full bg-reaction-aggravated" />
-                  Decline ({metrics.declineCount})
-                </span>
+              <div className="grid grid-cols-2 gap-2 label-caption pt-1">
+                {REACTIONS.map((reaction) => (
+                  <span
+                    key={reaction.value}
+                    className={`flex items-center gap-1.5 font-bold ${reaction.labelActiveClass}`}
+                  >
+                    <span className={`w-2.5 h-2.5 rounded-full ${reaction.trackClass}`} />
+                    {reaction.label} ({metrics.reactionCounts[reaction.value]})
+                  </span>
+                ))}
               </div>
             </div>
 
@@ -938,39 +919,20 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
             >
               All ({horizonVisits.length})
             </button>
-            <button
-              type="button"
-              onClick={() => setOutcomeFilter('Improved')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
-                outcomeFilter === 'Improved'
-                  ? 'bg-reaction-improved text-white shadow-2xs'
-                  : 'bg-brand-surface-subtle text-content-secondary hover:text-content-primary'
-              }`}
-            >
-              Improved ({metrics.improvedCount})
-            </button>
-            <button
-              type="button"
-              onClick={() => setOutcomeFilter('No Change')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
-                outcomeFilter === 'No Change'
-                  ? 'bg-reaction-stable text-white shadow-2xs'
-                  : 'bg-brand-surface-subtle text-content-secondary hover:text-content-primary'
-              }`}
-            >
-              No Change ({metrics.stableCount})
-            </button>
-            <button
-              type="button"
-              onClick={() => setOutcomeFilter('Decline')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
-                outcomeFilter === 'Decline'
-                  ? 'bg-reaction-aggravated text-white shadow-2xs'
-                  : 'bg-brand-surface-subtle text-content-secondary hover:text-content-primary'
-              }`}
-            >
-              Decline ({metrics.declineCount})
-            </button>
+            {REACTIONS.map((reaction) => (
+              <button
+                key={reaction.value}
+                type="button"
+                onClick={() => setOutcomeFilter(reaction.value as ReactionType)}
+                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                  outcomeFilter === reaction.value
+                    ? `${reaction.activeButtonClass} shadow-2xs`
+                    : 'bg-brand-surface-subtle text-content-secondary hover:text-content-primary'
+                }`}
+              >
+                {reaction.label} ({metrics.reactionCounts[reaction.value]})
+              </button>
+            ))}
             <button
               type="button"
               onClick={() => setOutcomeFilter('dues')}
@@ -980,7 +942,8 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
                   : 'bg-brand-surface-subtle text-content-secondary hover:text-content-primary'
               }`}
             >
-              Dues ({horizonVisits.filter((v) => v.feeStatus === 'Due').length})
+              {getFeeStatusMeta('Due').label} (
+              {horizonVisits.filter((v) => v.feeStatus === 'Due').length})
             </button>
 
             {/* Export CSV Button */}
@@ -1029,8 +992,8 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
                 </tr>
               ) : (
                 filteredVisits.map((item) => {
-                  const reactionMeta =
-                    REACTION_CONFIG[item.reaction] || REACTION_CONFIG['First Visit'];
+                  const reactionMeta = getReactionMeta(item.reaction);
+                  const feeStatusMeta = getFeeStatusMeta(item.feeStatus);
 
                   return (
                     <tr
@@ -1074,10 +1037,10 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
                             {item.age}y
                           </span>
                           {onOpenVisit && (
-                            <ArrowUpRight className="w-3.5 h-3.5 text-brand-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <ArrowUpRight className="w-3.5 h-3.5 text-brand-primary" />
                           )}
                         </div>
-                        <div className="text-[11px] text-content-secondary font-medium">
+                        <div className="label-caption">
                           {item.relation} · {item.locality}
                         </div>
                       </td>
@@ -1092,7 +1055,7 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
                         <span
                           className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${reactionMeta.badgeClass}`}
                         >
-                          {item.reaction}
+                          {reactionMeta.label}
                         </span>
                       </td>
 
@@ -1126,18 +1089,10 @@ export const DailyRegisterView: React.FC<DailyRegisterViewProps> = ({
                       {/* Fee and Payment Status */}
                       <td className="px-4 py-3 text-right">
                         <div className="font-mono font-bold text-content-primary">
-                          {formatCurrency(item.fee)}
+                          {formatCurrency(item.fee, clinicConfig.currency)}
                         </div>
-                        <span
-                          className={`text-[10px] font-bold ${
-                            item.feeStatus === 'Paid'
-                              ? 'text-reaction-improved'
-                              : item.feeStatus === 'Due'
-                              ? 'text-amber-600'
-                              : 'text-content-secondary'
-                          }`}
-                        >
-                          {item.feeStatus}
+                        <span className={`label-micro ${feeStatusMeta.textClass}`}>
+                          {feeStatusMeta.label}
                         </span>
                       </td>
                     </tr>

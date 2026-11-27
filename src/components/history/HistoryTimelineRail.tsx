@@ -23,7 +23,7 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
   onEditVisit,
 }) => {
   const { settlePatientDues, focusedVisitId, setFocusedVisitId } = usePatientsContext();
-  const { audioChimeEnabled } = useSettingsContext();
+  const { audioChimeEnabled, clinicConfig } = useSettingsContext();
   const [isSettledJustNow, setIsSettledJustNow] = useState(false);
   const historyScrollRef = useRef<HTMLDivElement>(null);
 
@@ -92,10 +92,10 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
               type="button"
               onClick={() => void handleSettleDues()}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer shrink-0 animate-in fade-in"
-              title={`Click to settle outstanding dues of ${formatCurrency(totalDue)}`}
+              title={`Click to settle outstanding dues of ${formatCurrency(totalDue, clinicConfig.currency)}`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Settle Due: {formatCurrency(totalDue)}</span>
+              <span>Settle Due: {formatCurrency(totalDue, clinicConfig.currency)}</span>
             </button>
           ) : isSettledJustNow ? (
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-500 text-white font-bold text-xs shadow-xs animate-in fade-in">
@@ -146,6 +146,8 @@ export const HistoryTimelineRail: React.FC<HistoryTimelineRailProps> = ({
                   isLatest={index === 0}
                   isFocused={visit.id === focusedVisitId}
                   onEdit={onEditVisit}
+                  currency={clinicConfig.currency}
+                  patientName={patient.fullName}
                 />
               ))}
             </div>

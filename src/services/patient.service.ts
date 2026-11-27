@@ -3,10 +3,13 @@ import { getPool, sql } from '@/db/pool';
 import {
   ChiefComplaint,
   DispensingVehicle,
+  FeeStatus,
+  Gender,
   PastVisit,
   Patient,
   PrescriptionItem,
   ReactionType,
+  RelationType,
 } from '@/types';
 import {
   formatClinicDisplayDate,
@@ -20,10 +23,10 @@ interface PatientRow {
   public_id: string;
   mrn: string;
   full_name: string;
-  relation_type: 's/o' | 'w/o' | 'd/o';
+  relation_type: RelationType;
   relative_name: string;
   age: number;
-  gender: 'Male' | 'Female' | 'Child';
+  gender: Gender;
   phone: string;
   locality: string;
   tracked_complaint: string | null;
@@ -52,7 +55,7 @@ interface VisitRow {
   doctor_notes: string | null;
   duration_days: number | null;
   fee: number;
-  fee_status: 'Paid' | 'Free' | 'Due';
+  fee_status: FeeStatus;
   edited_at: Date | null;
 }
 
@@ -149,6 +152,7 @@ function hydratePatients(
     bucket.visits.push({
       id: v.public_id,
       patientId: patientPublicIdById.get(v.patient_id) ?? '',
+      clinicDate: clinicDateStr,
       date: formatClinicDisplayDate(clinicDateStr, timeZone),
       tokenNo: v.token_no,
       reaction: v.reaction,
@@ -208,6 +212,7 @@ function hydratePatients(
       phone: p.phone,
       locality: p.locality,
       totalVisits: pastVisits.length,
+      lastVisitClinicDate: visitBucket?.latestClinicDate,
       lastVisitDate,
       chiefComplaints: complaintsByPatientId.get(p.id) ?? [],
       pastVisits,
@@ -421,10 +426,10 @@ export async function getPatientByPublicId(publicId: string): Promise<Patient> {
 
 export async function createPatient(input: {
   fullName: string;
-  relationType: 's/o' | 'w/o' | 'd/o';
+  relationType: RelationType;
   relativeName: string;
   age: number;
-  gender: 'Male' | 'Female' | 'Child';
+  gender: Gender;
   phone: string;
   locality: string;
   initialFee?: number;
@@ -529,10 +534,10 @@ export async function updatePatient(
   publicId: string,
   input: {
     fullName: string;
-    relationType: 's/o' | 'w/o' | 'd/o';
+    relationType: RelationType;
     relativeName: string;
     age: number;
-    gender: 'Male' | 'Female' | 'Child';
+    gender: Gender;
     phone: string;
     locality: string;
   }
@@ -600,7 +605,7 @@ export async function saveConsultation(
     doctorNotes?: string;
     durationDays?: number;
     fee: number;
-    feeStatus: 'Paid' | 'Free' | 'Due';
+    feeStatus: FeeStatus;
     idempotencyKey?: string;
   }
 ): Promise<{ visit: PastVisit; todayCount: number }> {
@@ -654,6 +659,7 @@ export async function saveConsultation(
           visit: {
             id: existingVisit.public_id,
             patientId: patientPublicId,
+            clinicDate: toIsoDateOnly(existingVisit.clinic_date),
             date: formatClinicDisplayDate(toIsoDateOnly(existingVisit.clinic_date), timeZone),
             tokenNo: existingVisit.token_no,
             reaction: existingVisit.reaction,
@@ -751,6 +757,7 @@ export async function saveConsultation(
       visit: {
         id: visitPublicId,
         patientId: patientPublicId,
+        clinicDate,
         date: formatClinicDisplayDate(clinicDate, timeZone),
         tokenNo,
         reaction: input.reaction,
@@ -771,31 +778,44 @@ export async function saveConsultation(
 
 export async function settlePatientDues(patientPublicId: string): Promise<{
   settledCount: number;
+  patient: Patient;
 }> {
   const pool = await getPool();
-  const patientRes = await pool
-    .request()
-    .input('publicId', sql.NVarChar(50), patientPublicId)
-    .query<{ id: number }>(
-      'SELECT id FROM dbo.patients WHERE public_id = @publicId AND archived_at IS NULL'
-    );
+  const tx = new sql.Transaction(pool);
+  await tx.begin();
 
-  const patientRow = patientRes.recordset[0];
-  if (!patientRow) {
-    throw new ApiError(404, 'Patient not found.');
+  try {
+    const patientRes = await new sql.Request(tx)
+      .input('publicId', sql.NVarChar(50), patientPublicId)
+      .query<{ id: number }>(
+        'SELECT id FROM dbo.patients WHERE public_id = @publicId AND archived_at IS NULL'
+      );
+
+    const patientRow = patientRes.recordset[0];
+    if (!patientRow) {
+      throw new ApiError(404, 'Patient not found.');
+    }
+
+    const updateRes = await new sql.Request(tx)
+      .input('patientId', sql.Int, patientRow.id)
+      .query(`
+        UPDATE dbo.visits WITH (HOLDLOCK)
+        SET fee_status = 'Paid',
+            edited_at = SYSDATETIMEOFFSET()
+        WHERE patient_id = @patientId AND fee_status = 'Due';
+      `);
+
+    const settledCount = updateRes.rowsAffected[0] ?? 0;
+    await tx.commit();
+
+    // Return the canonical patient so the client never has to guess derived
+    // values or a server-generated editedAt timestamp.
+    const patient = await getPatientByPublicId(patientPublicId);
+    return { settledCount, patient };
+  } catch (err) {
+    await tx.rollback();
+    throw err;
   }
-
-  const updateRes = await pool
-    .request()
-    .input('patientId', sql.Int, patientRow.id)
-    .query(`
-      UPDATE dbo.visits
-      SET fee_status = 'Paid',
-          edited_at = SYSDATETIMEOFFSET()
-      WHERE patient_id = @patientId AND fee_status = 'Due';
-    `);
-
-  return { settledCount: updateRes.rowsAffected[0] ?? 0 };
 }
 
 export async function listVisitsByDateRange(from?: string, to?: string) {
@@ -817,12 +837,12 @@ export async function listVisitsByDateRange(from?: string, to?: string) {
     VisitRow & {
       patient_public_id: string;
       full_name: string;
-      relation_type: string;
+      relation_type: RelationType;
       relative_name: string;
       locality: string;
       phone: string;
       age: number;
-      gender: 'Male' | 'Female' | 'Child';
+      gender: Gender;
     }
   >(`
     SELECT v.id, v.public_id, v.patient_id, v.clinic_date, v.visited_at, v.token_no,

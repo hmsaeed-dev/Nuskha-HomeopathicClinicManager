@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Patient, PastVisit, ReactionType, PrescriptionItem } from '@/types';
-import { CLINIC_CONFIG } from '@/config/clinic.config';
 import { ensureLocalStorageMigrated } from '@/lib/migrateLocalClient';
+import { useSettingsContext } from '@/context/SettingsContext';
 
 async function parseJsonOrThrow<T>(res: Response): Promise<T> {
   const payload = await res.json().catch(() => ({}));
@@ -14,7 +14,13 @@ async function parseJsonOrThrow<T>(res: Response): Promise<T> {
   return payload as T;
 }
 
+function errorMessage(err: unknown, fallback: string): string {
+  return err instanceof Error ? err.message : fallback;
+}
+
 export function usePatients() {
+  const { clinicConfig } = useSettingsContext();
+
   const [patients, setPatients] = useState<Patient[]>([]);
   const [selectedPatientId, setSelectedPatientId] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -23,9 +29,17 @@ export function usePatients() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // A snapshot of the last server-confirmed list, used to roll back an
+  // optimistic update when a write fails.
+  const patientsRef = useRef<Patient[]>([]);
+  useEffect(() => {
+    patientsRef.current = patients;
+  }, [patients]);
+
   const applyFetchedData = useCallback(
     (data: { patients: Patient[]; todayCount: number }) => {
       setPatients(data.patients);
+      patientsRef.current = data.patients;
       setTodayCount(data.todayCount);
       setSelectedPatientId((prev) => {
         if (prev && data.patients.some((p) => p.id === prev)) return prev;
@@ -35,8 +49,36 @@ export function usePatients() {
     []
   );
 
-  const refreshPatients = useCallback(async () => {
-    setIsLoading(true);
+  const rollbackTo = useCallback((snapshot: Patient[]) => {
+    setPatients(snapshot);
+    patientsRef.current = snapshot;
+    setSelectedPatientId((prev) =>
+      snapshot.some((p) => p.id === prev) ? prev : snapshot[0]?.id || ''
+    );
+  }, []);
+
+  const revalidatePatient = useCallback(async (patientId: string) => {
+    const res = await fetch(`/api/patients/${encodeURIComponent(patientId)}`, {
+      cache: 'no-store',
+    });
+    const { patient } = await parseJsonOrThrow<{ patient: Patient }>(res);
+    setPatients((prev) =>
+      prev.map((item) => (item.id === patient.id ? patient : item))
+    );
+    return patient;
+  }, []);
+
+  const revalidateInBackground = useCallback(
+    (patientId: string) => {
+      void revalidatePatient(patientId).catch((err) => {
+        console.error('Patient revalidation failed:', err);
+      });
+    },
+    [revalidatePatient]
+  );
+
+  const refreshPatients = useCallback(async (silent = false) => {
+    if (!silent) setIsLoading(true);
     setError(null);
     try {
       const res = await fetch('/api/patients', { cache: 'no-store' });
@@ -46,11 +88,10 @@ export function usePatients() {
       }>(res);
       applyFetchedData(data);
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to load patients from database.';
-      setError(message);
+      setError(errorMessage(err, 'Failed to load patients from database.'));
+      throw err;
     } finally {
-      setIsLoading(false);
+      if (!silent) setIsLoading(false);
     }
   }, [applyFetchedData]);
 
@@ -69,11 +110,7 @@ export function usePatients() {
       })
       .catch((err) => {
         if (!active) return;
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'Failed to load patients from database.';
-        setError(message);
+        setError(errorMessage(err, 'Failed to load patients from database.'));
       })
       .finally(() => {
         if (active) setIsLoading(false);
@@ -107,6 +144,7 @@ export function usePatients() {
     async (
       newPatientData: Omit<Patient, 'id' | 'pastVisits'> & { initialFee: number }
     ): Promise<Patient> => {
+      const snapshot = patientsRef.current;
       setIsSaving(true);
       try {
         const res = await fetch('/api/patients', {
@@ -128,17 +166,25 @@ export function usePatients() {
           patient: Patient;
           todayCount?: number;
         }>(res);
-        setPatients((prev) => [patient, ...prev]);
+
+        setPatients((prev) => [patient, ...prev.filter((p) => p.id !== patient.id)]);
         setSelectedPatientId(patient.id);
         if (typeof nextTodayCount === 'number') {
           setTodayCount(nextTodayCount);
         }
+        // The POST returns a canonical patient, but revalidate to pick up any
+        // server-derived labels/derived fields without hand-maintaining them.
+        revalidateInBackground(patient.id);
         return patient;
+      } catch (err) {
+        rollbackTo(snapshot);
+        setError(errorMessage(err, 'Failed to register patient.'));
+        throw err;
       } finally {
         setIsSaving(false);
       }
     },
-    []
+    [revalidateInBackground, rollbackTo]
   );
 
   const saveConsultation = useCallback(
@@ -154,6 +200,8 @@ export function usePatients() {
     }): Promise<PastVisit | undefined> => {
       if (!selectedPatient) return undefined;
 
+      const targetId = selectedPatient.id;
+      const snapshot = patientsRef.current;
       setIsSaving(true);
       try {
         const idempotencyKey =
@@ -162,7 +210,7 @@ export function usePatients() {
             ? crypto.randomUUID()
             : `idem-${Date.now()}-${Math.random().toString(36).slice(2)}`);
 
-        const res = await fetch(`/api/patients/${encodeURIComponent(selectedPatient.id)}/visits`, {
+        const res = await fetch(`/api/patients/${encodeURIComponent(targetId)}/visits`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -173,7 +221,7 @@ export function usePatients() {
             symptoms: data.symptoms,
             prescriptions: data.prescriptions,
             doctorNotes: data.doctorNotes,
-            durationDays: data.durationDays || CLINIC_CONFIG.defaultCourseDays,
+            durationDays: data.durationDays ?? clinicConfig.defaultCourseDays,
             fee: data.fee,
             feeStatus: data.feeStatus,
             idempotencyKey,
@@ -185,81 +233,110 @@ export function usePatients() {
           todayCount: number;
         }>(res);
 
+        // Optimistic patch uses values returned by the server — no manual
+        // "+1 visit" or hardcoded "Today" label.
+        const canonicalDate = visit.clinicDate;
         setPatients((prev) =>
           prev.map((patient) => {
-            if (patient.id !== selectedPatient.id) return patient;
-            const alreadyPresent = patient.pastVisits.some((v) => v.id === visit.id);
-            if (alreadyPresent) return patient;
+            if (patient.id !== targetId) return patient;
+            if (patient.pastVisits.some((v) => v.id === visit.id)) return patient;
             return {
               ...patient,
               totalVisits: patient.totalVisits + 1,
-              lastVisitDate: 'Today',
+              lastVisitDate: visit.date,
+              ...(canonicalDate
+                ? {
+                    lastVisitClinicDate:
+                      !patient.lastVisitClinicDate ||
+                      canonicalDate > patient.lastVisitClinicDate
+                        ? canonicalDate
+                        : patient.lastVisitClinicDate,
+                  }
+                : {}),
               pastVisits: [visit, ...patient.pastVisits],
             };
           })
         );
         setTodayCount(nextTodayCount);
+        revalidateInBackground(targetId);
         return visit;
+      } catch (err) {
+        rollbackTo(snapshot);
+        setError(errorMessage(err, 'Failed to save consultation.'));
+        throw err;
       } finally {
         setIsSaving(false);
       }
     },
-    [selectedPatient]
+    [clinicConfig.defaultCourseDays, revalidateInBackground, rollbackTo, selectedPatient]
   );
 
-  const updatePatient = useCallback(async (updatedPatient: Patient): Promise<Patient> => {
-    setIsSaving(true);
-    try {
-      const res = await fetch(`/api/patients/${encodeURIComponent(updatedPatient.id)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fullName: updatedPatient.fullName,
-          relationType: updatedPatient.relationType,
-          relativeName: updatedPatient.relativeName,
-          age: updatedPatient.age,
-          gender: updatedPatient.gender,
-          phone: updatedPatient.phone,
-          locality: updatedPatient.locality,
-        }),
-      });
+  const updatePatient = useCallback(
+    async (updatedPatient: Patient): Promise<Patient> => {
+      const snapshot = patientsRef.current;
+      setIsSaving(true);
+      try {
+        const res = await fetch(`/api/patients/${encodeURIComponent(updatedPatient.id)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fullName: updatedPatient.fullName,
+            relationType: updatedPatient.relationType,
+            relativeName: updatedPatient.relativeName,
+            age: updatedPatient.age,
+            gender: updatedPatient.gender,
+            phone: updatedPatient.phone,
+            locality: updatedPatient.locality,
+          }),
+        });
 
-      const { patient } = await parseJsonOrThrow<{ patient: Patient }>(res);
-      setPatients((prev) =>
-        prev.map((item) => (item.id === patient.id ? patient : item))
-      );
-      return patient;
-    } finally {
-      setIsSaving(false);
-    }
-  }, []);
+        const { patient } = await parseJsonOrThrow<{ patient: Patient }>(res);
+        setPatients((prev) =>
+          prev.map((item) => (item.id === patient.id ? patient : item))
+        );
+        revalidateInBackground(patient.id);
+        return patient;
+      } catch (err) {
+        rollbackTo(snapshot);
+        setError(errorMessage(err, 'Failed to update patient.'));
+        throw err;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [revalidateInBackground, rollbackTo]
+  );
 
-  const settlePatientDues = useCallback(async (patientId: string): Promise<void> => {
-    setIsSaving(true);
-    try {
-      const res = await fetch(`/api/patients/${encodeURIComponent(patientId)}/settle-dues`, {
-        method: 'POST',
-      });
-      await parseJsonOrThrow<{ settledCount: number }>(res);
+  const settlePatientDues = useCallback(
+    async (patientId: string): Promise<void> => {
+      const snapshot = patientsRef.current;
+      setIsSaving(true);
+      try {
+        const res = await fetch(`/api/patients/${encodeURIComponent(patientId)}/settle-dues`, {
+          method: 'POST',
+        });
+        const { patient } = await parseJsonOrThrow<{ patient: Patient }>(res);
 
-      setPatients((prev) =>
-        prev.map((patient) => {
-          if (patient.id !== patientId) return patient;
-          return {
-            ...patient,
-            pastVisits: patient.pastVisits.map((v) =>
-              v.feeStatus === 'Due' ? { ...v, feeStatus: 'Paid' as const } : v
-            ),
-          };
-        })
-      );
-    } finally {
-      setIsSaving(false);
-    }
-  }, []);
+        // The server returns the canonical patient so editedAt and feeStatus
+        // cannot drift between client and database.
+        setPatients((prev) =>
+          prev.map((item) => (item.id === patient.id ? patient : item))
+        );
+        revalidateInBackground(patient.id);
+      } catch (err) {
+        rollbackTo(snapshot);
+        setError(errorMessage(err, 'Failed to settle dues.'));
+        throw err;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [revalidateInBackground, rollbackTo]
+  );
 
   const deletePatient = useCallback(
     async (patientId: string): Promise<void> => {
+      const snapshot = patientsRef.current;
       setIsSaving(true);
       try {
         const res = await fetch(`/api/patients/${encodeURIComponent(patientId)}`, {
@@ -274,11 +351,18 @@ export function usePatients() {
           }
           return remaining;
         });
+        void refreshPatients(true).catch((err) => {
+          console.error('Post-delete revalidation failed:', err);
+        });
+      } catch (err) {
+        rollbackTo(snapshot);
+        setError(errorMessage(err, 'Failed to archive patient.'));
+        throw err;
       } finally {
         setIsSaving(false);
       }
     },
-    [selectedPatientId]
+    [refreshPatients, rollbackTo, selectedPatientId]
   );
 
   return {

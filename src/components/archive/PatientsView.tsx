@@ -22,8 +22,8 @@ import { Patient } from "@/types";
 import { usePatientsContext } from "@/context/PatientsContext";
 import { useSettingsContext } from "@/context/SettingsContext";
 import { EditPatientModal } from "@/components/patients/EditPatientModal";
-import { REACTION_CONFIG } from "@/constants/clinical";
 import { formatCurrency } from "@/utils/formatters";
+import { parseDisplayDateToClinicDate } from "@/lib/clinicDate";
 import { playUiCue } from "@/utils/sound";
 import { HistoryVisitCard } from "@/components/ui/clinical";
 
@@ -41,7 +41,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 	onOpenVisit,
 }) => {
 	const { updatePatient, deletePatient, settlePatientDues } = usePatientsContext();
-	const { audioChimeEnabled } = useSettingsContext();
+	const { audioChimeEnabled, clinicConfig } = useSettingsContext();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
 	const [selectedPatientId, setSelectedPatientId] = useState<string>(
@@ -56,12 +56,18 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 			// 1. Filter Tab
 			if (activeFilter === "chronic" && patient.totalVisits < 3)
 				return false;
-			if (
-				activeFilter === "recent" &&
-				!patient.lastVisitDate.toLowerCase().includes("nov") &&
-				patient.lastVisitDate !== "Today"
-			)
-				return false;
+			if (activeFilter === "recent") {
+				// Compare canonical clinic dates, never display strings like "Today".
+				const isoDate =
+					patient.lastVisitClinicDate ??
+					parseDisplayDateToClinicDate(patient.lastVisitDate);
+				const cutoff = new Date();
+				cutoff.setDate(cutoff.getDate() - 30);
+				const cutoffIso = `${cutoff.getFullYear()}-${String(
+					cutoff.getMonth() + 1
+				).padStart(2, "0")}-${String(cutoff.getDate()).padStart(2, "0")}`;
+				if (isoDate < cutoffIso) return false;
+			}
 			if (
 				activeFilter === "dues" &&
 				!patient.pastVisits.some((v) => v.feeStatus === "Due")
@@ -254,7 +260,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 										}}
 										title="Open in OPD"
 										aria-label={`Open ${patientItem.fullName} in OPD`}
-										className={`shrink-0 p-1 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity ${
+										className={`shrink-0 p-1 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
 											isSelected
 												? "text-white hover:bg-white/20"
 												: "text-brand-primary hover:bg-brand-primary-container"
@@ -373,10 +379,10 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 												}
 											}}
 											className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white text-xs font-bold shadow-md transition-all active:scale-98 cursor-pointer animate-in fade-in"
-											title={`Click to settle outstanding dues of ${formatCurrency(totalDue)}`}
+											title={`Click to settle outstanding dues of ${formatCurrency(totalDue, clinicConfig.currency)}`}
 										>
 											<CheckCircle2 className="w-3.5 h-3.5" />
-											<span>Settle Due: {formatCurrency(totalDue)}</span>
+											<span>Settle Due: {formatCurrency(totalDue, clinicConfig.currency)}</span>
 										</button>
 									)}
 
@@ -505,11 +511,11 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 								</span>
 								<div className="flex items-center justify-between">
 									<span className="font-mono text-sm font-bold text-content-primary">
-										{formatCurrency(totalPaid)}
+										{formatCurrency(totalPaid, clinicConfig.currency)}
 									</span>
 									{totalDue > 0 && (
 										<span className="text-[10px] font-bold text-white bg-reaction-aggravated px-1.5 py-0.5 rounded shadow-2xs">
-											Due: {formatCurrency(totalDue)}
+											Due: {formatCurrency(totalDue, clinicConfig.currency)}
 										</span>
 									)}
 								</div>
@@ -563,6 +569,8 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 														.length - index
 												}
 												isLatest={index === 0}
+												currency={clinicConfig.currency}
+												patientName={selectedPatient.fullName}
 												onOpen={
 													onOpenVisit
 														? (visit) =>

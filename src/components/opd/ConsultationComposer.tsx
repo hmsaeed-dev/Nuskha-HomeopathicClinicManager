@@ -2,10 +2,11 @@
 
 import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { RotateCcw, Plus, CheckCircle2 } from 'lucide-react';
-import { Patient, ReactionType, PrescriptionItem } from '@/types';
+import { FeeStatus, Patient, ReactionType, PrescriptionItem } from '@/types';
 import { useSettingsContext } from '@/context/SettingsContext';
 import { playUiCue } from '@/utils/sound';
 import { useConsultationForm } from '@/hooks/useConsultationForm';
+import { REACTIONS } from '@/constants/vocab';
 import { ReactionSelector } from './ReactionSelector';
 import { PrescriptionRow } from './PrescriptionRow';
 import { CourseDurationSelector } from './CourseDurationSelector';
@@ -19,7 +20,7 @@ interface ConsultationComposerProps {
     doctorNotes: string;
     durationDays: number;
     fee: number;
-    feeStatus: 'Paid' | 'Free' | 'Due';
+    feeStatus: FeeStatus;
     idempotencyKey?: string;
   }) => Promise<unknown> | unknown;
 }
@@ -132,12 +133,9 @@ export const ConsultationComposer: React.FC<ConsultationComposerProps> = ({
       }
 
       // 4. Reactions: Keys [1] to [4] strictly matching the visible UI order
-      const reactionKeys: Record<string, ReactionType> = {
-        '1': 'Decline',
-        '2': 'No Change',
-        '3': 'Improved',
-        '4': 'First Visit',
-      };
+      const reactionKeys: Record<string, ReactionType> = Object.fromEntries(
+        REACTIONS.map((reaction) => [reaction.shortcut, reaction.value])
+      ) as Record<string, ReactionType>;
 
       if (e.key in reactionKeys) {
         const isAllowed = singleKeyShortcutsEnabled ? (!isInputFocused || e.altKey) : e.altKey;
