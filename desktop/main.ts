@@ -36,6 +36,19 @@ function getRepoRoot(): string {
   return path.resolve(__dirname, '..', '..');
 }
 
+function getDevServerUrl(): string | null {
+  const raw = process.env.NUSKHA_DEV_URL?.trim();
+  // Never allow a packaged app to load a development server.
+  if (!raw || app.isPackaged) return null;
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return null;
+    return parsed.toString().replace(/\/$/, '');
+  } catch {
+    return null;
+  }
+}
+
 function getAppDataPaths() {
   const dataDir = app.getPath('userData');
   return {
@@ -229,10 +242,8 @@ async function startNextServer(config: DbConfig): Promise<number> {
   return port;
 }
 
-function loadSplashHtml(port?: number): string {
-  const subtitle = port
-    ? `Connecting to NuskhaDB on 127.0.0.1:${port}...`
-    : 'Starting Nuskha clinic workspace...';
+function loadSplashHtml(message?: string): string {
+  const subtitle = message ?? 'Starting Nuskha clinic workspace...';
   return `data:text/html;charset=utf-8,${encodeURIComponent(`
     <!DOCTYPE html>
     <html>
@@ -264,7 +275,49 @@ async function openDatabaseSetup(errorMessage: string | null = null): Promise<vo
   await mainWindow.loadFile(getSetupHtmlPath());
 }
 
+async function openDevWorkspace(url: string): Promise<void> {
+  const win = mainWindow;
+  if (!win) return;
+
+  let retriesLeft = 3;
+  win.webContents.on(
+    'did-fail-load',
+    (_event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+      // -3 means ERR_ABORTED, which can happen during normal dev-server reloads.
+      if (isQuitting || !isMainFrame || errorCode === -3) return;
+      if (!validatedURL.startsWith(url)) return;
+
+      if (retriesLeft > 0) {
+        retriesLeft -= 1;
+        const remaining = retriesLeft;
+        setTimeout(() => {
+          if (isQuitting) return;
+          void win.loadURL(
+            loadSplashHtml(`Dev server unavailable (${errorDescription}). Retrying (${remaining} left)...`)
+          );
+          setTimeout(() => {
+            if (!isQuitting) void win.loadURL(url);
+          }, 1200);
+        }, 300);
+        return;
+      }
+
+      void win.loadURL(
+        loadSplashHtml(`Cannot reach the Next.js dev server at ${url}. Start it with "npm run dev:desktop".`)
+      );
+    }
+  );
+
+  await win.loadURL(url);
+}
+
 async function launchAppWithConfig(config: DbConfig): Promise<void> {
+  const devUrl = getDevServerUrl();
+  if (devUrl) {
+    await openDevWorkspace(devUrl);
+    return;
+  }
+
   if (!mainWindow) return;
   await mainWindow.loadURL(loadSplashHtml());
 
@@ -362,8 +415,11 @@ function buildAppMenu(): void {
         {
           label: 'Reload Clinic Workspace',
           click: () => {
-            if (mainWindow && activePort) {
-              void mainWindow.loadURL(`http://127.0.0.1:${activePort}`);
+            const target =
+              getDevServerUrl() ??
+              (activePort ? `http://127.0.0.1:${activePort}` : null);
+            if (mainWindow && target) {
+              void mainWindow.loadURL(target);
             }
           },
         },
@@ -501,6 +557,12 @@ async function createMainWindow(): Promise<void> {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  const devUrl = getDevServerUrl();
+  if (devUrl) {
+    await openDevWorkspace(devUrl);
+    return;
+  }
 
   const { configPath } = getAppDataPaths();
   const initialConfig =

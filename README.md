@@ -24,10 +24,25 @@ The desktop wrapper runs the Next.js standalone server inside Electron on `127.0
 directly to the local SQL Server — no cloud service is required.
 
 ```bash
+npm run dev:desktop    # live development: Next.js dev server + Electron, no production build
 npm run desktop:dev    # build, then launch Electron in local mode
 npm run desktop:build  # build Next.js standalone + Electron main process
 npm run desktop:dist   # build and produce Windows installer + portable exe
 ```
+
+### Live desktop development
+
+`npm run dev:desktop` compiles the Electron main process once, starts `next dev` on port 3000,
+waits for it to respond, then opens Electron against `http://localhost:3000`. Closing the Electron
+window also stops the dev server. No `next build`, standalone staging, or packaging is involved.
+
+Database settings in this mode come from `.env.local` (the same as `npm run dev`), not the first-run
+Electron setup screen. Changes under `src/` — components, Tailwind/CSS, API routes — appear
+immediately via Fast Refresh. Changes to `desktop/*.ts` or `.env.local` require stopping and
+restarting `npm run dev:desktop`.
+
+Production packaging is unaffected: packaged builds always use the standalone server and never
+load a development URL.
 
 Installers are written to `dist-desktop/`:
 

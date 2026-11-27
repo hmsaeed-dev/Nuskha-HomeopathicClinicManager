@@ -7,6 +7,8 @@
   "main": "desktop/dist/main.js",
   "scripts": {
     "dev": "next dev",
+    "dev:desktop": "npm run desktop:tsc && concurrently -k -n next,desktop -c green,cyan \"next dev -p 3000\" \"wait-on -t 120000 http-get://localhost:3000 && npm run dev:desktop:electron\"",
+    "dev:desktop:electron": "cross-env NUSKHA_DEV_URL=http://localhost:3000 electron .",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -33,12 +35,15 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^10.0.7",
+    "cross-env": "^10.1.0",
     "electron": "^45.5.0",
     "electron-builder": "^26.18.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "tailwindcss": "4.3.3",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^9.5.1"
   }
 }
